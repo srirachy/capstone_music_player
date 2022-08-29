@@ -1,0 +1,6 @@
+client/public/**
+node_modules/**
+client/node_modules/**
+server/node_modules/**
+coverage/**
+client/src/registerServiceWorker.js
