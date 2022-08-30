@@ -14,7 +14,7 @@
     "rootDir": "./",
     "baseUrl": "./",
     "paths": {
-      "@/*": ["*"]
+      "@/*": ["*"],
     },
     "resolveJsonModule": true,                           /* Enable importing .json files. */
     "sourceMap": true,                                   /* Create source map files for emitted JavaScript files. */

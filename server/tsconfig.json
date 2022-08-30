@@ -1,12 +1,17 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "CommonJS",
     "rootDir": "./",
-    "isolatedModules": false,
+    "esModuleInterop": true,
+    "baseUrl": "./",
+    "paths": {
+      "*": ["../*"]
+    }
   },
   "include": [
-    "./"
+    "./",
+    "../node_modules/dotenv"
   ],
   "exclude": [
     "./node_modules"

@@ -34,7 +34,7 @@
   "settings": {
     "import/resolver": {
       "node": {
-        "moduleDirectory": ["node_modules", "client/node_modules", "server/node_modules"]
+        "moduleDirectory": ["./node_modules/", "client/node_modules/", "client/src/", "server/", "server/node_modules/"]
       }
     }
   },
