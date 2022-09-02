@@ -1,9 +1,14 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "CommonJS",
     "rootDir": "./",
-    "isolatedModules": false,
+    "esModuleInterop": true,
+    "baseUrl": "./",
+    "paths": {
+      "*": ["../*"]
+    },
+    "typeRoots": ["./node_modules/@types", "./types"],
   },
   "include": [
     "./"

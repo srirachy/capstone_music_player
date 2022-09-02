@@ -4,7 +4,13 @@
     "target": "ESNext",
     "module": "ESNext",
     "jsx": "react-jsx",
-    "noEmit": true
+    "noEmit": true,
+    "baseUrl": "./",
+    "paths": {
+      "*": ["./"],
+      "src/*": ["./src/*"]
+    },
+    "isolatedModules": false,
   },
   "include": [
     "./src"
