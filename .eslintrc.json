@@ -29,7 +29,11 @@
       "ignorePropertyModificationsFor": [ "state"]
     }],
     "indent": "off",
-    "@typescript-eslint/indent": "off"
+    "@typescript-eslint/indent": "off",
+    "no-unused-expressions": "off",
+    "@typescript-eslint/no-unused-expressions": "warn",
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": "warn"
   },
   "settings": {
     "import/resolver": {
