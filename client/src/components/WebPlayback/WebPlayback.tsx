@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ListenerEventType, PlaybackType } from '../types';
+import { ListenerEventType, PlaybackType } from '../../types';
 
 const track = {
   name: '',

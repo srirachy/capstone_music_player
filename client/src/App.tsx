@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import WebPlayback from './components/WebPlayback';
-import Login from './components/Login';
+import WebPlayback from './components/WebPlayback/WebPlayback';
+import Login from './components/Login/Login';
 
 const AppWrapper = styled.div`
   * {
