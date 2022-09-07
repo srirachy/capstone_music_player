@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
-import App from './App';
+import Login from './Login';
 
-test('show login if token is invalid', async () => {
-  render(<App />);
+test('allow user to authenticate', async () => {
+  render(<Login />);
   const linkElement = screen.getByText(/Login with Spotify/i);
   expect(linkElement).toBeInTheDocument();
 });
