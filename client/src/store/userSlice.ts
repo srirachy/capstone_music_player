@@ -9,13 +9,13 @@ const initialState = {
   mewo: true,
 } as ExampleTypes;
 
-export const exampleSlice = createSlice({
+export const userSlice = createSlice({
   name: 'example',
   initialState,
   reducers: {},
 });
 
-export const exSlice = (state: RootState) => state;
-// export const {} = exampleSlice.actions; PLACEHOLDER
+export const userState = (state: RootState) => state;
+// export const {} = userSlice.actions; PLACEHOLDER
 
-export default exampleSlice.reducer;
+export default userSlice.reducer;

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { ListenerEventType, PlaybackType } from '../../types';
+import useSessToken from 'src/utils/useSessToken';
+import { ListenerEventType } from '../../types';
 
 const track = {
   name: '',
@@ -9,7 +10,8 @@ const track = {
   artists: [{ name: '' }],
 };
 
-function WebPlayback({ token }: PlaybackType) {
+function WebPlayback() {
+  const token = useSessToken();
   const [player, setPlayer] = useState<undefined | Spotify.Player>(
     undefined,
   );
@@ -27,7 +29,7 @@ function WebPlayback({ token }: PlaybackType) {
       const sPlayer = new window.Spotify.Player({
         name: 'Web Playback SDK',
         getOAuthToken: (cb) => {
-          cb(token);
+          cb(token.sessToken);
         },
         volume: 0.5,
       });

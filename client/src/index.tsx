@@ -1,26 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import styled from 'styled-components';
 import { Provider } from 'react-redux';
 import { store } from './store';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-
-const AppWrapper = styled.div`
-  body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI',
-      'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
-      'Droid Sans', 'Helvetica Neue', sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
-  code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas,
-      'Courier New', monospace;
-  }
-`;
+import { GlobalStyle } from './styles/GlobalStyle';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
@@ -28,9 +12,8 @@ const root = ReactDOM.createRoot(
 root.render(
   <Provider store={store}>
     <React.StrictMode>
-      <AppWrapper>
-        <App />
-      </AppWrapper>
+      <GlobalStyle />
+      <App />
     </React.StrictMode>
   </Provider>,
 );

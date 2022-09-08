@@ -5,7 +5,7 @@
     "node": true,
     "jest": true
   },
-  "extends": ["airbnb", "airbnb/hooks", "plugin:prettier/recommended", "airbnb-typescript"],
+  "extends": ["airbnb", "airbnb/hooks", "plugin:prettier/recommended", "airbnb-typescript", "react-app"],
   "plugins": ["react", "prettier"],
   "rules": {
     "prettier/prettier": [
