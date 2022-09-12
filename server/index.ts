@@ -26,12 +26,24 @@ app.get('/', (_req, res) => {
 });
 
 app.get('/auth/login', (_req, res) => {
-  const scope = 'streaming user-read-email user-read-private';
+  // const scope =
+  //   'streaming user-read-email user-read-private user-modify-playback-state user-read-playback-state user-read-currently-playing user-read-recently-played user-read-playback-position user-top-read';
+  const scope = [
+    'streaming',
+    'user-read-email',
+    'user-read-private',
+    'user-modify-playback-state',
+    'user-read-playback-state',
+    'user-read-currently-playing',
+    'user-read-recently-played',
+    'user-read-playback-position',
+    'user-top-read',
+  ];
   const state = generateRandomString(16);
   const authQueryParameters = new URLSearchParams({
     response_type: 'code',
     client_id: spotifyClientId,
-    scope: scope,
+    scope: scope.join(' '),
     redirect_uri: spotifyRedirectUri,
     state: state,
   } as URLProps);
