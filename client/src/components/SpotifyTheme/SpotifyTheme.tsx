@@ -1,11 +1,11 @@
 import {
   SpotifyThemeContainer,
   SidebarWrapper,
-  SearchWrapper,
+  NavBarWrapper,
   ContentWrapper,
 } from '../../styles/SpotifyThemeStyle';
 import Sidebar from '../Sidebar/Sidebar';
-import Search from '../Search/Search';
+import NavBar from '../NavBar/NavBar';
 import SpotifyContent from '../SpotifyContent/SpotifyContent';
 
 function SpotifyTheme() {
@@ -13,12 +13,12 @@ function SpotifyTheme() {
     <SpotifyThemeContainer>
       <SidebarWrapper>
         <Sidebar />
-        <SearchWrapper>
-          <Search />
+        <NavBarWrapper>
+          <NavBar />
           <ContentWrapper>
             <SpotifyContent />
           </ContentWrapper>
-        </SearchWrapper>
+        </NavBarWrapper>
       </SidebarWrapper>
     </SpotifyThemeContainer>
   );

@@ -1,5 +1,13 @@
+import { AiFillClockCircle } from 'react-icons/ai';
+import { ContentContainer } from '../../styles/SpotifyContent';
+
 function SpotifyContent() {
-  return <p>spoopifycontent--meow</p>;
+  return (
+    <ContentContainer>
+      <AiFillClockCircle />
+      <p>meow</p>
+    </ContentContainer>
+  );
 }
 
 export default SpotifyContent;

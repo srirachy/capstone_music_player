@@ -1,13 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import tokenReducer from './tokenSlice';
-// import musicPlayerReducer from './musicPlayerSlice';
-// import userReducer from './userSlice';
+import musicPlayerReducer from './musicPlayerSlice';
+import userReducer from './userSlice';
 
 export const store = configureStore({
   reducer: {
     token: tokenReducer,
-    // musicPlayer: musicPlayerReducer,
-    // user: userReducer,
+    musicPlayer: musicPlayerReducer,
+    user: userReducer,
   },
 });
 

@@ -1,21 +1,30 @@
 import { createSlice } from '@reduxjs/toolkit';
-import type { RootState } from './index';
+// import type { RootState } from './index';
 
-type ExampleTypes = {
-  mewo: boolean;
+type PlaylistProps = {
+  name: string;
+  id: string;
+};
+
+type MusicPlayerTypes = {
+  playlist: PlaylistProps[];
 };
 
 const initialState = {
-  mewo: true,
-} as ExampleTypes;
+  playlist: [],
+} as MusicPlayerTypes;
 
 export const musicPlayerSlice = createSlice({
   name: 'musicPlayer',
   initialState,
-  reducers: {},
+  reducers: {
+    setPlaylist(state, { payload }) {
+      state.playlist = payload;
+    },
+  },
 });
 
-export const musicPlayerState = (state: RootState) => state;
-// export const {} = musicPlayerSlice.actions; PLACEHOLDER
+// export const musicPlayerState = (state: RootState) => state;
+export const { setPlaylist } = musicPlayerSlice.actions;
 
 export default musicPlayerSlice.reducer;

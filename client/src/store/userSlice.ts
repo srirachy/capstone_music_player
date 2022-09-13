@@ -1,21 +1,30 @@
 import { createSlice } from '@reduxjs/toolkit';
-import type { RootState } from './index';
+// import type { RootState } from './index';
 
-type ExampleTypes = {
-  mewo: boolean;
+type UserProps = {
+  userId: string;
+  userName: string;
+};
+
+type UserTypes = {
+  userInfo: UserProps;
 };
 
 const initialState = {
-  mewo: true,
-} as ExampleTypes;
+  userInfo: {},
+} as UserTypes;
 
 export const userSlice = createSlice({
-  name: 'example',
+  name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    setUserInfo(state, { payload }) {
+      state.userInfo = payload;
+    },
+  },
 });
 
-export const userState = (state: RootState) => state;
-// export const {} = userSlice.actions; PLACEHOLDER
+// export const userState = (state: RootState) => state;
+export const { setUserInfo } = userSlice.actions;
 
 export default userSlice.reducer;
