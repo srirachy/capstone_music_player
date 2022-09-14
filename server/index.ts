@@ -28,8 +28,6 @@ app.get('/', (_req, res) => {
 
 // login endpoint
 app.get('/auth/login', (_req, res) => {
-  // const scope =
-  //   'streaming user-read-email user-read-private user-modify-playback-state user-read-playback-state user-read-currently-playing user-read-recently-played user-read-playback-position user-top-read';
   const scope = [
     'streaming',
     'user-read-email',
@@ -40,6 +38,7 @@ app.get('/auth/login', (_req, res) => {
     'user-read-recently-played',
     'user-read-playback-position',
     'user-top-read',
+    'playlist-read-private',
   ];
   const state = generateRandomString(16);
   const authQueryParameters = new URLSearchParams({
@@ -123,6 +122,32 @@ app.get('/auth/me', (_req, res) => {
 app.get('/auth/me/playlist', (_req, res) => {
   const authPlaylistOptions = {
     url: 'https://api.spotify.com/v1/me/playlists',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+  };
+
+  request.get(authPlaylistOptions, function (error, response, body) {
+    if (!error && response.statusCode === 200) {
+      res.json(response.body);
+    } else {
+      console.log(
+        error,
+        response.body.error,
+        response.body.error.error_description,
+      );
+      res.end(body);
+    }
+  });
+});
+
+// get playlist song data
+app.get('/auth/playlists/:playlist_id', (req, res) => {
+  const playlistId = req.params.playlist_id;
+  console.log(playlistId);
+  const authPlaylistOptions = {
+    url: `https://api.spotify.com/v1/playlists/${playlistId}`,
     headers: {
       Authorization: `Bearer ${accessToken}`,
       'Content-Type': 'application/json',

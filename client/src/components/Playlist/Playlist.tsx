@@ -1,7 +1,10 @@
 import { useEffect } from 'react';
 import { useAppDispatch } from 'src/store/hooks';
 import usePlaylist from 'src/utils/usePlaylist';
-import { setPlaylist } from '../../store/musicPlayerSlice';
+import {
+  setPlaylist,
+  setSelectedPlaylist,
+} from '../../store/musicPlayerSlice';
 import { PlaylistContainer } from '../../styles/PlaylistStyle';
 import { PlaylistItemsType } from '../../types';
 
@@ -19,10 +22,15 @@ function Playlist() {
           return { name, id };
         },
       );
-      dispatch(setPlaylist(playlists));
+      if (playlists) {
+        dispatch(setPlaylist(playlists)); // set all playlists from user's playlist data
+      }
+      if (playlist.selectedPlaylist === '') {
+        dispatch(setSelectedPlaylist(items[0].id)); // set first playlist as selected
+      }
     };
     getPlaylistData();
-  }, [dispatch]);
+  }, [dispatch, playlist.selectedPlaylist]);
 
   return (
     <PlaylistContainer>

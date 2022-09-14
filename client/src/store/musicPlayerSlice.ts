@@ -8,10 +8,14 @@ type PlaylistProps = {
 
 type MusicPlayerTypes = {
   playlist: PlaylistProps[];
+  selectedPlaylist: string;
+  playlistSongs: {};
 };
 
 const initialState = {
   playlist: [],
+  selectedPlaylist: '',
+  playlistSongs: {},
 } as MusicPlayerTypes;
 
 export const musicPlayerSlice = createSlice({
@@ -21,10 +25,17 @@ export const musicPlayerSlice = createSlice({
     setPlaylist(state, { payload }) {
       state.playlist = payload;
     },
+    setSelectedPlaylist(state, { payload }) {
+      state.selectedPlaylist = payload;
+    },
+    setPlaylistSongs(state, { payload }) {
+      state.playlistSongs = payload;
+    },
   },
 });
 
 // export const musicPlayerState = (state: RootState) => state;
-export const { setPlaylist } = musicPlayerSlice.actions;
+export const { setPlaylist, setSelectedPlaylist, setPlaylistSongs } =
+  musicPlayerSlice.actions;
 
 export default musicPlayerSlice.reducer;

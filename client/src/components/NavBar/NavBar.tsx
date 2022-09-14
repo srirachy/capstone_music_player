@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+// import { useEffect } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import { CgProfile } from 'react-icons/cg';
 import useUserInfo from 'src/utils/useUserInfo';
@@ -10,12 +10,7 @@ import {
 
 function NavBar() {
   const userInfo = useUserInfo();
-  useEffect(() => {
-    if (userInfo) {
-      console.log(userInfo);
-      console.log(userInfo.userInfo.userName);
-    }
-  }, [userInfo]);
+
   return (
     <NavContainer>
       <SearchWrapper>
