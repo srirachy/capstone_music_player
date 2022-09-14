@@ -15,9 +15,16 @@ export const SidebarWrapper = styled.div`
   background: linear-gradient(transparent, rgba(0, 0, 0, 1));
   background-color: rgb(32, 87, 100);
 `;
-export const SearchWrapper = styled.div`
+export const NavBarWrapper = styled.div`
   height: 100%;
   width: 100%;
   overflow: auto;
+  &::-webkit-scrollbar {
+    width: 0.7rem;
+    &-thumb {
+      background-color: rgba(255, 255, 255, 0.6);
+    }
+  }
+  scrollbar-width: thin;
 `;
 export const ContentWrapper = styled.div``;

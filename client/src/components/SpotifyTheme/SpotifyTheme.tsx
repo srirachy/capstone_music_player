@@ -1,24 +1,41 @@
+import { useState, useRef } from 'react';
 import {
   SpotifyThemeContainer,
   SidebarWrapper,
-  SearchWrapper,
+  NavBarWrapper,
   ContentWrapper,
 } from '../../styles/SpotifyThemeStyle';
 import Sidebar from '../Sidebar/Sidebar';
-import Search from '../Search/Search';
+import NavBar from '../NavBar/NavBar';
 import SpotifyContent from '../SpotifyContent/SpotifyContent';
 
 function SpotifyTheme() {
+  const bodyRef = useRef<HTMLDivElement>(null);
+  const [navBackground, setNavBackground] = useState<boolean>(false);
+  const [headerBackground, setHeaderBackground] =
+    useState<boolean>(false);
+
+  const bodyScrolled = () => {
+    if (bodyRef.current !== null) {
+      bodyRef.current.scrollTop >= 30
+        ? setNavBackground(true)
+        : setNavBackground(false);
+      bodyRef.current.scrollTop >= 268
+        ? setHeaderBackground(true)
+        : setHeaderBackground(false);
+    }
+  };
+
   return (
     <SpotifyThemeContainer>
       <SidebarWrapper>
         <Sidebar />
-        <SearchWrapper>
-          <Search />
+        <NavBarWrapper ref={bodyRef} onScroll={bodyScrolled}>
+          <NavBar navBackground={navBackground} />
           <ContentWrapper>
-            <SpotifyContent />
+            <SpotifyContent headerBackground={headerBackground} />
           </ContentWrapper>
-        </SearchWrapper>
+        </NavBarWrapper>
       </SidebarWrapper>
     </SpotifyThemeContainer>
   );

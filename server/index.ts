@@ -21,13 +21,13 @@ const spotifyClientId = process.env.SPOTIFY_CLIENT_ID;
 const spotifyClientSecret = process.env.SPOTIFY_CLIENT_SECRET;
 const spotifyRedirectUri = process.env.SPOTIFY_REDIRECT_URI;
 
+// mostly for redirecting
 app.get('/', (_req, res) => {
   res.send('redirecting...');
 });
 
+// login endpoint
 app.get('/auth/login', (_req, res) => {
-  // const scope =
-  //   'streaming user-read-email user-read-private user-modify-playback-state user-read-playback-state user-read-currently-playing user-read-recently-played user-read-playback-position user-top-read';
   const scope = [
     'streaming',
     'user-read-email',
@@ -38,6 +38,7 @@ app.get('/auth/login', (_req, res) => {
     'user-read-recently-played',
     'user-read-playback-position',
     'user-top-read',
+    'playlist-read-private',
   ];
   const state = generateRandomString(16);
   const authQueryParameters = new URLSearchParams({
@@ -53,6 +54,7 @@ app.get('/auth/login', (_req, res) => {
   );
 });
 
+// callback endpoint
 app.get('/auth/callback', (req, res) => {
   const { code } = req.query;
 
@@ -82,13 +84,88 @@ app.get('/auth/callback', (req, res) => {
         response.body.error,
         response.body.error.error_description,
       );
-      res.end();
+      res.end(response.body);
     }
   });
 });
 
+// token endpoint
 app.get('/auth/token', (_req, res) => {
   res.json({ access_token: accessToken });
+});
+
+// userInfo endpoint
+app.get('/auth/me', (_req, res) => {
+  const authMeOptions = {
+    url: 'https://api.spotify.com/v1/me',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+  };
+
+  request.get(authMeOptions, function (error, response, body) {
+    if (!error && response.statusCode === 200) {
+      res.json(response.body);
+    } else {
+      console.log(
+        error,
+        response.body.error,
+        response.body.error.error_description,
+      );
+      res.end(body);
+    }
+  });
+});
+
+// playlist endpoint
+app.get('/auth/me/playlist', (_req, res) => {
+  const authPlaylistOptions = {
+    url: 'https://api.spotify.com/v1/me/playlists',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+  };
+
+  request.get(authPlaylistOptions, function (error, response, body) {
+    if (!error && response.statusCode === 200) {
+      res.json(response.body);
+    } else {
+      console.log(
+        error,
+        response.body.error,
+        response.body.error.error_description,
+      );
+      res.end(body);
+    }
+  });
+});
+
+// get playlist song data
+app.get('/auth/playlists/:playlist_id', (req, res) => {
+  const playlistId = req.params.playlist_id;
+  console.log(playlistId);
+  const authPlaylistOptions = {
+    url: `https://api.spotify.com/v1/playlists/${playlistId}`,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+  };
+
+  request.get(authPlaylistOptions, function (error, response, body) {
+    if (!error && response.statusCode === 200) {
+      res.json(response.body);
+    } else {
+      console.log(
+        error,
+        response.body.error,
+        response.body.error.error_description,
+      );
+      res.end(body);
+    }
+  });
 });
 
 app.listen(PORT, () => {
