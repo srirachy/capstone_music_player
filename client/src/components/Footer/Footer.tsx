@@ -1,9 +1,10 @@
 import { FooterContainer } from '../../styles/FooterStyle';
+import CurrentTrack from '../CurrentTrack/CurrentTrack';
 
 function Footer() {
   return (
     <FooterContainer>
-      <p>meow--fooptper</p>
+      <CurrentTrack />
     </FooterContainer>
   );
 }

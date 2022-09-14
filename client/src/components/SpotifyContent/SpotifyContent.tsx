@@ -61,12 +61,6 @@ function SpotifyContent({ headerBackground }: HeaderBkgdType) {
     }
   }, [dispatch, playlist.selectedPlaylist]);
 
-  useEffect(() => {
-    if (playlist.playlistSongs) {
-      console.log(playlist.playlistSongs.tracks);
-    }
-  });
-
   return (
     <ContentContainer>
       {playlist.playlistSongs && (

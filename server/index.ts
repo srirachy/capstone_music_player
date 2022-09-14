@@ -79,12 +79,8 @@ app.get('/auth/callback', (req, res) => {
       accessToken = body.access_token;
       res.redirect('http://localhost:3000');
     } else {
-      console.log(
-        error,
-        response.body.error,
-        response.body.error.error_description,
-      );
-      res.end(response.body);
+      console.log(error);
+      res.end();
     }
   });
 });
@@ -106,14 +102,10 @@ app.get('/auth/me', (_req, res) => {
 
   request.get(authMeOptions, function (error, response, body) {
     if (!error && response.statusCode === 200) {
-      res.json(response.body);
+      res.json(body);
     } else {
-      console.log(
-        error,
-        response.body.error,
-        response.body.error.error_description,
-      );
-      res.end(body);
+      console.log(error);
+      res.end();
     }
   });
 });
@@ -130,14 +122,10 @@ app.get('/auth/me/playlist', (_req, res) => {
 
   request.get(authPlaylistOptions, function (error, response, body) {
     if (!error && response.statusCode === 200) {
-      res.json(response.body);
+      res.json(body);
     } else {
-      console.log(
-        error,
-        response.body.error,
-        response.body.error.error_description,
-      );
-      res.end(body);
+      console.log(error);
+      res.end();
     }
   });
 });
@@ -156,16 +144,35 @@ app.get('/auth/playlists/:playlist_id', (req, res) => {
 
   request.get(authPlaylistOptions, function (error, response, body) {
     if (!error && response.statusCode === 200) {
-      res.json(response.body);
+      res.json(body);
     } else {
-      console.log(
-        error,
-        response.body.error,
-        response.body.error.error_description,
-      );
-      res.end(body);
+      console.log(error);
+      res.end();
     }
   });
+});
+
+// get playlist song data
+app.get('/auth/me/player/currently-playing', (_req, res) => {
+  const authCurrentTrackOptions = {
+    url: 'https://api.spotify.com/v1/me/player/currently-playing',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+  };
+
+  request.get(
+    authCurrentTrackOptions,
+    function (error, response, body) {
+      if (!error && response.statusCode === 200) {
+        res.json(body);
+      } else {
+        console.log(error);
+        res.end();
+      }
+    },
+  );
 });
 
 app.listen(PORT, () => {

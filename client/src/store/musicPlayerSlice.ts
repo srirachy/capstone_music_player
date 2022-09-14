@@ -28,12 +28,14 @@ type MusicPlayerTypes = {
   playlist: PlaylistProps[];
   selectedPlaylist: string;
   playlistSongs: PlaylistSongProps;
+  currentTrack: {};
 };
 
 const initialState = {
   playlist: [],
   selectedPlaylist: '',
   playlistSongs: {},
+  currentTrack: {},
 } as unknown as MusicPlayerTypes;
 
 export const musicPlayerSlice = createSlice({
@@ -49,11 +51,18 @@ export const musicPlayerSlice = createSlice({
     setPlaylistSongs(state, { payload }) {
       state.playlistSongs = payload;
     },
+    setCurrentTrack(state, { payload }) {
+      state.currentTrack = payload;
+    },
   },
 });
 
 // export const musicPlayerState = (state: RootState) => state;
-export const { setPlaylist, setSelectedPlaylist, setPlaylistSongs } =
-  musicPlayerSlice.actions;
+export const {
+  setPlaylist,
+  setSelectedPlaylist,
+  setPlaylistSongs,
+  setCurrentTrack,
+} = musicPlayerSlice.actions;
 
 export default musicPlayerSlice.reducer;
