@@ -7,12 +7,13 @@ import {
   SearchWrapper,
   UserWrapper,
 } from '../../styles/NavBarStyle';
+import { NavBkgdType } from '../../types';
 
-function NavBar() {
+function NavBar({ navBackground }: NavBkgdType) {
   const userInfo = useUserInfo();
 
   return (
-    <NavContainer>
+    <NavContainer navBackground={navBackground}>
       <SearchWrapper>
         <FaSearch />
         <input

@@ -1,3 +1,4 @@
+import { useState, useRef } from 'react';
 import {
   SpotifyThemeContainer,
   SidebarWrapper,
@@ -9,14 +10,30 @@ import NavBar from '../NavBar/NavBar';
 import SpotifyContent from '../SpotifyContent/SpotifyContent';
 
 function SpotifyTheme() {
+  const bodyRef = useRef<HTMLDivElement>(null);
+  const [navBackground, setNavBackground] = useState<boolean>(false);
+  const [headerBackground, setHeaderBackground] =
+    useState<boolean>(false);
+
+  const bodyScrolled = () => {
+    if (bodyRef.current !== null) {
+      bodyRef.current.scrollTop >= 30
+        ? setNavBackground(true)
+        : setNavBackground(false);
+      bodyRef.current.scrollTop >= 268
+        ? setHeaderBackground(true)
+        : setHeaderBackground(false);
+    }
+  };
+
   return (
     <SpotifyThemeContainer>
       <SidebarWrapper>
         <Sidebar />
-        <NavBarWrapper>
-          <NavBar />
+        <NavBarWrapper ref={bodyRef} onScroll={bodyScrolled}>
+          <NavBar navBackground={navBackground} />
           <ContentWrapper>
-            <SpotifyContent />
+            <SpotifyContent headerBackground={headerBackground} />
           </ContentWrapper>
         </NavBarWrapper>
       </SidebarWrapper>

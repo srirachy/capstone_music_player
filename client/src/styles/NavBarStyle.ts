@@ -1,6 +1,7 @@
 import styled from 'styled-components';
+import { NavBkgdType } from '../types';
 
-export const NavContainer = styled.section`
+export const NavContainer = styled.section<NavBkgdType>`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -9,7 +10,8 @@ export const NavContainer = styled.section`
   position: sticky;
   top: 0;
   transition: 0.3s ease-in-out;
-  background-color: none;
+  background-color: ${({ navBackground }) =>
+    navBackground ? 'rgba(0, 0, 0, 0.7)' : 'none'};
 `;
 
 export const SearchWrapper = styled.div`

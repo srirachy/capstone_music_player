@@ -1,12 +1,12 @@
 import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { store } from '../../store';
-import Search from './NavBar';
+import NavBar from './NavBar';
 
 test('check to see if placeholder search text is in the screen', async () => {
   render(
     <Provider store={store}>
-      <Search />
+      <NavBar navBackground={false} />
     </Provider>,
   );
   const linkElement = screen.getByPlaceholderText(

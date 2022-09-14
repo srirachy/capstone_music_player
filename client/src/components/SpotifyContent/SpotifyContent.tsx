@@ -3,10 +3,25 @@ import { AiFillClockCircle } from 'react-icons/ai';
 import { useAppDispatch } from 'src/store/hooks';
 import { setPlaylistSongs } from 'src/store/musicPlayerSlice';
 import usePlaylist from 'src/utils/usePlaylist';
-import { ContentContainer } from '../../styles/SpotifyContent';
-import { TrackType, ArtistProp } from '../../types';
+import {
+  ContentContainer,
+  ListInfoWrapper,
+  ImageWrapper,
+  DetailWrapper,
+  HeaderRow,
+  HeaderCol,
+  SongListContainer,
+  SongWrapper,
+  SongRow,
+  SongCol,
+  SongColDetail,
+  SongImageWrapper,
+  SongInfoWrapper,
+} from '../../styles/SpotifyContent';
+import { TrackType, ArtistProp, HeaderBkgdType } from '../../types';
+import { convertMsToStandardTime } from '../../utils/Functions';
 
-function SpotifyContent() {
+function SpotifyContent({ headerBackground }: HeaderBkgdType) {
   const dispatch = useAppDispatch();
   const playlist = usePlaylist();
 
@@ -46,10 +61,92 @@ function SpotifyContent() {
     }
   }, [dispatch, playlist.selectedPlaylist]);
 
+  useEffect(() => {
+    if (playlist.playlistSongs) {
+      console.log(playlist.playlistSongs.tracks);
+    }
+  });
+
   return (
     <ContentContainer>
-      <AiFillClockCircle />
-      <p>meow</p>
+      {playlist.playlistSongs && (
+        <>
+          <ListInfoWrapper>
+            <ImageWrapper>
+              <img
+                src={playlist.playlistSongs.image}
+                alt="playlist album cover"
+              />
+            </ImageWrapper>
+            <DetailWrapper>
+              <span>PLAYLIST</span>
+              <h1>{playlist.playlistSongs.name}</h1>
+              <p>{playlist.playlistSongs.description}</p>
+            </DetailWrapper>
+          </ListInfoWrapper>
+          <SongListContainer>
+            <HeaderRow headerBackground={headerBackground}>
+              <HeaderCol>
+                <span>#</span>
+              </HeaderCol>
+              <HeaderCol>
+                <span>TITLE</span>
+              </HeaderCol>
+              <HeaderCol>
+                <span>ALBUM</span>
+              </HeaderCol>
+              <HeaderCol>
+                <span>
+                  <AiFillClockCircle />
+                </span>
+              </HeaderCol>
+            </HeaderRow>
+            <SongWrapper>
+              {playlist.playlistSongs.tracks &&
+                playlist.playlistSongs.tracks.map(
+                  (
+                    {
+                      id,
+                      image,
+                      name,
+                      artists,
+                      album,
+                      duration,
+                      // context_uri,
+                      // track_number,
+                    },
+                    i,
+                  ) => {
+                    return (
+                      <SongRow key={id}>
+                        <SongCol>
+                          <span>{i + 1}</span>
+                        </SongCol>
+                        <SongColDetail>
+                          <SongImageWrapper>
+                            <img src={image} alt="track album art" />
+                          </SongImageWrapper>
+                          <SongInfoWrapper>
+                            <span>{name}</span>
+                            <span>{artists.join(', ')}</span>
+                          </SongInfoWrapper>
+                        </SongColDetail>
+                        <SongCol>
+                          <span>{album}</span>
+                        </SongCol>
+                        <SongCol>
+                          <span>
+                            {convertMsToStandardTime(duration)}
+                          </span>
+                        </SongCol>
+                      </SongRow>
+                    );
+                  },
+                )}
+            </SongWrapper>
+          </SongListContainer>
+        </>
+      )}
     </ContentContainer>
   );
 }

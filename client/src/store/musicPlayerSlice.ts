@@ -1,22 +1,40 @@
 import { createSlice } from '@reduxjs/toolkit';
-// import type { RootState } from './index';
 
 type PlaylistProps = {
   name: string;
   id: string;
 };
 
+type PlaylistSongProps = {
+  id: string;
+  name: string;
+  description: string;
+  image: string;
+  tracks: OutputTrackProps[];
+};
+
+type OutputTrackProps = {
+  album: string;
+  artists: string[];
+  context_uri: string;
+  duration: number;
+  id: string;
+  image: string;
+  name: string;
+  track_number: number;
+};
+
 type MusicPlayerTypes = {
   playlist: PlaylistProps[];
   selectedPlaylist: string;
-  playlistSongs: {};
+  playlistSongs: PlaylistSongProps;
 };
 
 const initialState = {
   playlist: [],
   selectedPlaylist: '',
   playlistSongs: {},
-} as MusicPlayerTypes;
+} as unknown as MusicPlayerTypes;
 
 export const musicPlayerSlice = createSlice({
   name: 'musicPlayer',

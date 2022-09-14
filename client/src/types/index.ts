@@ -14,8 +14,13 @@ export type PlaylistItemsType = {
   id: string;
 };
 
+// type for NavBar
+export type NavBkgdType = {
+  navBackground: boolean;
+};
+
 // types for spotify content
-export type TrackProps = {
+type TrackProps = {
   id: string;
   name: string;
   artists: ArtistProp[];
@@ -26,20 +31,24 @@ export type TrackProps = {
   track_number: number;
 };
 
-export type TrackType = {
-  track: TrackProps;
-};
-
-export type AlbumProps = {
+type AlbumProps = {
   images: ImagesProp[];
   name: string;
   uri: string;
 };
 
-export type ImagesProp = {
+type ImagesProp = {
   url: string;
+};
+
+export type TrackType = {
+  track: TrackProps;
 };
 
 export type ArtistProp = {
   name: string;
+};
+
+export type HeaderBkgdType = {
+  headerBackground: boolean;
 };

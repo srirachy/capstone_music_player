@@ -6,9 +6,9 @@ import SpotifyContent from './SpotifyContent';
 test('allow user to authenticate', async () => {
   render(
     <Provider store={store}>
-      <SpotifyContent />
+      <SpotifyContent headerBackground={false} />
     </Provider>,
   );
-  const linkElement = screen.getByText(/meow/i);
+  const linkElement = screen.getByText(/playlist/i);
   expect(linkElement).toBeInTheDocument();
 });
