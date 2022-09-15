@@ -9,6 +9,6 @@ test('allow user to authenticate', async () => {
       <Footer />
     </Provider>,
   );
-  const linkElement = screen.getByText(/meow--fooptper/i);
+  const linkElement = screen.getByLabelText(/footer_container/i);
   expect(linkElement).toBeInTheDocument();
 });

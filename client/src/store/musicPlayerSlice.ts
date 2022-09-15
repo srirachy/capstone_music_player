@@ -24,11 +24,18 @@ type OutputTrackProps = {
   track_number: number;
 };
 
+type CurrentTrackProps = {
+  id: string;
+  name: string;
+  artists: string[];
+  image: string;
+};
+
 type MusicPlayerTypes = {
   playlist: PlaylistProps[];
   selectedPlaylist: string;
   playlistSongs: PlaylistSongProps;
-  currentTrack: {};
+  currentTrack: CurrentTrackProps;
 };
 
 const initialState = {
