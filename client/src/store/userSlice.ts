@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-// import type { RootState } from './index';
 
 type UserProps = {
   userId: string;
@@ -24,7 +23,6 @@ export const userSlice = createSlice({
   },
 });
 
-// export const userState = (state: RootState) => state;
 export const { setUserInfo } = userSlice.actions;
 
 export default userSlice.reducer;

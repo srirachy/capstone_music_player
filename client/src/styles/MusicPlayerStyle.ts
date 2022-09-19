@@ -13,4 +13,6 @@ export const ThemeWrapper = styled.section`
   height: 100%;
   width: 100%;
 `;
-export const FooterWrapper = styled.footer``;
+export const FooterWrapper = styled.footer`
+  font-size: 1rem;
+`;

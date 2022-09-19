@@ -11,13 +11,14 @@ const track = {
 };
 
 function WebPlayback() {
-  const token = useSessToken();
-  const [player, setPlayer] = useState<undefined | Spotify.Player>(
+  const { sessToken } = useSessToken();
+  const [player, setPlayer] = useState<Spotify.Player | undefined>(
     undefined,
-  );
+  ); // no-undefined warning. mostly coming from extends: eslint/recommended.
   const [isPaused, setPaused] = useState<boolean>(false);
   const [isActive, setActive] = useState<boolean>(false);
   const [currentTrack, setTrack] = useState<typeof track>(track);
+
   useEffect(() => {
     const script = document.createElement('script');
     script.src = 'https://sdk.scdn.co/spotify-player.js';
@@ -29,14 +30,14 @@ function WebPlayback() {
       const sPlayer = new window.Spotify.Player({
         name: 'Web Playback SDK',
         getOAuthToken: (cb) => {
-          cb(token.sessToken);
+          cb(sessToken);
         },
         volume: 0.5,
       });
 
       setPlayer(sPlayer);
     };
-  }, [token]);
+  }, [sessToken]);
 
   useEffect(() => {
     player?.addListener(

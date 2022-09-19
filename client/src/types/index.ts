@@ -31,7 +31,7 @@ type TrackProps = {
   track_number: number;
 };
 
-type AlbumProps = {
+export type AlbumProps = {
   images: ImagesProp[];
   name: string;
   uri: string;
@@ -51,4 +51,48 @@ export type ArtistProp = {
 
 export type HeaderBkgdType = {
   headerBackground: boolean;
+};
+
+// types for musicPlayerSlice
+type PlaylistProps = {
+  name: string;
+  id: string;
+};
+
+type PlaylistSongProps = {
+  id: string;
+  name: string;
+  description: string;
+  image: string;
+  tracks: OutputTrackProps[];
+};
+
+type OutputTrackProps = {
+  album: string;
+  artists: string[];
+  context_uri: string;
+  duration: number;
+  id: string;
+  image: string;
+  name: string;
+  track_number: number;
+};
+
+export type CurrentTrackProps = {
+  id: string;
+  name: string;
+  artists: string[];
+  image: string;
+};
+
+export type MusicPlayerTypes = {
+  loading: boolean;
+  error: boolean;
+  playlist: PlaylistProps[];
+  selectedPlaylist: string;
+  playlistSongs: PlaylistSongProps;
+  currentTrack: CurrentTrackProps;
+  prevOrNextStatus: number;
+  musicIsPlaying: boolean;
+  trackTrigger: boolean;
 };

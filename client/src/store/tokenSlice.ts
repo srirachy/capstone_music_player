@@ -1,12 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit';
-// import type { RootState } from './index'; DEV-PLACEHOLDER
 
 type TokenTypes = {
   sessToken: string;
+  tokenExpires: number;
+  refreshToken: string;
+  timeStamp: number;
 };
 
 const initialState = {
   sessToken: '',
+  tokenExpires: 0,
+  refreshToken: '',
+  timeStamp: 0,
 } as TokenTypes;
 
 export const tokenSlice = createSlice({
@@ -16,10 +21,23 @@ export const tokenSlice = createSlice({
     setSessToken(state, { payload }) {
       state.sessToken = payload;
     },
+    setTokenExpires(state, { payload }) {
+      state.tokenExpires = payload;
+    },
+    setRefreshToken(state, { payload }) {
+      state.refreshToken = payload;
+    },
+    setTimeStamp(state, { payload }) {
+      state.timeStamp = payload;
+    },
   },
 });
 
-// export const tokenState = (state: RootState) => state; DEV-PLACEHOLDER
-export const { setSessToken } = tokenSlice.actions;
+export const {
+  setSessToken,
+  setTokenExpires,
+  setRefreshToken,
+  setTimeStamp,
+} = tokenSlice.actions;
 
 export default tokenSlice.reducer;

@@ -10,7 +10,7 @@ import {
 import { NavBkgdType } from '../../types';
 
 function NavBar({ navBackground }: NavBkgdType) {
-  const userInfo = useUserInfo();
+  const { userInfo } = useUserInfo();
 
   return (
     <NavContainer navBackground={navBackground}>
@@ -24,7 +24,7 @@ function NavBar({ navBackground }: NavBkgdType) {
       <UserWrapper>
         <a href="#replace_later">
           <CgProfile />
-          <span>{userInfo.userInfo.userId}</span>
+          <span>{userInfo.userId}</span>
         </a>
       </UserWrapper>
     </NavContainer>

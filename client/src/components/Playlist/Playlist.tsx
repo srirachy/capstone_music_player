@@ -10,7 +10,7 @@ import { PlaylistItemsType } from '../../types';
 
 function Playlist() {
   const dispatch = useAppDispatch();
-  const playlist = usePlaylist();
+  const { selectedPlaylist, playlist } = usePlaylist();
 
   useEffect(() => {
     const getPlaylistData = async () => {
@@ -25,19 +25,20 @@ function Playlist() {
       if (playlists) {
         dispatch(setPlaylist(playlists)); // set all playlists from user's playlist data
       }
-      if (playlist.selectedPlaylist === '') {
+      if (selectedPlaylist === '') {
         dispatch(setSelectedPlaylist(items[0].id)); // set first playlist as selected
       }
     };
     getPlaylistData();
-  }, [dispatch, playlist.selectedPlaylist]);
+  }, [dispatch, selectedPlaylist]);
 
   return (
     <PlaylistContainer>
       <ul>
-        {playlist.playlist.map(({ name, id }) => {
-          return <li key={id}>{name}</li>;
-        })}
+        {Object.keys(playlist).length > 0 &&
+          playlist.map(({ name, id }) => {
+            return <li key={id}>{name}</li>;
+          })}
       </ul>
     </PlaylistContainer>
   );

@@ -1,56 +1,59 @@
 import { useEffect } from 'react';
-import { setCurrentTrack } from 'src/store/musicPlayerSlice';
+import {
+  setCurrentTrack,
+  fetchCurrentTrack,
+  setTrackTrigger,
+} from 'src/store/musicPlayerSlice';
 import { useAppDispatch } from 'src/store/hooks';
+import { createTrackObj } from 'src/utils/Functions';
 import {
   CurrentTrackContainer,
   TrackWrapper,
   ImageWrapper,
   InfoWrapper,
 } from '../../styles/CurrentTrackStyle';
-import { ArtistProp } from '../../types';
 import usePlaylist from '../../utils/usePlaylist';
 
 function CurrentTrack() {
   const dispatch = useAppDispatch();
-  const playlist = usePlaylist();
+  const { currentTrack, trackTrigger } = usePlaylist();
 
   useEffect(() => {
     const getCurrentTrack = async () => {
-      const response = await fetch(
-        'auth/me/player/currently-playing',
-      );
-      const resData = await response.json();
-      const data = JSON.parse(resData);
+      const resData = await dispatch(fetchCurrentTrack());
+      const data = await resData.payload;
       if (Object.keys(data).length > 0) {
         const { item } = data;
-        const currentTrackObj = {
-          id: item.id,
-          name: item.name,
-          artists: item.artists.map(
-            (artist: ArtistProp) => artist.name,
-          ),
-          image: item.album.images[2].url,
-        };
-        console.log(currentTrackObj);
-        dispatch(setCurrentTrack(currentTrackObj));
+        const currentTrackObj = createTrackObj(item);
+        if (Object.keys(currentTrackObj).length > 0) {
+          dispatch(setCurrentTrack(currentTrackObj));
+          dispatch(setTrackTrigger(false));
+        } else {
+          dispatch(setCurrentTrack(null));
+          dispatch(setTrackTrigger(false));
+        }
       }
     };
-    getCurrentTrack();
-  }, [dispatch]);
+    if (trackTrigger) {
+      getCurrentTrack();
+    }
+  }, [dispatch, trackTrigger]);
 
   return (
     <CurrentTrackContainer aria-label="current_track_container">
-      {Object.keys(playlist.currentTrack).length !== 0 && (
+      {Object.keys(currentTrack).length > 0 && (
         <TrackWrapper>
           <ImageWrapper>
             <img
-              src={playlist.currentTrack.image}
+              src={currentTrack.image}
               alt="current track album art"
             />
           </ImageWrapper>
           <InfoWrapper>
-            <h4>{playlist.currentTrack.name}</h4>
-            <h6>{playlist.currentTrack.artists.join(', ')}</h6>
+            <h4>{currentTrack.name}</h4>
+            {currentTrack.artists && (
+              <h6>{currentTrack.artists.join(', ')}</h6>
+            )}
           </InfoWrapper>
         </TrackWrapper>
       )}

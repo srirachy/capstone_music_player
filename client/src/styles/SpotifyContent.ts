@@ -1,7 +1,9 @@
 import styled from 'styled-components';
 import { HeaderBkgdType } from 'src/types';
 
-export const ContentContainer = styled.section``;
+export const ContentContainer = styled.section`
+  font-size: 1rem;
+`;
 export const ListInfoWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -24,7 +26,9 @@ export const DetailWrapper = styled.div`
     font-size: 4rem;
   }
 `;
-export const SongListContainer = styled.div``;
+export const SongListContainer = styled.div`
+  font-size: 1rem;
+`;
 export const HeaderRow = styled.div<HeaderBkgdType>`
   display: grid;
   grid-template-columns: 0.3fr 3fr 2fr 0.1fr;

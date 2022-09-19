@@ -23,12 +23,12 @@ import { convertMsToStandardTime } from '../../utils/Functions';
 
 function SpotifyContent({ headerBackground }: HeaderBkgdType) {
   const dispatch = useAppDispatch();
-  const playlist = usePlaylist();
+  const { selectedPlaylist, playlistSongs } = usePlaylist();
 
   useEffect(() => {
     const getPlaylistSongs = async () => {
       const response = await fetch(
-        `/auth/playlists/${playlist.selectedPlaylist}`,
+        `/auth/playlists/${selectedPlaylist}`,
       );
       const resData = await response.json();
       const data = JSON.parse(resData);
@@ -56,26 +56,26 @@ function SpotifyContent({ headerBackground }: HeaderBkgdType) {
         dispatch(setPlaylistSongs(songData)); // set song data from selected playlist
       }
     };
-    if (playlist.selectedPlaylist) {
+    if (selectedPlaylist) {
       getPlaylistSongs();
     }
-  }, [dispatch, playlist.selectedPlaylist]);
+  }, [dispatch, selectedPlaylist]);
 
   return (
     <ContentContainer>
-      {playlist.playlistSongs && (
+      {Object.keys(playlistSongs).length > 0 && (
         <>
           <ListInfoWrapper>
             <ImageWrapper>
               <img
-                src={playlist.playlistSongs.image}
+                src={playlistSongs.image}
                 alt="playlist album cover"
               />
             </ImageWrapper>
             <DetailWrapper>
               <span>PLAYLIST</span>
-              <h1>{playlist.playlistSongs.name}</h1>
-              <p>{playlist.playlistSongs.description}</p>
+              <h1>{playlistSongs.name}</h1>
+              <p>{playlistSongs.description}</p>
             </DetailWrapper>
           </ListInfoWrapper>
           <SongListContainer>
@@ -96,8 +96,8 @@ function SpotifyContent({ headerBackground }: HeaderBkgdType) {
               </HeaderCol>
             </HeaderRow>
             <SongWrapper>
-              {playlist.playlistSongs.tracks &&
-                playlist.playlistSongs.tracks.map(
+              {Object.keys(playlistSongs.tracks).length > 0 &&
+                playlistSongs.tracks.map(
                   (
                     {
                       id,
@@ -122,7 +122,9 @@ function SpotifyContent({ headerBackground }: HeaderBkgdType) {
                           </SongImageWrapper>
                           <SongInfoWrapper>
                             <span>{name}</span>
-                            <span>{artists.join(', ')}</span>
+                            {artists && (
+                              <span>{artists.join(', ')}</span>
+                            )}
                           </SongInfoWrapper>
                         </SongColDetail>
                         <SongCol>
