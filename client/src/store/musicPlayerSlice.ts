@@ -13,6 +13,8 @@ const initialState = {
   currentTrackData: {},
   musicIsPlaying: false,
   trackTrigger: true,
+  repeatState: '',
+  shuffleState: false,
 } as unknown as MusicPlayerTypes;
 
 export const fetchCurrentTrack = createAsyncThunk(
@@ -51,6 +53,28 @@ export const fetchSelectedPlaylist = createAsyncThunk(
   },
 );
 
+export const fetchPauseOrPlay = createAsyncThunk(
+  'musicPlayer/fetchPauseOrPlay',
+  async (curState: string) => {
+    const pauseOrPlay = curState;
+    await fetch(`/auth/v1/me/player/${pauseOrPlay}`);
+  },
+);
+
+export const fetchShuffle = createAsyncThunk(
+  'musicPlayer/fetchShuffle',
+  async (shuffState: string) => {
+    await fetch(`/auth/shuffle/${shuffState}`);
+  },
+);
+
+export const fetchRepeat = createAsyncThunk(
+  'musicPlayer/fetchRepeat',
+  async (repState: string) => {
+    await fetch(`/auth/repeat/${repState}`);
+  },
+);
+
 export const musicPlayerSlice = createSlice({
   name: 'musicPlayer',
   initialState,
@@ -75,6 +99,12 @@ export const musicPlayerSlice = createSlice({
     },
     setTrackTrigger(state, { payload }) {
       state.trackTrigger = payload;
+    },
+    setShuffleState(state, { payload }) {
+      state.shuffleState = payload;
+    },
+    setRepeatState(state, { payload }) {
+      state.repeatState = payload;
     },
   },
   extraReducers(builder) {
@@ -132,6 +162,42 @@ export const musicPlayerSlice = createSlice({
       .addCase(fetchSelectedPlaylist.rejected, (state) => {
         state.error = true;
         state.loading = false;
+      })
+      .addCase(fetchPauseOrPlay.pending, (state) => {
+        state.error = false;
+        state.loading = true;
+      })
+      .addCase(fetchPauseOrPlay.fulfilled, (state) => {
+        state.error = false;
+        state.loading = false;
+      })
+      .addCase(fetchPauseOrPlay.rejected, (state) => {
+        state.error = true;
+        state.loading = false;
+      })
+      .addCase(fetchShuffle.pending, (state) => {
+        state.error = false;
+        state.loading = true;
+      })
+      .addCase(fetchShuffle.fulfilled, (state) => {
+        state.error = false;
+        state.loading = false;
+      })
+      .addCase(fetchShuffle.rejected, (state) => {
+        state.error = true;
+        state.loading = false;
+      })
+      .addCase(fetchRepeat.pending, (state) => {
+        state.error = false;
+        state.loading = true;
+      })
+      .addCase(fetchRepeat.fulfilled, (state) => {
+        state.error = false;
+        state.loading = false;
+      })
+      .addCase(fetchRepeat.rejected, (state) => {
+        state.error = true;
+        state.loading = false;
       });
   },
 });
@@ -143,6 +209,8 @@ export const {
   setCurrentTrack,
   setMusicIsPlaying,
   setTrackTrigger,
+  setShuffleState,
+  setRepeatState,
 } = musicPlayerSlice.actions;
 
 export default musicPlayerSlice.reducer;

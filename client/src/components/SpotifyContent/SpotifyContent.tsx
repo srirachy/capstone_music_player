@@ -28,6 +28,7 @@ function SpotifyContent({ headerBackground }: HeaderBkgdType) {
   const dispatch = useAppDispatch();
   const { selectedPlaylist, playlistSongs } = usePlaylist();
 
+  // fetch data of selected playlist for content output
   useEffect(() => {
     const getPlaylistSongs = async () => {
       const response = await dispatch(

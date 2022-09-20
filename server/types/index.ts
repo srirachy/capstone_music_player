@@ -11,3 +11,11 @@ export type CbUrlProps = {
   redirect_uri: string;
   grant_type: string;
 };
+
+export type ShuffUrlProps = {
+  state: string;
+};
+
+export type RepUrlProps = {
+  state: string;
+};

@@ -13,6 +13,7 @@ function Playlist() {
   const dispatch = useAppDispatch();
   const { selectedPlaylist, playlist } = usePlaylist();
 
+  // fetch all user playlists data
   useEffect(() => {
     const getPlaylistData = async () => {
       const response = await dispatch(fetchUserPlaylist());

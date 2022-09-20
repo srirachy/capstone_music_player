@@ -8,6 +8,12 @@ import { FiRepeat } from 'react-icons/fi';
 import { useAppDispatch } from 'src/store/hooks';
 import {
   fetchNextOrPrevTrack,
+  fetchPauseOrPlay,
+  fetchRepeat,
+  fetchShuffle,
+  setMusicIsPlaying,
+  setRepeatState,
+  setShuffleState,
   setTrackTrigger,
 } from 'src/store/musicPlayerSlice';
 import usePlaylist from 'src/utils/usePlaylist';
@@ -21,9 +27,10 @@ import {
 } from '../../styles/MusicControllerStyle';
 
 function MusicController() {
-  const { musicIsPlaying } = usePlaylist();
+  const { musicIsPlaying, shuffleState, repeatState } = usePlaylist();
   const dispatch = useAppDispatch();
 
+  // onClick to change track w/ prev/next buttons
   const changeTrack = async (prevOrNext: string) => {
     await dispatch(fetchNextOrPrevTrack(prevOrNext)) // trigger next/prev song
       .then((status) => {
@@ -36,26 +43,78 @@ function MusicController() {
       });
   };
 
+  // onClick to pause or play track
+  const mpState = async (curState: string) => {
+    let boolState;
+    await dispatch(fetchPauseOrPlay(curState))
+      .then((status) => {
+        console.log(status);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    if (curState === 'play') {
+      boolState = true;
+    } else {
+      boolState = false;
+    }
+    dispatch(setMusicIsPlaying(boolState));
+  };
+
+  // onClick shuffle
+  const toggleShuffle = async () => {
+    const curShuffle = shuffleState ? 'false' : 'true';
+    // pass state as string for fetch
+    await dispatch(fetchShuffle(curShuffle))
+      .then((status) => {
+        console.log(status);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    dispatch(setShuffleState(!shuffleState)); // swap state
+  };
+
+  // onClick repeat
+  const toggleRepeat = async () => {
+    let curRepeat;
+    if (repeatState === '' || repeatState === 'off') {
+      curRepeat = 'track';
+    } else if (repeatState === 'track') {
+      curRepeat = 'context';
+    } else {
+      curRepeat = 'off';
+    }
+    await dispatch(fetchRepeat(curRepeat))
+      .then((status) => {
+        console.log(status);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    dispatch(setRepeatState(curRepeat));
+  };
+
   return (
     <ControllerContainer aria-label="controller_container">
       <ShuffleWrapper>
-        <BsShuffle />
+        <BsShuffle onClick={() => toggleShuffle()} />
       </ShuffleWrapper>
       <PrevWrapper>
         <CgPlayTrackPrev onClick={() => changeTrack('previous')} />
       </PrevWrapper>
       <PlayPauseWrapper>
         {musicIsPlaying ? (
-          <BsFillPauseCircleFill />
+          <BsFillPauseCircleFill onClick={() => mpState('pause')} />
         ) : (
-          <BsFillPlayCircleFill />
+          <BsFillPlayCircleFill onClick={() => mpState('play')} />
         )}
       </PlayPauseWrapper>
       <NextWrapper>
         <CgPlayTrackNext onClick={() => changeTrack('next')} />
       </NextWrapper>
       <RepeatWrapper>
-        <FiRepeat />
+        <FiRepeat onClick={() => toggleRepeat()} />
       </RepeatWrapper>
     </ControllerContainer>
   );

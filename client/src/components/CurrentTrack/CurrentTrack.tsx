@@ -18,6 +18,7 @@ function CurrentTrack() {
   const dispatch = useAppDispatch();
   const { currentTrack, trackTrigger } = usePlaylist();
 
+  // fetch current track data on initial render (cuz trackTrigger is initially true) and when trackTrigger is true
   useEffect(() => {
     const getCurrentTrack = async () => {
       const resData = await dispatch(fetchCurrentTrack());
@@ -26,11 +27,11 @@ function CurrentTrack() {
         const { item } = data;
         const currentTrackObj = createTrackObj(item);
         if (Object.keys(currentTrackObj).length > 0) {
-          dispatch(setCurrentTrack(currentTrackObj));
-          dispatch(setTrackTrigger(false));
+          dispatch(setCurrentTrack(currentTrackObj)); // set track data
+          dispatch(setTrackTrigger(false)); // reset trackTrigger
         } else {
-          dispatch(setCurrentTrack(null));
-          dispatch(setTrackTrigger(false));
+          dispatch(setCurrentTrack(null)); // set empty data if track details aren't found
+          dispatch(setTrackTrigger(false)); // reset trackTrigger
         }
       }
     };

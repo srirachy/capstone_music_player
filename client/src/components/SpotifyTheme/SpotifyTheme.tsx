@@ -15,6 +15,7 @@ function SpotifyTheme() {
   const [headerBackground, setHeaderBackground] =
     useState<boolean>(false);
 
+  // helper function to pass into NavBarWrapper for styledcomponent dynamic attribute
   const bodyScrolled = () => {
     if (bodyRef.current !== null) {
       bodyRef.current.scrollTop >= 30

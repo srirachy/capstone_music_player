@@ -1,8 +1,12 @@
 import express from 'express';
-// import request from 'request';
 import axios from 'axios';
 import { generateRandomString } from './utils/Functions';
-import { LoginUrlProps, CbUrlProps } from './types';
+import {
+  LoginUrlProps,
+  CbUrlProps,
+  RepUrlProps,
+  ShuffUrlProps,
+} from './types';
 
 const logger = require('morgan');
 const dotenv = require('../node_modules/dotenv');
@@ -11,6 +15,8 @@ const dotenv = require('../node_modules/dotenv');
 const app = express();
 const PORT = process.env.PORT || 9000;
 dotenv.config({ path: '../.env' });
+
+// token globals
 let accessToken = '';
 let expiresIn = 0;
 let refreshToken = '';
@@ -24,12 +30,12 @@ const spotifyClientId = process.env.SPOTIFY_CLIENT_ID;
 const spotifyClientSecret = process.env.SPOTIFY_CLIENT_SECRET;
 const spotifyRedirectUri = process.env.SPOTIFY_REDIRECT_URI;
 
-// mostly for redirecting
+// redirect endpoint -- mostly a helper route
 app.get('/', (_req, res) => {
   res.send('redirecting...');
 });
 
-// login endpoint
+// login endpoint -- user enters login credentials and spotify authorizes via OAuth 2.0
 app.get('/auth/login', (_req, res) => {
   const scope = [
     'streaming',
@@ -57,7 +63,7 @@ app.get('/auth/login', (_req, res) => {
   );
 });
 
-// callback endpoint
+// callback endpoint -- set token server globals and redirect to homepage
 app.get('/auth/callback', async (req, res) => {
   const { code } = req.query;
   const formData = new URLSearchParams({
@@ -86,34 +92,6 @@ app.get('/auth/callback', async (req, res) => {
     console.log(err);
     res.send(err);
   }
-
-  // const authOptions = {
-  //   url: 'https://accounts.spotify.com/api/token',
-  //   form: {
-  //     code: code,
-  //     redirect_uri: spotifyRedirectUri,
-  //     grant_type: 'authorization_code',
-  //   },
-  //   headers: {
-  //     Authorization: `Basic ${Buffer.from(
-  //       `${spotifyClientId}:${spotifyClientSecret}`,
-  //     ).toString('base64')}`,
-  //     'Content-Type': 'application/x-www-form-urlencoded',
-  //   },
-  //   json: true,
-  // };
-
-  // request.post(authOptions, function (error, response, body) {
-  //   if (!error && response.statusCode === 200) {
-  //     accessToken = body.access_token;
-  //     expiresIn = body.expires_in;
-  //     refreshToken = body.refresh_token;
-  //     res.redirect('http://localhost:3000');
-  //   } else {
-  //     console.log(error);
-  //     res.end();
-  //   }
-  // });
 });
 
 // token endpoint -- send server globals to front-end
@@ -175,22 +153,6 @@ app.get('/auth/me', async (_req, res) => {
     console.log(err);
     res.send(err);
   }
-  // const authMeOptions = {
-  //   url: 'https://api.spotify.com/v1/me',
-  //   headers: {
-  //     Authorization: `Bearer ${accessToken}`,
-  //     'Content-Type': 'application/json',
-  //   },
-  // };
-
-  // request.get(authMeOptions, function (error, response, body) {
-  //   if (!error && response.statusCode === 200) {
-  //     res.json(body);
-  //   } else {
-  //     console.log(error);
-  //     res.end();
-  //   }
-  // });
 });
 
 // playlist endpoint -- get user playlists
@@ -210,22 +172,6 @@ app.get('/auth/me/playlist', async (_req, res) => {
     console.log(err);
     res.send(err);
   }
-  // const authPlaylistOptions = {
-  //   url: 'https://api.spotify.com/v1/me/playlists',
-  //   headers: {
-  //     Authorization: `Bearer ${accessToken}`,
-  //     'Content-Type': 'application/json',
-  //   },
-  // };
-
-  // request.get(authPlaylistOptions, function (error, response, body) {
-  //   if (!error && response.statusCode === 200) {
-  //     res.json(body);
-  //   } else {
-  //     console.log(error);
-  //     res.end();
-  //   }
-  // });
 });
 
 // selected playlist endpoint -- get playlist song data
@@ -247,23 +193,6 @@ app.get('/auth/playlists/:playlist_id', async (req, res) => {
     console.log(err);
     res.send(err);
   }
-
-  // const authPlaylistOptions = {
-  //   url: `https://api.spotify.com/v1/playlists/${playlistId}`,
-  //   headers: {
-  //     Authorization: `Bearer ${accessToken}`,
-  //     'Content-Type': 'application/json',
-  //   },
-  // };
-
-  // request.get(authPlaylistOptions, function (error, response, body) {
-  //   if (!error && response.statusCode === 200) {
-  //     res.json(body);
-  //   } else {
-  //     console.log(error);
-  //     res.end();
-  //   }
-  // });
 });
 
 // currently playing endpoint -- get data of current song
@@ -283,20 +212,6 @@ app.get('/auth/me/player/currently-playing', async (_req, res) => {
     console.log(err);
     res.send(err);
   }
-  // await axios
-  //   .get('https://api.spotify.com/v1/me/player/currently-playing', {
-  //     headers: {
-  //       Authorization: `Bearer ${accessToken}`,
-  //       'Content-Type': 'application/json',
-  //     },
-  //   })
-  //   .then((response) => {
-  //     res.json(response.data);
-  //   })
-  //   .catch((err) => {
-  //     console.log(err);
-  //     res.send(err);
-  //   });
 });
 
 // next/prev endpoint -- skip to next/previous track
@@ -322,25 +237,74 @@ app.get('/auth/me/player/:prevOrNext', async (req, res) => {
     console.log(err);
     res.send(err);
   }
+});
 
-  // await axios
-  //   .post(
-  //     `https://api.spotify.com/v1/me/player/${reqPrevOrNext}`,
-  //     {},
-  //     {
-  //       headers: {
-  //         Authorization: `Bearer ${accessToken}`,
-  //         'Content-Type': 'application/json',
-  //       },
-  //     },
-  //   )
-  //   .then((response) => {
-  //     res.end(response.data);
-  //   })
-  //   .catch((err) => {
-  //     console.log(err.response.status, err.response.statusText);
-  //     res.end();
-  //   });
+// pause/play endpoint -- pause or play current track
+app.get('/auth/v1/me/player/:pauseOrPlay', async (req, res) => {
+  const reqPauseOrPlay = req.params.pauseOrPlay;
+  try {
+    await axios({
+      method: 'put',
+      url: `https://api.spotify.com/v1/me/player/${reqPauseOrPlay}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    }).then((response) => {
+      res.end(response.data);
+    });
+  } catch (err) {
+    console.log(err);
+    res.send(err);
+  }
+});
+
+// shuffle endpoint -- toggle shuffle
+app.get('/auth/shuffle/:shuffState', async (req, res) => {
+  const shState = req.params.shuffState;
+  const shuffData = new URLSearchParams({
+    state: shState,
+  } as ShuffUrlProps).toString(); // need help figuring out how to add data for this call... currently: data: { error: [Object] }... trying to get data: { state: 'true', 'false' }
+  try {
+    await axios({
+      method: 'put',
+      url: 'https://api.spotify.com/v1/me/player/shuffle',
+      data: shuffData,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    }).then((response) => {
+      res.end(response.data);
+    });
+  } catch (err) {
+    console.log(err);
+    res.send(err);
+  }
+});
+
+// repeat endpoint -- toggle repeat
+app.get('/auth/repeat/:repState', async (req, res) => {
+  const rState = req.params.repState;
+  const repData = new URLSearchParams({
+    state: rState,
+  } as RepUrlProps).toString(); // need help figuring out how to add data for this call also... currently: data: { error: [Object] }... trying to get data: { state: 'track', 'context', 'off' }
+  try {
+    await axios({
+      method: 'put',
+      url: 'https://api.spotify.com/v1/me/player/repeat',
+      data: repData,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    }).then((response) => {
+      res.end(response.data);
+    });
+  } catch (err) {
+    console.log(err);
+    res.send(err);
+  }
 });
 
 app.listen(PORT, () => {

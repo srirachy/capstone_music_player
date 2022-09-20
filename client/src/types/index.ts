@@ -19,7 +19,7 @@ export type NavBkgdType = {
   navBackground: boolean;
 };
 
-// types for spotify content
+// types SpotifyContent
 type TrackProps = {
   id: string;
   name: string;
@@ -53,7 +53,7 @@ export type HeaderBkgdType = {
   headerBackground: boolean;
 };
 
-// types for musicPlayerSlice
+// types musicPlayerSlice
 type PlaylistProps = {
   name: string;
   id: string;
@@ -98,6 +98,8 @@ export type MusicPlayerTypes = {
   prevOrNextStatus: number;
   musicIsPlaying: boolean;
   trackTrigger: boolean;
+  shuffleState: boolean;
+  repeatState: string;
 };
 
 // types tokenSlice
@@ -122,4 +124,12 @@ export type UserTypes = {
   error: boolean;
   userInfo: UserProps;
   userData: {};
+};
+
+// utils/Functions types
+export type TrackObjTypes = {
+  id: string;
+  name: string;
+  artists: [];
+  album: AlbumProps;
 };

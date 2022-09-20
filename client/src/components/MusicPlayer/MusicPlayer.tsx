@@ -22,6 +22,7 @@ function MusicPlayer() {
   const { sessToken, timeStamp, refreshToken, tokenExpires } =
     useSessToken();
 
+  // fetch/output user data
   useEffect(() => {
     const getUserInfo = async () => {
       const response = await dispatch(fetchUser());
@@ -37,6 +38,7 @@ function MusicPlayer() {
     getUserInfo();
   }, [dispatch]);
 
+  // token persist
   useEffect(() => {
     if (sessToken) {
       const queryString = window.location.search;
@@ -72,6 +74,7 @@ function MusicPlayer() {
       window.location.assign('/'); // not sure if this works, but trying to jus redirect to origin which should be the login page once localStorage clears
     }
 
+    // getRefreshToken helper function -- logout if no refreshToken, otherwise fetch refreshToken
     async function getRefreshToken() {
       const persistToken = localStorage.getItem('persist:token');
       if (persistToken) {
