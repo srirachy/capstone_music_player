@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useAppDispatch } from 'src/store/hooks';
 import usePlaylist from 'src/utils/usePlaylist';
 import {
+  fetchUserPlaylist,
   setPlaylist,
   setSelectedPlaylist,
 } from '../../store/musicPlayerSlice';
@@ -14,9 +15,8 @@ function Playlist() {
 
   useEffect(() => {
     const getPlaylistData = async () => {
-      const response = await fetch('/auth/me/playlist');
-      const data = await response.json();
-      const { items } = JSON.parse(data);
+      const response = await dispatch(fetchUserPlaylist());
+      const { items } = await response.payload;
       const playlists = items.map(
         ({ name, id }: PlaylistItemsType) => {
           return { name, id };

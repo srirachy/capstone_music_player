@@ -1,8 +1,8 @@
 import express from 'express';
-import request from 'request';
+// import request from 'request';
 import axios from 'axios';
 import { generateRandomString } from './utils/Functions';
-import { URLProps } from './types';
+import { LoginUrlProps, CbUrlProps } from './types';
 
 const logger = require('morgan');
 const dotenv = require('../node_modules/dotenv');
@@ -50,7 +50,7 @@ app.get('/auth/login', (_req, res) => {
     scope: scope.join(' '),
     redirect_uri: spotifyRedirectUri,
     state: state,
-  } as URLProps);
+  } as LoginUrlProps);
 
   res.redirect(
     `https://accounts.spotify.com/authorize/?${authQueryParameters.toString()}`,
@@ -58,39 +58,65 @@ app.get('/auth/login', (_req, res) => {
 });
 
 // callback endpoint
-app.get('/auth/callback', (req, res) => {
+app.get('/auth/callback', async (req, res) => {
   const { code } = req.query;
+  const formData = new URLSearchParams({
+    code,
+    redirect_uri: spotifyRedirectUri,
+    grant_type: 'authorization_code',
+  } as CbUrlProps).toString();
 
-  const authOptions = {
-    url: 'https://accounts.spotify.com/api/token',
-    form: {
-      code: code,
-      redirect_uri: spotifyRedirectUri,
-      grant_type: 'authorization_code',
-    },
-    headers: {
-      Authorization: `Basic ${Buffer.from(
-        `${spotifyClientId}:${spotifyClientSecret}`,
-      ).toString('base64')}`,
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    json: true,
-  };
+  try {
+    const response = await axios({
+      method: 'post',
+      url: 'https://accounts.spotify.com/api/token',
+      data: formData,
+      headers: {
+        Authorization: `Basic ${Buffer.from(
+          `${spotifyClientId}:${spotifyClientSecret}`,
+        ).toString('base64')}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
+    accessToken = response.data.access_token;
+    expiresIn = response.data.expires_in;
+    refreshToken = response.data.refresh_token;
+    res.redirect('http://localhost:3000');
+  } catch (err) {
+    console.log(err);
+    res.send(err);
+  }
 
-  request.post(authOptions, function (error, response, body) {
-    if (!error && response.statusCode === 200) {
-      accessToken = body.access_token;
-      expiresIn = body.expires_in;
-      refreshToken = body.refresh_token;
-      res.redirect('http://localhost:3000');
-    } else {
-      console.log(error);
-      res.end();
-    }
-  });
+  // const authOptions = {
+  //   url: 'https://accounts.spotify.com/api/token',
+  //   form: {
+  //     code: code,
+  //     redirect_uri: spotifyRedirectUri,
+  //     grant_type: 'authorization_code',
+  //   },
+  //   headers: {
+  //     Authorization: `Basic ${Buffer.from(
+  //       `${spotifyClientId}:${spotifyClientSecret}`,
+  //     ).toString('base64')}`,
+  //     'Content-Type': 'application/x-www-form-urlencoded',
+  //   },
+  //   json: true,
+  // };
+
+  // request.post(authOptions, function (error, response, body) {
+  //   if (!error && response.statusCode === 200) {
+  //     accessToken = body.access_token;
+  //     expiresIn = body.expires_in;
+  //     refreshToken = body.refresh_token;
+  //     res.redirect('http://localhost:3000');
+  //   } else {
+  //     console.log(error);
+  //     res.end();
+  //   }
+  // });
 });
 
-// token endpoint
+// token endpoint -- send server globals to front-end
 app.get('/auth/token', (_req, res) => {
   const tokenObj = {
     access_token: accessToken,
@@ -100,110 +126,221 @@ app.get('/auth/token', (_req, res) => {
   res.json(tokenObj);
 });
 
-// check session
-
-// userInfo endpoint
-app.get('/auth/me', (_req, res) => {
-  const authMeOptions = {
-    url: 'https://api.spotify.com/v1/me',
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      'Content-Type': 'application/json',
-    },
+// refresh token endpoint -- call endpoint to refresh server globals and send to front-end
+app.get('/auth/refresh_token/:rTok', async (req, res) => {
+  const { rTok } = req.params;
+  const formObj = {
+    grant_type: 'refresh_token',
+    refresh_token: rTok,
   };
+  const formData = new URLSearchParams(formObj).toString();
 
-  request.get(authMeOptions, function (error, response, body) {
-    if (!error && response.statusCode === 200) {
-      res.json(body);
-    } else {
-      console.log(error);
-      res.end();
-    }
-  });
-});
-
-// playlist endpoint
-app.get('/auth/me/playlist', (_req, res) => {
-  const authPlaylistOptions = {
-    url: 'https://api.spotify.com/v1/me/playlists',
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      'Content-Type': 'application/json',
-    },
-  };
-
-  request.get(authPlaylistOptions, function (error, response, body) {
-    if (!error && response.statusCode === 200) {
-      res.json(body);
-    } else {
-      console.log(error);
-      res.end();
-    }
-  });
-});
-
-// get playlist song data
-app.get('/auth/playlists/:playlist_id', (req, res) => {
-  const playlistId = req.params.playlist_id;
-
-  const authPlaylistOptions = {
-    url: `https://api.spotify.com/v1/playlists/${playlistId}`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      'Content-Type': 'application/json',
-    },
-  };
-
-  request.get(authPlaylistOptions, function (error, response, body) {
-    if (!error && response.statusCode === 200) {
-      res.json(body);
-    } else {
-      console.log(error);
-      res.end();
-    }
-  });
-});
-
-// get playlist song data
-app.get('/auth/me/player/currently-playing', async (_req, res) => {
-  await axios
-    .get('https://api.spotify.com/v1/me/player/currently-playing', {
+  try {
+    const response = await axios({
+      method: 'post',
+      url: 'https://accounts.spotify.com/api/token',
+      data: formData,
       headers: {
-        Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
+        Authorization: `Basic ${Buffer.from(
+          `${spotifyClientId}:${spotifyClientSecret}`,
+        ).toString('base64')}`,
       },
-    })
-    .then((response) => {
-      res.json(response.data);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(400).json({ message: err.message });
     });
+    accessToken = response.data.access_token;
+    expiresIn = response.data.expires_in;
+    res.send({
+      access_token: accessToken,
+      expires_in: expiresIn,
+    });
+  } catch (err) {
+    console.log(err);
+    res.send(err);
+  }
 });
 
-// skip to next/previous track
-app.get('/auth/me/player/:prevOrNext', async (req, res) => {
-  const reqPrevOrNext = req.params.prevOrNext;
-
-  await axios
-    .post(
-      `https://api.spotify.com/v1/me/player/${reqPrevOrNext}`,
-      {},
-      {
+// userInfo endpoint -- get user data
+app.get('/auth/me', async (_req, res) => {
+  try {
+    await axios
+      .get('https://api.spotify.com/v1/me', {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
-      },
-    )
-    .then((response) => {
-      res.end(response.data);
-    })
-    .catch((err) => {
-      console.log(err.response.status, err.response.statusText);
-      res.end();
-    });
+      })
+      .then((response) => {
+        res.json(response.data);
+      });
+  } catch (err) {
+    console.log(err);
+    res.send(err);
+  }
+  // const authMeOptions = {
+  //   url: 'https://api.spotify.com/v1/me',
+  //   headers: {
+  //     Authorization: `Bearer ${accessToken}`,
+  //     'Content-Type': 'application/json',
+  //   },
+  // };
+
+  // request.get(authMeOptions, function (error, response, body) {
+  //   if (!error && response.statusCode === 200) {
+  //     res.json(body);
+  //   } else {
+  //     console.log(error);
+  //     res.end();
+  //   }
+  // });
+});
+
+// playlist endpoint -- get user playlists
+app.get('/auth/me/playlist', async (_req, res) => {
+  try {
+    await axios
+      .get('https://api.spotify.com/v1/me/playlists', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      })
+      .then((response) => {
+        res.json(response.data);
+      });
+  } catch (err) {
+    console.log(err);
+    res.send(err);
+  }
+  // const authPlaylistOptions = {
+  //   url: 'https://api.spotify.com/v1/me/playlists',
+  //   headers: {
+  //     Authorization: `Bearer ${accessToken}`,
+  //     'Content-Type': 'application/json',
+  //   },
+  // };
+
+  // request.get(authPlaylistOptions, function (error, response, body) {
+  //   if (!error && response.statusCode === 200) {
+  //     res.json(body);
+  //   } else {
+  //     console.log(error);
+  //     res.end();
+  //   }
+  // });
+});
+
+// selected playlist endpoint -- get playlist song data
+app.get('/auth/playlists/:playlist_id', async (req, res) => {
+  const playlistId = req.params.playlist_id;
+
+  try {
+    await axios
+      .get(`https://api.spotify.com/v1/playlists/${playlistId}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      })
+      .then((response) => {
+        res.json(response.data);
+      });
+  } catch (err) {
+    console.log(err);
+    res.send(err);
+  }
+
+  // const authPlaylistOptions = {
+  //   url: `https://api.spotify.com/v1/playlists/${playlistId}`,
+  //   headers: {
+  //     Authorization: `Bearer ${accessToken}`,
+  //     'Content-Type': 'application/json',
+  //   },
+  // };
+
+  // request.get(authPlaylistOptions, function (error, response, body) {
+  //   if (!error && response.statusCode === 200) {
+  //     res.json(body);
+  //   } else {
+  //     console.log(error);
+  //     res.end();
+  //   }
+  // });
+});
+
+// currently playing endpoint -- get data of current song
+app.get('/auth/me/player/currently-playing', async (_req, res) => {
+  try {
+    await axios
+      .get('https://api.spotify.com/v1/me/player/currently-playing', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      })
+      .then((response) => {
+        res.json(response.data);
+      });
+  } catch (err) {
+    console.log(err);
+    res.send(err);
+  }
+  // await axios
+  //   .get('https://api.spotify.com/v1/me/player/currently-playing', {
+  //     headers: {
+  //       Authorization: `Bearer ${accessToken}`,
+  //       'Content-Type': 'application/json',
+  //     },
+  //   })
+  //   .then((response) => {
+  //     res.json(response.data);
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //     res.send(err);
+  //   });
+});
+
+// next/prev endpoint -- skip to next/previous track
+app.get('/auth/me/player/:prevOrNext', async (req, res) => {
+  const reqPrevOrNext = req.params.prevOrNext;
+
+  try {
+    await axios
+      .post(
+        `https://api.spotify.com/v1/me/player/${reqPrevOrNext}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+        },
+      )
+      .then((response) => {
+        res.end(response.data);
+      });
+  } catch (err) {
+    console.log(err);
+    res.send(err);
+  }
+
+  // await axios
+  //   .post(
+  //     `https://api.spotify.com/v1/me/player/${reqPrevOrNext}`,
+  //     {},
+  //     {
+  //       headers: {
+  //         Authorization: `Bearer ${accessToken}`,
+  //         'Content-Type': 'application/json',
+  //       },
+  //     },
+  //   )
+  //   .then((response) => {
+  //     res.end(response.data);
+  //   })
+  //   .catch((err) => {
+  //     console.log(err.response.status, err.response.statusText);
+  //     res.end();
+  //   });
 });
 
 app.listen(PORT, () => {

@@ -1,7 +1,10 @@
 import { useEffect } from 'react';
 import { AiFillClockCircle } from 'react-icons/ai';
 import { useAppDispatch } from 'src/store/hooks';
-import { setPlaylistSongs } from 'src/store/musicPlayerSlice';
+import {
+  fetchSelectedPlaylist,
+  setPlaylistSongs,
+} from 'src/store/musicPlayerSlice';
 import usePlaylist from 'src/utils/usePlaylist';
 import {
   ContentContainer,
@@ -27,11 +30,10 @@ function SpotifyContent({ headerBackground }: HeaderBkgdType) {
 
   useEffect(() => {
     const getPlaylistSongs = async () => {
-      const response = await fetch(
-        `/auth/playlists/${selectedPlaylist}`,
+      const response = await dispatch(
+        fetchSelectedPlaylist(selectedPlaylist),
       );
-      const resData = await response.json();
-      const data = JSON.parse(resData);
+      const data = await response.payload;
       const songData = {
         id: data.id,
         name: data.name,

@@ -89,10 +89,37 @@ export type MusicPlayerTypes = {
   loading: boolean;
   error: boolean;
   playlist: PlaylistProps[];
+  playlistData: {};
   selectedPlaylist: string;
+  selectedPlaylistData: {};
   playlistSongs: PlaylistSongProps;
   currentTrack: CurrentTrackProps;
+  currentTrackData: {};
   prevOrNextStatus: number;
   musicIsPlaying: boolean;
   trackTrigger: boolean;
+};
+
+// types tokenSlice
+export type TokenTypes = {
+  loading: boolean;
+  error: boolean;
+  sessToken: string;
+  tokenExpires: number;
+  refreshToken: string;
+  timeStamp: number;
+  refreshData: {};
+};
+
+// types userSlice
+type UserProps = {
+  userId: string;
+  userName: string;
+};
+
+export type UserTypes = {
+  loading: boolean;
+  error: boolean;
+  userInfo: UserProps;
+  userData: {};
 };

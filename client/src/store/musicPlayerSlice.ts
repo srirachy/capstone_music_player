@@ -5,9 +5,12 @@ const initialState = {
   loading: true,
   error: false,
   playlist: [],
+  playlistData: {},
   selectedPlaylist: '',
+  selectedPlaylistData: {},
   playlistSongs: {},
   currentTrack: {},
+  currentTrackData: {},
   musicIsPlaying: false,
   trackTrigger: true,
 } as unknown as MusicPlayerTypes;
@@ -26,6 +29,25 @@ export const fetchNextOrPrevTrack = createAsyncThunk(
   async (buttonPressed: string) => {
     const prevOrNext = buttonPressed;
     await fetch(`/auth/me/player/${prevOrNext}`);
+  },
+);
+
+export const fetchUserPlaylist = createAsyncThunk(
+  'musicPlayer/fetchUserPlaylist',
+  async () => {
+    const res = await fetch('/auth/me/playlist');
+    const resData = await res.json();
+    return resData;
+  },
+);
+
+export const fetchSelectedPlaylist = createAsyncThunk(
+  'musicPlayer/fetchSelectedPlaylist',
+  async (selectedPlaylist: string) => {
+    const sPlist = selectedPlaylist;
+    const res = await fetch(`/auth/playlists/${sPlist}`);
+    const resData = await res.json();
+    return resData;
   },
 );
 
@@ -64,7 +86,7 @@ export const musicPlayerSlice = createSlice({
       .addCase(fetchCurrentTrack.fulfilled, (state, { payload }) => {
         state.error = false;
         state.loading = false;
-        state.currentTrack = payload;
+        state.currentTrackData = payload;
       })
       .addCase(fetchCurrentTrack.rejected, (state) => {
         state.error = true;
@@ -79,6 +101,35 @@ export const musicPlayerSlice = createSlice({
         state.loading = false;
       })
       .addCase(fetchNextOrPrevTrack.rejected, (state) => {
+        state.error = true;
+        state.loading = false;
+      })
+      .addCase(fetchUserPlaylist.pending, (state) => {
+        state.error = false;
+        state.loading = true;
+      })
+      .addCase(fetchUserPlaylist.fulfilled, (state, { payload }) => {
+        state.error = false;
+        state.loading = false;
+        state.playlistData = payload;
+      })
+      .addCase(fetchUserPlaylist.rejected, (state) => {
+        state.error = true;
+        state.loading = false;
+      })
+      .addCase(fetchSelectedPlaylist.pending, (state) => {
+        state.error = false;
+        state.loading = true;
+      })
+      .addCase(
+        fetchSelectedPlaylist.fulfilled,
+        (state, { payload }) => {
+          state.error = false;
+          state.loading = false;
+          state.selectedPlaylistData = payload;
+        },
+      )
+      .addCase(fetchSelectedPlaylist.rejected, (state) => {
         state.error = true;
         state.loading = false;
       });

@@ -15,8 +15,9 @@ import musicPlayerReducer from './musicPlayerSlice';
 import userReducer from './userSlice';
 
 const persistConfig = {
-  key: 'root',
+  key: 'token',
   storage,
+  blacklist: ['loading', 'error', 'refreshData'],
 };
 
 const persistedReducer = persistReducer(persistConfig, tokenReducer);
