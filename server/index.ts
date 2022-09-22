@@ -4,8 +4,8 @@ import { generateRandomString } from './utils/Functions';
 import {
   LoginUrlProps,
   CbUrlProps,
-  RepUrlProps,
-  ShuffUrlProps,
+  // RepUrlProps,
+  // ShuffUrlProps,
 } from './types';
 
 const logger = require('morgan');
@@ -31,12 +31,12 @@ const spotifyClientSecret = process.env.SPOTIFY_CLIENT_SECRET;
 const spotifyRedirectUri = process.env.SPOTIFY_REDIRECT_URI;
 
 // redirect endpoint -- mostly a helper route
-app.get('/', (_req, res) => {
+app.get('/', (_, res) => {
   res.send('redirecting...');
 });
 
 // login endpoint -- user enters login credentials and spotify authorizes via OAuth 2.0
-app.get('/auth/login', (_req, res) => {
+app.get('/auth/login', (_, res) => {
   const scope = [
     'streaming',
     'user-read-email',
@@ -73,7 +73,13 @@ app.get('/auth/callback', async (req, res) => {
   } as CbUrlProps).toString();
 
   try {
-    const response = await axios({
+    const {
+      data: {
+        access_token: dataToken,
+        expires_in: dataExpires,
+        refresh_token: dataRefresh,
+      },
+    } = await axios({
       method: 'post',
       url: 'https://accounts.spotify.com/api/token',
       data: formData,
@@ -84,9 +90,9 @@ app.get('/auth/callback', async (req, res) => {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
     });
-    accessToken = response.data.access_token;
-    expiresIn = response.data.expires_in;
-    refreshToken = response.data.refresh_token;
+    accessToken = dataToken;
+    expiresIn = dataExpires;
+    refreshToken = dataRefresh;
     res.redirect('http://localhost:3000');
   } catch (err) {
     console.log(err);
@@ -95,7 +101,7 @@ app.get('/auth/callback', async (req, res) => {
 });
 
 // token endpoint -- send server globals to front-end
-app.get('/auth/token', (_req, res) => {
+app.get('/auth/token', (_, res) => {
   const tokenObj = {
     access_token: accessToken,
     expires_in: expiresIn,
@@ -129,6 +135,7 @@ app.get('/auth/refresh_token/:rTok', async (req, res) => {
     res.send({
       access_token: accessToken,
       expires_in: expiresIn,
+      refresh_token: rTok,
     });
   } catch (err) {
     console.log(err);
@@ -137,7 +144,7 @@ app.get('/auth/refresh_token/:rTok', async (req, res) => {
 });
 
 // userInfo endpoint -- get user data
-app.get('/auth/me', async (_req, res) => {
+app.get('/auth/me', async (_, res) => {
   try {
     await axios
       .get('https://api.spotify.com/v1/me', {
@@ -156,7 +163,7 @@ app.get('/auth/me', async (_req, res) => {
 });
 
 // playlist endpoint -- get user playlists
-app.get('/auth/me/playlist', async (_req, res) => {
+app.get('/auth/me/playlist', async (_, res) => {
   try {
     await axios
       .get('https://api.spotify.com/v1/me/playlists', {
@@ -196,7 +203,7 @@ app.get('/auth/playlists/:playlist_id', async (req, res) => {
 });
 
 // currently playing endpoint -- get data of current song
-app.get('/auth/me/player/currently-playing', async (_req, res) => {
+app.get('/auth/me/player/currently-playing', async (_, res) => {
   try {
     await axios
       .get('https://api.spotify.com/v1/me/player/currently-playing', {
@@ -262,14 +269,11 @@ app.get('/auth/v1/me/player/:pauseOrPlay', async (req, res) => {
 // shuffle endpoint -- toggle shuffle
 app.get('/auth/shuffle/:shuffState', async (req, res) => {
   const shState = req.params.shuffState;
-  const shuffData = new URLSearchParams({
-    state: shState,
-  } as ShuffUrlProps).toString(); // need help figuring out how to add data for this call... currently: data: { error: [Object] }... trying to get data: { state: 'true', 'false' }
+  const shuffQuery = `?state=${shState}`;
   try {
     await axios({
       method: 'put',
-      url: 'https://api.spotify.com/v1/me/player/shuffle',
-      data: shuffData,
+      url: `https://api.spotify.com/v1/me/player/shuffle${shuffQuery}`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
@@ -286,14 +290,11 @@ app.get('/auth/shuffle/:shuffState', async (req, res) => {
 // repeat endpoint -- toggle repeat
 app.get('/auth/repeat/:repState', async (req, res) => {
   const rState = req.params.repState;
-  const repData = new URLSearchParams({
-    state: rState,
-  } as RepUrlProps).toString(); // need help figuring out how to add data for this call also... currently: data: { error: [Object] }... trying to get data: { state: 'track', 'context', 'off' }
+  const repQuery = `?state=${rState}`;
   try {
     await axios({
       method: 'put',
-      url: 'https://api.spotify.com/v1/me/player/repeat',
-      data: repData,
+      url: `https://api.spotify.com/v1/me/player/repeat${repQuery}`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json',

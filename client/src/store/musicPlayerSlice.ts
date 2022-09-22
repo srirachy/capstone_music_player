@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createTrackObj } from 'src/utils/Functions';
 import { MusicPlayerTypes } from '../types/index';
 
 const initialState = {
@@ -10,7 +11,6 @@ const initialState = {
   selectedPlaylistData: {},
   playlistSongs: {},
   currentTrack: {},
-  currentTrackData: {},
   musicIsPlaying: false,
   trackTrigger: true,
   repeatState: '',
@@ -22,7 +22,9 @@ export const fetchCurrentTrack = createAsyncThunk(
   async () => {
     const res = await fetch('auth/me/player/currently-playing');
     const resData = await res.json();
-    return resData;
+    const { item, is_playing: isPlaying } = resData;
+    const currentTrackObj = createTrackObj(item);
+    return { currentTrackObj, isPlaying };
   },
 );
 
@@ -116,7 +118,9 @@ export const musicPlayerSlice = createSlice({
       .addCase(fetchCurrentTrack.fulfilled, (state, { payload }) => {
         state.error = false;
         state.loading = false;
-        state.currentTrackData = payload;
+        state.trackTrigger = false;
+        state.currentTrack = payload.currentTrackObj;
+        state.musicIsPlaying = payload.isPlaying;
       })
       .addCase(fetchCurrentTrack.rejected, (state) => {
         state.error = true;
@@ -129,6 +133,7 @@ export const musicPlayerSlice = createSlice({
       .addCase(fetchNextOrPrevTrack.fulfilled, (state) => {
         state.error = false;
         state.loading = false;
+        state.trackTrigger = true;
       })
       .addCase(fetchNextOrPrevTrack.rejected, (state) => {
         state.error = true;

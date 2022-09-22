@@ -94,7 +94,6 @@ export type MusicPlayerTypes = {
   selectedPlaylistData: {};
   playlistSongs: PlaylistSongProps;
   currentTrack: CurrentTrackProps;
-  currentTrackData: {};
   prevOrNextStatus: number;
   musicIsPlaying: boolean;
   trackTrigger: boolean;
@@ -103,14 +102,23 @@ export type MusicPlayerTypes = {
 };
 
 // types tokenSlice
-export type TokenTypes = {
-  loading: boolean;
-  error: boolean;
-  sessToken: string;
+type TokenObjProps = {
+  token: string;
   tokenExpires: number;
   refreshToken: string;
   timeStamp: number;
-  refreshData: {};
+};
+
+export type TokenTypes = {
+  loading: boolean;
+  error: boolean;
+  tokenObj: TokenObjProps;
+};
+
+export type TokenProps = {
+  access_token: string;
+  expires_in: number;
+  refresh_token: string;
 };
 
 // types userSlice
@@ -123,7 +131,6 @@ export type UserTypes = {
   loading: boolean;
   error: boolean;
   userInfo: UserProps;
-  userData: {};
 };
 
 // utils/Functions types

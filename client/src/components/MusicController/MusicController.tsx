@@ -14,7 +14,6 @@ import {
   setMusicIsPlaying,
   setRepeatState,
   setShuffleState,
-  setTrackTrigger,
 } from 'src/store/musicPlayerSlice';
 import usePlaylist from 'src/utils/usePlaylist';
 import {
@@ -34,9 +33,7 @@ function MusicController() {
   const changeTrack = async (prevOrNext: string) => {
     await dispatch(fetchNextOrPrevTrack(prevOrNext)) // trigger next/prev song
       .then((status) => {
-        if (status.meta.requestStatus === 'fulfilled') {
-          dispatch(setTrackTrigger(true));
-        }
+        console.log(status);
       })
       .catch((err) => {
         console.log(err);
@@ -44,21 +41,15 @@ function MusicController() {
   };
 
   // onClick to pause or play track
-  const mpState = async (curState: string) => {
-    let boolState;
-    await dispatch(fetchPauseOrPlay(curState))
+  const mpState = async (pauseOrPlay: string) => {
+    await dispatch(fetchPauseOrPlay(pauseOrPlay))
       .then((status) => {
         console.log(status);
       })
       .catch((err) => {
         console.log(err);
       });
-    if (curState === 'play') {
-      boolState = true;
-    } else {
-      boolState = false;
-    }
-    dispatch(setMusicIsPlaying(boolState));
+    dispatch(setMusicIsPlaying(pauseOrPlay === 'play'));
   };
 
   // onClick shuffle

@@ -3,36 +3,28 @@ import MusicPlayer from './components/MusicPlayer/MusicPlayer';
 import Login from './components/Login/Login';
 import { AppContainer } from './styles/AppStyle';
 import { useAppDispatch } from './store/hooks';
-import {
-  setRefreshToken,
-  setSessToken,
-  setTimeStamp,
-  setTokenExpires,
-} from './store/tokenSlice';
 import useSessToken from './utils/useSessToken';
+import { fetchToken } from './store/tokenSlice';
 
 function App() {
   const dispatch = useAppDispatch();
-  const { sessToken } = useSessToken();
+  const {
+    tokenObj: { token },
+  } = useSessToken();
 
   useEffect(() => {
     const getToken = async () => {
       console.log('getting initial token');
-      const response = await fetch('/auth/token');
-      const data = await response.json();
-      dispatch(setSessToken(data.access_token));
-      dispatch(setTokenExpires(data.expires_in));
-      dispatch(setRefreshToken(data.refresh_token));
-      dispatch(setTimeStamp(Date.now()));
+      await dispatch(fetchToken());
     };
-    if (!sessToken) {
+    if (!token) {
       getToken();
     }
-  }, [dispatch, sessToken]);
+  }, [dispatch, token]);
 
   return (
     <AppContainer>
-      <div>{!sessToken ? <Login /> : <MusicPlayer />}</div>
+      <div>{!token ? <Login /> : <MusicPlayer />}</div>
     </AppContainer>
   );
 }
