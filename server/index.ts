@@ -179,25 +179,26 @@ app.get('/auth/me/playlist', async (_, res) => {
 });
 
 // selected playlist endpoint -- get playlist song data
-app.get('/auth/playlists/:playlist_id', async (req, res) => {
-  const playlistId = req.params.playlist_id;
-
-  try {
-    const { data } = await axios.get(
-      `https://api.spotify.com/v1/playlists/${playlistId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
+app.get(
+  '/auth/playlists/:playlist_id',
+  async ({ params: { playlist_id: playlistId } }, res) => {
+    try {
+      const { data } = await axios.get(
+        `https://api.spotify.com/v1/playlists/${playlistId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
         },
-      },
-    );
-    res.json(data);
-  } catch (err) {
-    console.log(err);
-    res.send(err);
-  }
-});
+      );
+      res.json(data);
+    } catch (err) {
+      console.log(err);
+      res.send(err);
+    }
+  },
+);
 
 // currently playing endpoint -- get data of current song
 app.get('/auth/me/player/currently-playing', async (_, res) => {
@@ -219,85 +220,92 @@ app.get('/auth/me/player/currently-playing', async (_, res) => {
 });
 
 // next/prev endpoint -- skip to next/previous track
-app.get('/auth/me/player/:prevOrNext', async (req, res) => {
-  const reqPrevOrNext = req.params.prevOrNext;
+app.get(
+  '/auth/me/player/:prevOrNext',
+  async ({ params: { prevOrNext } }, res) => {
+    try {
+      const { data } = await axios.post(
+        `https://api.spotify.com/v1/me/player/${prevOrNext}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      res.end(data);
+    } catch (err) {
+      console.log(err);
+      res.send(err);
+    }
+  },
+);
 
-  try {
-    const { data } = await axios.post(
-      `https://api.spotify.com/v1/me/player/${reqPrevOrNext}`,
-      {},
-      {
+// pause/play endpoint -- pause or play current track
+app.get(
+  '/auth/v1/me/player/:pauseOrPlay',
+  async ({ params: { pauseOrPlay } }, res) => {
+    try {
+      const { data } = await axios({
+        method: 'put',
+        url: `https://api.spotify.com/v1/me/player/${pauseOrPlay}`,
         headers: {
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
-      },
-    );
-    res.end(data);
-  } catch (err) {
-    console.log(err);
-    res.send(err);
-  }
-});
-
-// pause/play endpoint -- pause or play current track
-app.get('/auth/v1/me/player/:pauseOrPlay', async (req, res) => {
-  const reqPauseOrPlay = req.params.pauseOrPlay;
-  try {
-    const { data } = await axios({
-      method: 'put',
-      url: `https://api.spotify.com/v1/me/player/${reqPauseOrPlay}`,
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-    });
-    res.end(data);
-  } catch (err) {
-    console.log(err);
-    res.send(err);
-  }
-});
+      });
+      res.end(data);
+    } catch (err) {
+      console.log(err);
+      res.send(err);
+    }
+  },
+);
 
 // shuffle endpoint -- toggle shuffle
-app.get('/auth/shuffle/:shuffState', async (req, res) => {
-  const shState = req.params.shuffState;
-  const shuffQuery = `?state=${shState}`;
-  try {
-    const { data } = await axios({
-      method: 'put',
-      url: `https://api.spotify.com/v1/me/player/shuffle${shuffQuery}`,
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-    });
-    res.end(data);
-  } catch (err) {
-    console.log(err);
-    res.send(err);
-  }
-});
+app.get(
+  '/auth/shuffle/:shuffState',
+  async ({ params: { shuffState } }, res) => {
+    const shuffQuery = `?state=${shuffState}`;
+    try {
+      const { data } = await axios({
+        method: 'put',
+        url: `https://api.spotify.com/v1/me/player/shuffle${shuffQuery}`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      res.end(data);
+    } catch (err) {
+      console.log(err);
+      res.send(err);
+    }
+  },
+);
 
 // repeat endpoint -- toggle repeat
-app.get('/auth/repeat/:repState', async (req, res) => {
-  const rState = req.params.repState;
-  const repQuery = `?state=${rState}`;
-  try {
-    const { data } = await axios({
-      method: 'put',
-      url: `https://api.spotify.com/v1/me/player/repeat${repQuery}`,
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-    });
-    res.end(data);
-  } catch (err) {
-    console.log(err);
-    res.send(err);
-  }
-});
+app.get(
+  '/auth/repeat/:repState',
+  async ({ params: { repState } }, res) => {
+    const repQuery = `?state=${repState}`;
+    try {
+      const { data } = await axios({
+        method: 'put',
+        url: `https://api.spotify.com/v1/me/player/repeat${repQuery}`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      res.end(data);
+    } catch (err) {
+      console.log(err);
+      res.send(err);
+    }
+  },
+);
 
 app.listen(PORT, () => {
   console.log(`listening at localhost port: ${PORT}`);
