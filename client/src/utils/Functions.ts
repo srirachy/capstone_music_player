@@ -9,8 +9,12 @@ export const convertMsToStandardTime = (ms: number) => {
 };
 
 // helper function to create track obj
-export const createTrackObj = (item: TrackObjTypes) => {
-  const { id, name, artists, album } = item;
+export const createTrackObj = ({
+  id,
+  name,
+  artists,
+  album,
+}: TrackObjTypes) => {
   const trackObj = {
     id: id,
     name: name,
@@ -35,4 +39,33 @@ export const createTokenObj = (data: TokenProps) => {
   };
 
   return tokenObj;
+};
+
+export const getRefreshToken = () => {
+  const persistToken = localStorage.getItem('persist:token');
+  if (persistToken) {
+    const persistParse = JSON.parse(persistToken);
+    const tokenObjParse = JSON.parse(persistParse.tokenObj);
+    if (
+      !tokenObjParse.refreshToken ||
+      tokenObjParse.refreshToken === 'undefined' ||
+      Date.now() - Number(tokenObjParse.tokenExpires) / 1000 < 1000
+    ) {
+      return false; // there is no refreshToken
+    }
+  }
+  return true; // refreshToken found
+};
+
+export const hasTokenExpired = (
+  token: string,
+  timeStamp: number,
+  tokenExpires: number,
+) => {
+  if (!token || !timeStamp) {
+    return false;
+  }
+
+  const millisecondsElapsed = Date.now() - Number(timeStamp);
+  return millisecondsElapsed / 1000 > Number(tokenExpires);
 };

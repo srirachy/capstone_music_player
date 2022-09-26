@@ -1,10 +1,7 @@
 import { useEffect } from 'react';
 import { AiFillClockCircle } from 'react-icons/ai';
 import { useAppDispatch } from 'src/store/hooks';
-import {
-  fetchSelectedPlaylist,
-  setPlaylistSongs,
-} from 'src/store/musicPlayerSlice';
+import { fetchSelectedPlaylist } from 'src/store/musicPlayerSlice';
 import usePlaylist from 'src/utils/usePlaylist';
 import {
   ContentContainer,
@@ -21,43 +18,20 @@ import {
   SongImageWrapper,
   SongInfoWrapper,
 } from '../../styles/SpotifyContent';
-import { TrackType, ArtistProp, HeaderBkgdType } from '../../types';
+import { HeaderBkgdType } from '../../types';
 import { convertMsToStandardTime } from '../../utils/Functions';
 
 function SpotifyContent({ headerBackground }: HeaderBkgdType) {
   const dispatch = useAppDispatch();
-  const { selectedPlaylist, playlistSongs } = usePlaylist();
+  const {
+    selectedPlaylist,
+    playlistSongs: { image, name, description, tracks },
+  } = usePlaylist();
 
   // fetch data of selected playlist for content output
   useEffect(() => {
     const getPlaylistSongs = async () => {
-      const response = await dispatch(
-        fetchSelectedPlaylist(selectedPlaylist),
-      );
-      const data = await response.payload;
-      const songData = {
-        id: data.id,
-        name: data.name,
-        description: data.description.startsWith('<a')
-          ? ''
-          : data.description,
-        image: data.images[0].url,
-        tracks: data.tracks.items.map(({ track }: TrackType) => ({
-          id: track.id,
-          name: track.name,
-          artists: track.artists.map(
-            (artist: ArtistProp) => artist.name,
-          ),
-          image: track.album.images[2].url,
-          duration: track.duration_ms,
-          album: track.album.name,
-          context_uri: track.album.uri,
-          track_number: track.track_number,
-        })),
-      };
-      if (songData) {
-        dispatch(setPlaylistSongs(songData)); // set song data from selected playlist
-      }
+      await dispatch(fetchSelectedPlaylist(selectedPlaylist));
     };
     if (selectedPlaylist) {
       getPlaylistSongs();
@@ -66,19 +40,16 @@ function SpotifyContent({ headerBackground }: HeaderBkgdType) {
 
   return (
     <ContentContainer>
-      {Object.keys(playlistSongs).length > 0 && (
+      {name && (
         <>
           <ListInfoWrapper>
             <ImageWrapper>
-              <img
-                src={playlistSongs.image}
-                alt="playlist album cover"
-              />
+              <img src={image} alt="playlist album cover" />
             </ImageWrapper>
             <DetailWrapper>
               <span>PLAYLIST</span>
-              <h1>{playlistSongs.name}</h1>
-              <p>{playlistSongs.description}</p>
+              <h1>{name}</h1>
+              <p>{description}</p>
             </DetailWrapper>
           </ListInfoWrapper>
           <SongListContainer>
@@ -99,13 +70,13 @@ function SpotifyContent({ headerBackground }: HeaderBkgdType) {
               </HeaderCol>
             </HeaderRow>
             <SongWrapper>
-              {Object.keys(playlistSongs.tracks).length > 0 &&
-                playlistSongs.tracks.map(
+              {tracks.length > 0 &&
+                tracks.map(
                   (
                     {
                       id,
-                      image,
-                      name,
+                      image: trackImg,
+                      name: trackName,
                       artists,
                       album,
                       duration,
@@ -121,10 +92,13 @@ function SpotifyContent({ headerBackground }: HeaderBkgdType) {
                         </SongCol>
                         <SongColDetail>
                           <SongImageWrapper>
-                            <img src={image} alt="track album art" />
+                            <img
+                              src={trackImg}
+                              alt="track album art"
+                            />
                           </SongImageWrapper>
                           <SongInfoWrapper>
-                            <span>{name}</span>
+                            <span>{trackName}</span>
                             {artists && (
                               <span>{artists.join(', ')}</span>
                             )}

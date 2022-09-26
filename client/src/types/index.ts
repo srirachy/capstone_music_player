@@ -89,9 +89,7 @@ export type MusicPlayerTypes = {
   loading: boolean;
   error: boolean;
   playlist: PlaylistProps[];
-  playlistData: {};
   selectedPlaylist: string;
-  selectedPlaylistData: {};
   playlistSongs: PlaylistSongProps;
   currentTrack: CurrentTrackProps;
   prevOrNextStatus: number;

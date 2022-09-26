@@ -1,14 +1,17 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { createTrackObj } from 'src/utils/Functions';
-import { MusicPlayerTypes } from '../types/index';
+import {
+  ArtistProp,
+  MusicPlayerTypes,
+  PlaylistItemsType,
+  TrackType,
+} from '../types/index';
 
 const initialState = {
   loading: true,
   error: false,
   playlist: [],
-  playlistData: {},
   selectedPlaylist: '',
-  selectedPlaylistData: {},
   playlistSongs: {},
   currentTrack: {},
   musicIsPlaying: false,
@@ -41,7 +44,12 @@ export const fetchUserPlaylist = createAsyncThunk(
   async () => {
     const res = await fetch('/auth/me/playlist');
     const resData = await res.json();
-    return resData;
+    const { items } = resData;
+    const playlists = items.map(({ name, id }: PlaylistItemsType) => {
+      return { name, id };
+    });
+    const initPlaylist = items[0].id;
+    return { playlists, initPlaylist };
   },
 );
 
@@ -51,7 +59,26 @@ export const fetchSelectedPlaylist = createAsyncThunk(
     const sPlist = selectedPlaylist;
     const res = await fetch(`/auth/playlists/${sPlist}`);
     const resData = await res.json();
-    return resData;
+    const { id, name, description, images, tracks } = resData;
+    const songData = {
+      id: id,
+      name: name,
+      description: description.startsWith('<a') ? '' : description,
+      image: images[0].url,
+      tracks: tracks.items.map(({ track }: TrackType) => ({
+        id: track.id,
+        name: track.name,
+        artists: track.artists.map(
+          (artist: ArtistProp) => artist.name,
+        ),
+        image: track.album.images[2].url,
+        duration: track.duration_ms,
+        album: track.album.name,
+        context_uri: track.album.uri,
+        track_number: track.track_number,
+      })),
+    };
+    return songData;
   },
 );
 
@@ -60,6 +87,7 @@ export const fetchPauseOrPlay = createAsyncThunk(
   async (curState: string) => {
     const pauseOrPlay = curState;
     await fetch(`/auth/v1/me/player/${pauseOrPlay}`);
+    return pauseOrPlay === 'play';
   },
 );
 
@@ -67,6 +95,7 @@ export const fetchShuffle = createAsyncThunk(
   'musicPlayer/fetchShuffle',
   async (shuffState: string) => {
     await fetch(`/auth/shuffle/${shuffState}`);
+    return shuffState === 'true';
   },
 );
 
@@ -74,6 +103,7 @@ export const fetchRepeat = createAsyncThunk(
   'musicPlayer/fetchRepeat',
   async (repState: string) => {
     await fetch(`/auth/repeat/${repState}`);
+    return repState;
   },
 );
 
@@ -93,14 +123,8 @@ export const musicPlayerSlice = createSlice({
     setCurrentTrack(state, { payload }) {
       state.currentTrack = payload;
     },
-    setPrevOrNext(state, { payload }) {
-      state.prevOrNextStatus = payload;
-    },
     setMusicIsPlaying(state, { payload }) {
       state.musicIsPlaying = payload;
-    },
-    setTrackTrigger(state, { payload }) {
-      state.trackTrigger = payload;
     },
     setShuffleState(state, { payload }) {
       state.shuffleState = payload;
@@ -146,7 +170,8 @@ export const musicPlayerSlice = createSlice({
       .addCase(fetchUserPlaylist.fulfilled, (state, { payload }) => {
         state.error = false;
         state.loading = false;
-        state.playlistData = payload;
+        state.playlist = payload.playlists;
+        state.selectedPlaylist = payload.initPlaylist;
       })
       .addCase(fetchUserPlaylist.rejected, (state) => {
         state.error = true;
@@ -161,7 +186,7 @@ export const musicPlayerSlice = createSlice({
         (state, { payload }) => {
           state.error = false;
           state.loading = false;
-          state.selectedPlaylistData = payload;
+          state.playlistSongs = payload;
         },
       )
       .addCase(fetchSelectedPlaylist.rejected, (state) => {
@@ -172,9 +197,10 @@ export const musicPlayerSlice = createSlice({
         state.error = false;
         state.loading = true;
       })
-      .addCase(fetchPauseOrPlay.fulfilled, (state) => {
+      .addCase(fetchPauseOrPlay.fulfilled, (state, { payload }) => {
         state.error = false;
         state.loading = false;
+        state.musicIsPlaying = payload;
       })
       .addCase(fetchPauseOrPlay.rejected, (state) => {
         state.error = true;
@@ -184,9 +210,10 @@ export const musicPlayerSlice = createSlice({
         state.error = false;
         state.loading = true;
       })
-      .addCase(fetchShuffle.fulfilled, (state) => {
+      .addCase(fetchShuffle.fulfilled, (state, { payload }) => {
         state.error = false;
         state.loading = false;
+        state.shuffleState = payload;
       })
       .addCase(fetchShuffle.rejected, (state) => {
         state.error = true;
@@ -196,9 +223,10 @@ export const musicPlayerSlice = createSlice({
         state.error = false;
         state.loading = true;
       })
-      .addCase(fetchRepeat.fulfilled, (state) => {
+      .addCase(fetchRepeat.fulfilled, (state, { payload }) => {
         state.error = false;
         state.loading = false;
+        state.repeatState = payload;
       })
       .addCase(fetchRepeat.rejected, (state) => {
         state.error = true;
@@ -213,7 +241,6 @@ export const {
   setPlaylistSongs,
   setCurrentTrack,
   setMusicIsPlaying,
-  setTrackTrigger,
   setShuffleState,
   setRepeatState,
 } = musicPlayerSlice.actions;

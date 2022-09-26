@@ -11,9 +11,6 @@ import {
   fetchPauseOrPlay,
   fetchRepeat,
   fetchShuffle,
-  setMusicIsPlaying,
-  setRepeatState,
-  setShuffleState,
 } from 'src/store/musicPlayerSlice';
 import usePlaylist from 'src/utils/usePlaylist';
 import {
@@ -49,7 +46,6 @@ function MusicController() {
       .catch((err) => {
         console.log(err);
       });
-    dispatch(setMusicIsPlaying(pauseOrPlay === 'play'));
   };
 
   // onClick shuffle
@@ -63,7 +59,6 @@ function MusicController() {
       .catch((err) => {
         console.log(err);
       });
-    dispatch(setShuffleState(!shuffleState)); // swap state
   };
 
   // onClick repeat
@@ -83,7 +78,6 @@ function MusicController() {
       .catch((err) => {
         console.log(err);
       });
-    dispatch(setRepeatState(curRepeat));
   };
 
   return (

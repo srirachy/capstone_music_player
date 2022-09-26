@@ -12,6 +12,10 @@ import {
   ThemeWrapper,
   FooterWrapper,
 } from '../../styles/MusicPlayerStyle';
+import {
+  getRefreshToken,
+  hasTokenExpired,
+} from '../../utils/Functions';
 
 function MusicPlayer() {
   const dispatch = useAppDispatch();
@@ -40,47 +44,24 @@ function MusicPlayer() {
         const tokenObjParse = JSON.parse(persistParse.tokenObj);
         if (
           hasError ||
-          hasTokenExpired() ||
+          hasTokenExpired(token, timeStamp, tokenExpires) ||
           tokenObjParse.token === 'undefined'
         ) {
-          getRefreshToken();
+          const canRefresh = getRefreshToken();
+          if (canRefresh) {
+            dispatch(fetchRefreshToken(refreshToken));
+          } else {
+            console.log('no refresh token avail');
+            logout();
+          }
         }
       }
-    }
-
-    // helper function to check if token expired
-    function hasTokenExpired() {
-      if (!token || !timeStamp) {
-        return false;
-      }
-
-      const millisecondsElapsed = Date.now() - Number(timeStamp);
-      return millisecondsElapsed / 1000 > Number(tokenExpires);
     }
 
     // logout helper function
     function logout() {
       dispatch(clearToken({}));
       // window.location.assign('/'); // not sure if this works, but trying to jus redirect to origin which should be the login page once localStorage clears
-    }
-
-    // getRefreshToken helper function -- logout if no refreshToken, otherwise fetch refreshToken
-    async function getRefreshToken() {
-      const persistToken = localStorage.getItem('persist:token');
-      if (persistToken) {
-        const persistParse = JSON.parse(persistToken);
-        if (
-          !persistParse.refreshToken ||
-          persistParse.refreshToken === 'undefined' ||
-          Date.now() - Number(persistParse.tokenExpires) / 1000 < 1000
-        ) {
-          console.log('no refresh token avail');
-          logout(); // log out if unable to find refresh token
-        }
-      }
-
-      // update session token if there is a refresh token
-      await dispatch(fetchRefreshToken(refreshToken));
     }
   }, [dispatch, refreshToken, timeStamp, token, tokenExpires]);
 
