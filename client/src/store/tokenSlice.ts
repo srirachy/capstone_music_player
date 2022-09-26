@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TokenTypes } from '../types';
 import { createTokenObj } from '../utils/Functions';
-import { RootState } from './index.js';
+// import { persistor, RootState } from './index.js';
 
 const initialState = {
   loading: false,
@@ -29,14 +29,19 @@ export const fetchRefreshToken = createAsyncThunk(
   },
 );
 
+export const fetchLogout = createAsyncThunk(
+  'token/logout',
+  async () => {
+    const res = await fetch('/auth/logout');
+    const resData = await res.json();
+    return resData;
+  },
+);
+
 export const tokenSlice = createSlice({
   name: 'token',
   initialState,
-  reducers: {
-    clearToken(state, { payload }) {
-      state.tokenObj = payload;
-    },
-  },
+  reducers: {},
   extraReducers(builder) {
     builder
       .addCase(fetchToken.pending, (state) => {
@@ -64,11 +69,24 @@ export const tokenSlice = createSlice({
       .addCase(fetchRefreshToken.rejected, (state) => {
         state.error = true;
         state.loading = false;
+      })
+      .addCase(fetchLogout.pending, (state) => {
+        state.error = false;
+        state.loading = true;
+      })
+      .addCase(fetchLogout.fulfilled, (state, { payload }) => {
+        state.error = false;
+        state.loading = false;
+        state.tokenObj = payload;
+      })
+      .addCase(fetchLogout.rejected, (state) => {
+        state.error = true;
+        state.loading = false;
       });
   },
 });
 
-export const exampleToken = (state: RootState) => state;
-export const { clearToken } = tokenSlice.actions;
+// export const exampleToken = (state: RootState) => state;
+// export const { clearToken } = tokenSlice.actions;
 
 export default tokenSlice.reducer;

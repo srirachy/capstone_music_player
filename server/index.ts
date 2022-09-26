@@ -307,6 +307,18 @@ app.get(
   },
 );
 
+// logout endpoint
+app.get('/auth/logout', (_, res) => {
+  accessToken = '';
+  expiresIn = 0;
+  refreshToken = '';
+  res.send({
+    access_token: accessToken,
+    expires_in: expiresIn,
+    refresh_token: refreshToken,
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`listening at localhost port: ${PORT}`);
 });

@@ -3,8 +3,8 @@ import { useEffect } from 'react';
 import { useAppDispatch } from 'src/store/hooks';
 import { fetchUser } from 'src/store/userSlice';
 import useSessToken from 'src/utils/useSessToken';
-import { clearToken, fetchRefreshToken } from 'src/store/tokenSlice';
-import storage from 'redux-persist/lib/storage';
+import { fetchLogout, fetchRefreshToken } from 'src/store/tokenSlice';
+import { persistor } from 'src/store';
 import Footer from '../Footer/Footer';
 import SpotifyTheme from '../SpotifyTheme/SpotifyTheme';
 import {
@@ -60,18 +60,22 @@ function MusicPlayer() {
 
     // logout helper function
     function logout() {
-      dispatch(clearToken({}));
-      // window.location.assign('/'); // not sure if this works, but trying to jus redirect to origin which should be the login page once localStorage clears
+      persistor.pause();
+      persistor.flush().then(() => {
+        return persistor.purge();
+      });
+      dispatch(fetchLogout());
     }
   }, [dispatch, refreshToken, timeStamp, token, tokenExpires]);
 
-  async function logoutTest() {
-    console.log(localStorage.getItem('persist:token'));
-    storage.removeItem('persist:token');
-    console.log(storage.getItem('persist:token'));
-    dispatch(clearToken({})); // looks like redux-persist is working a bit too well... i try to clear state and local storage, but the tokenState manages to refill itself and log back in
-    // window.location.assign('/');
-  }
+  // function logoutTest() {
+  //   persistor.pause();
+  //   persistor.flush().then(() => {
+  //     return persistor.purge();
+  //   });
+  //   console.log(localStorage.getItem('persist:token'));
+  //   dispatch(fetchLogout());
+  // }
 
   return (
     <MusicPlayerContainer>
@@ -80,9 +84,9 @@ function MusicPlayer() {
         <SpotifyTheme />
       </ThemeWrapper>
       <FooterWrapper>
-        <button type="button" onClick={() => logoutTest()}>
+        {/* <button type="button" onClick={() => logoutTest()}>
           logout test
-        </button>
+        </button> */}
         <Footer />
       </FooterWrapper>
     </MusicPlayerContainer>
