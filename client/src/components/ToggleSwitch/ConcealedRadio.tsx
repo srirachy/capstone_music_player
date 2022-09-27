@@ -11,6 +11,7 @@ function ConcealedRadio({ value, selected }: RadioProps) {
       type="radio"
       name="switch"
       checked={selected === value}
+      readOnly
     />
   );
 }

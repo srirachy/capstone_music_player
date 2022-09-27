@@ -3,8 +3,7 @@ import { SwitchLabel } from '../../styles/ToggleSwitchStyle';
 type LabelTypes = {
   title: string;
   id: string;
-  // onChange: (val: string) => void;
-  onChange: any;
+  onChange: (val: string) => void;
 };
 
 function ClickableLabel({ title, onChange, id }: LabelTypes) {

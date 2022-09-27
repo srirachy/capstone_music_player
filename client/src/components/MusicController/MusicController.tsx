@@ -28,37 +28,19 @@ function MusicController() {
 
   // onClick to change track w/ prev/next buttons
   const changeTrack = async (prevOrNext: string) => {
-    await dispatch(fetchNextOrPrevTrack(prevOrNext)) // trigger next/prev song
-      .then((status) => {
-        console.log(status);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    await dispatch(fetchNextOrPrevTrack(prevOrNext)); // trigger next/prev song
   };
 
   // onClick to pause or play track
   const mpState = async (pauseOrPlay: string) => {
-    await dispatch(fetchPauseOrPlay(pauseOrPlay))
-      .then((status) => {
-        console.log(status);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    await dispatch(fetchPauseOrPlay(pauseOrPlay));
   };
 
   // onClick shuffle
   const toggleShuffle = async () => {
     const curShuffle = shuffleState ? 'false' : 'true';
     // pass state as string for fetch
-    await dispatch(fetchShuffle(curShuffle))
-      .then((status) => {
-        console.log(status);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    await dispatch(fetchShuffle(curShuffle));
   };
 
   // onClick repeat
@@ -71,13 +53,7 @@ function MusicController() {
     } else {
       curRepeat = 'off';
     }
-    await dispatch(fetchRepeat(curRepeat))
-      .then((status) => {
-        console.log(status);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    await dispatch(fetchRepeat(curRepeat));
   };
 
   return (

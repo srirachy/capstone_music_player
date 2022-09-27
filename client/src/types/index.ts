@@ -131,6 +131,11 @@ export type UserTypes = {
   userInfo: UserProps;
 };
 
+// types themeSlice
+export type ThemeTypes = {
+  themeState: string;
+};
+
 // utils/Functions types
 export type TrackObjTypes = {
   id: string;

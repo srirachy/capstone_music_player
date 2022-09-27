@@ -17,6 +17,7 @@ import {
   hasTokenExpired,
 } from '../../utils/Functions';
 import ToggleSwitch from '../ToggleSwitch/ToggleSwitch';
+import useThemeState from '../../utils/useThemeState';
 
 function MusicPlayer() {
   const dispatch = useAppDispatch();
@@ -24,6 +25,7 @@ function MusicPlayer() {
     tokenObj: { token, timeStamp, refreshToken, tokenExpires },
   } = useSessToken();
   const [val, setVals] = useState<string[]>([]);
+  const { themeState } = useThemeState();
 
   // fetch/output user data
   useEffect(() => {
@@ -34,8 +36,12 @@ function MusicPlayer() {
   }, [dispatch]);
 
   useEffect(() => {
-    setVals(['meow', 'poopo', 'lala']);
+    setVals(['Spotify', 'Discover', 'Visualizer']);
   }, []);
+
+  useEffect(() => {
+    console.log(themeState);
+  }, [themeState]);
 
   // token persist
   useEffect(() => {
@@ -93,7 +99,7 @@ function MusicPlayer() {
         {/* <button type="button" onClick={() => logoutTest()}>
           logout test
         </button> */}
-        <ToggleSwitch vals={val} curSelect="lala" />
+        <ToggleSwitch vals={val} curSelect={themeState} />
         <Footer />
       </FooterWrapper>
     </MusicPlayerContainer>

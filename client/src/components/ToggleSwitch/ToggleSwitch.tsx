@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useAppDispatch } from 'src/store/hooks';
+import { setThemeState } from 'src/store/themeSlice';
 import {
   Switch,
   SwitchSelection,
@@ -12,14 +13,13 @@ type ToggleProps = {
 };
 
 function ToggleSwitch({ vals, curSelect }: ToggleProps) {
-  const [selectState, setSelectState] = useState<string>('');
+  const dispatch = useAppDispatch();
   const handleChange = (val: string) => {
-    setSelectState(val);
-    console.log(val);
+    dispatch(setThemeState(val));
   };
   const selectionStyle = () => {
     return {
-      left: `${(vals.indexOf(selectState) / 3) * 100}%`,
+      left: `${(vals.indexOf(curSelect) / 3) * 100}%`,
     };
   };
   return (
