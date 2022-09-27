@@ -1,7 +1,10 @@
-// this component will house the three themes: clone, my own style - emphasis on music discovery, and visualizer
+// this component will house the three themes: clone, my own style - emphasis on music discovery, and visualizer... maybe not visualizer anymore :(
 import { useEffect } from 'react';
 import { useAppDispatch } from 'src/store/hooks';
-import { setUserInfo } from 'src/store/userSlice';
+import { fetchUser } from 'src/store/userSlice';
+import useSessToken from 'src/utils/useSessToken';
+import { fetchLogout, fetchRefreshToken } from 'src/store/tokenSlice';
+import { persistor } from 'src/store';
 import Footer from '../Footer/Footer';
 import SpotifyTheme from '../SpotifyTheme/SpotifyTheme';
 import {
@@ -9,25 +12,70 @@ import {
   ThemeWrapper,
   FooterWrapper,
 } from '../../styles/MusicPlayerStyle';
+import {
+  getRefreshToken,
+  hasTokenExpired,
+} from '../../utils/Functions';
 
 function MusicPlayer() {
   const dispatch = useAppDispatch();
+  const {
+    tokenObj: { token, timeStamp, refreshToken, tokenExpires },
+  } = useSessToken();
 
+  // fetch/output user data
   useEffect(() => {
     const getUserInfo = async () => {
-      const response = await fetch('/auth/me');
-      const resData = await response.json();
-      const data = JSON.parse(resData);
-      if (data) {
-        const userInfo = {
-          userId: data.id,
-          userName: data.display_name,
-        };
-        dispatch(setUserInfo(userInfo));
-      }
+      await dispatch(fetchUser());
     };
     getUserInfo();
   }, [dispatch]);
+
+  // token persist
+  useEffect(() => {
+    // use refreshToken to getRefreshToken()
+    if (token) {
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const hasError = urlParams.get('error');
+      const persistToken = localStorage.getItem('persist:token');
+      if (persistToken) {
+        const persistParse = JSON.parse(persistToken);
+        const tokenObjParse = JSON.parse(persistParse.tokenObj);
+        if (
+          hasError ||
+          hasTokenExpired(token, timeStamp, tokenExpires) ||
+          tokenObjParse.token === 'undefined'
+        ) {
+          const canRefresh = getRefreshToken();
+          if (canRefresh) {
+            dispatch(fetchRefreshToken(refreshToken));
+          } else {
+            console.log('no refresh token avail');
+            logout();
+          }
+        }
+      }
+    }
+
+    // logout helper function
+    function logout() {
+      persistor.pause();
+      persistor.flush().then(() => {
+        return persistor.purge();
+      });
+      dispatch(fetchLogout());
+    }
+  }, [dispatch, refreshToken, timeStamp, token, tokenExpires]);
+
+  // function logoutTest() {
+  //   persistor.pause();
+  //   persistor.flush().then(() => {
+  //     return persistor.purge();
+  //   });
+  //   console.log(localStorage.getItem('persist:token'));
+  //   dispatch(fetchLogout());
+  // }
 
   return (
     <MusicPlayerContainer>
@@ -36,6 +84,9 @@ function MusicPlayer() {
         <SpotifyTheme />
       </ThemeWrapper>
       <FooterWrapper>
+        {/* <button type="button" onClick={() => logoutTest()}>
+          logout test
+        </button> */}
         <Footer />
       </FooterWrapper>
     </MusicPlayerContainer>

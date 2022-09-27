@@ -1,14 +1,14 @@
 import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { store } from '../../store';
-import Footer from './Footer';
+import MusicController from './MusicController';
 
-test('allow user to authenticate', async () => {
+test('check if component is loaded', async () => {
   render(
     <Provider store={store}>
-      <Footer />
+      <MusicController />
     </Provider>,
   );
-  const linkElement = screen.getByLabelText(/footer_container/i);
+  const linkElement = screen.getByLabelText(/controller_container/i);
   expect(linkElement).toBeInTheDocument();
 });

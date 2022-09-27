@@ -5,7 +5,7 @@ import {
 
 function Login() {
   const connectSpotify = () => {
-    window.location.href = 'http://localhost:9000/auth/login';
+    window.location.href = 'http://localhost:9000/auth/login'; // is there a way to thunk this?
   };
   return (
     <LoginContainer>

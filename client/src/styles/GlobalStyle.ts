@@ -11,6 +11,9 @@ export const GlobalStyle = createGlobalStyle`
   html, body{
     height: 100vh;
     max-width: 100vw;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 `;
 
