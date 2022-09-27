@@ -1,5 +1,5 @@
 // this component will house the three themes: clone, my own style - emphasis on music discovery, and visualizer... maybe not visualizer anymore :(
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useAppDispatch } from 'src/store/hooks';
 import { fetchUser } from 'src/store/userSlice';
 import useSessToken from 'src/utils/useSessToken';
@@ -16,12 +16,14 @@ import {
   getRefreshToken,
   hasTokenExpired,
 } from '../../utils/Functions';
+import ToggleSwitch from '../ToggleSwitch/ToggleSwitch';
 
 function MusicPlayer() {
   const dispatch = useAppDispatch();
   const {
     tokenObj: { token, timeStamp, refreshToken, tokenExpires },
   } = useSessToken();
+  const [val, setVals] = useState<string[]>([]);
 
   // fetch/output user data
   useEffect(() => {
@@ -30,6 +32,10 @@ function MusicPlayer() {
     };
     getUserInfo();
   }, [dispatch]);
+
+  useEffect(() => {
+    setVals(['meow', 'poopo', 'lala']);
+  }, []);
 
   // token persist
   useEffect(() => {
@@ -87,6 +93,7 @@ function MusicPlayer() {
         {/* <button type="button" onClick={() => logoutTest()}>
           logout test
         </button> */}
+        <ToggleSwitch vals={val} curSelect="lala" />
         <Footer />
       </FooterWrapper>
     </MusicPlayerContainer>
