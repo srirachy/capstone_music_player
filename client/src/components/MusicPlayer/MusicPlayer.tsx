@@ -18,6 +18,7 @@ import {
 } from '../../utils/Functions';
 import ToggleSwitch from '../ToggleSwitch/ToggleSwitch';
 import useThemeState from '../../utils/useThemeState';
+import DiscoverTheme from '../DiscoverTheme/DiscoverTheme';
 
 function MusicPlayer() {
   const dispatch = useAppDispatch();
@@ -93,7 +94,9 @@ function MusicPlayer() {
     <MusicPlayerContainer>
       <ThemeWrapper>
         {/* toggle -- spotify/discover/visualizer theme */}
-        <SpotifyTheme />
+        {themeState === 'Spotify' && <SpotifyTheme />}
+        {/* <SpotifyTheme /> */}
+        {themeState === 'Discover' && <DiscoverTheme />}
       </ThemeWrapper>
       <FooterWrapper>
         {/* <button type="button" onClick={() => logoutTest()}>
