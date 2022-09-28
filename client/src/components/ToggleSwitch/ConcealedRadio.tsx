@@ -1,9 +1,5 @@
 import { SwitchRadio } from '../../styles/ToggleSwitchStyle';
-
-type RadioProps = {
-  value: string;
-  selected: string;
-};
+import { RadioProps } from '../../types';
 
 function ConcealedRadio({ value, selected }: RadioProps) {
   return (

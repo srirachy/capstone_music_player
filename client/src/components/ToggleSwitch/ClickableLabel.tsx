@@ -1,10 +1,5 @@
 import { SwitchLabel } from '../../styles/ToggleSwitchStyle';
-
-type LabelTypes = {
-  title: string;
-  id: string;
-  onChange: (val: string) => void;
-};
+import { LabelTypes } from '../../types';
 
 function ClickableLabel({ title, onChange, id }: LabelTypes) {
   return (

@@ -6,11 +6,7 @@ import {
 } from '../../styles/ToggleSwitchStyle';
 import ClickableLabel from './ClickableLabel';
 import ConcealedRadio from './ConcealedRadio';
-
-type ToggleProps = {
-  vals: string[];
-  curSelect: string;
-};
+import { ToggleProps } from '../../types';
 
 function ToggleSwitch({ vals, curSelect }: ToggleProps) {
   const dispatch = useAppDispatch();
