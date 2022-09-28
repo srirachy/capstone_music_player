@@ -1,16 +1,14 @@
 import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { store } from '../../store';
-import SpotifyTheme from './SpotifyTheme';
+import ToggleSwitch from './ToggleSwitch';
 
-test('load spotify theme container', async () => {
+test('load toggle switch element', async () => {
   render(
     <Provider store={store}>
-      <SpotifyTheme />
+      <ToggleSwitch vals={['']} curSelect="" />
     </Provider>,
   );
-  const linkElement = screen.getByLabelText(
-    /spotify_theme_container/i,
-  );
+  const linkElement = screen.getByLabelText(/toggle_switch/i);
   expect(linkElement).toBeInTheDocument();
 });

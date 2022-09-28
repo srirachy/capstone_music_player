@@ -110,29 +110,7 @@ export const fetchRepeat = createAsyncThunk(
 export const musicPlayerSlice = createSlice({
   name: 'musicPlayer',
   initialState,
-  reducers: {
-    setPlaylist(state, { payload }) {
-      state.playlist = payload;
-    },
-    setSelectedPlaylist(state, { payload }) {
-      state.selectedPlaylist = payload;
-    },
-    setPlaylistSongs(state, { payload }) {
-      state.playlistSongs = payload;
-    },
-    setCurrentTrack(state, { payload }) {
-      state.currentTrack = payload;
-    },
-    setMusicIsPlaying(state, { payload }) {
-      state.musicIsPlaying = payload;
-    },
-    setShuffleState(state, { payload }) {
-      state.shuffleState = payload;
-    },
-    setRepeatState(state, { payload }) {
-      state.repeatState = payload;
-    },
-  },
+  reducers: {},
   extraReducers(builder) {
     builder
       .addCase(fetchCurrentTrack.pending, (state) => {
@@ -235,14 +213,14 @@ export const musicPlayerSlice = createSlice({
   },
 });
 
-export const {
-  setPlaylist,
-  setSelectedPlaylist,
-  setPlaylistSongs,
-  setCurrentTrack,
-  setMusicIsPlaying,
-  setShuffleState,
-  setRepeatState,
-} = musicPlayerSlice.actions;
+// export const {
+//   setPlaylist,
+//   setSelectedPlaylist,
+//   setPlaylistSongs,
+//   setCurrentTrack,
+//   setMusicIsPlaying,
+//   setShuffleState,
+//   setRepeatState,
+// } = musicPlayerSlice.actions;
 
 export default musicPlayerSlice.reducer;

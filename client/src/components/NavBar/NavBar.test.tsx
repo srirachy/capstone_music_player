@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import { store } from '../../store';
 import NavBar from './NavBar';
 
-test('check to see if placeholder search text is in the screen', async () => {
+test('load search bar element', async () => {
   render(
     <Provider store={store}>
       <NavBar navBackground={false} />

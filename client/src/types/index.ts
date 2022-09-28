@@ -131,6 +131,28 @@ export type UserTypes = {
   userInfo: UserProps;
 };
 
+// types themeSlice
+export type ThemeTypes = {
+  themeState: string;
+};
+
+export type RadioProps = {
+  value: string;
+  selected: string;
+};
+
+export type LabelTypes = {
+  title: string;
+  id: string;
+  onChange: (val: string) => void;
+};
+
+// types toggle switch
+export type ToggleProps = {
+  vals: string[];
+  curSelect: string;
+};
+
 // utils/Functions types
 export type TrackObjTypes = {
   id: string;

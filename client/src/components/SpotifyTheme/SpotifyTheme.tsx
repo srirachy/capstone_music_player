@@ -28,7 +28,7 @@ function SpotifyTheme() {
   };
 
   return (
-    <SpotifyThemeContainer>
+    <SpotifyThemeContainer aria-label="spotify_theme_container">
       <SidebarWrapper>
         <Sidebar />
         <NavBarWrapper ref={bodyRef} onScroll={bodyScrolled}>

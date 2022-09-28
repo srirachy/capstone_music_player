@@ -2,11 +2,14 @@
 import { useEffect } from 'react';
 import { useAppDispatch } from 'src/store/hooks';
 import { fetchUser } from 'src/store/userSlice';
-import useSessToken from 'src/utils/useSessToken';
 import { fetchLogout, fetchRefreshToken } from 'src/store/tokenSlice';
 import { persistor } from 'src/store';
+import useSessToken from 'src/utils/useSessToken';
+import useThemeState from 'src/utils/useThemeState';
 import Footer from '../Footer/Footer';
 import SpotifyTheme from '../SpotifyTheme/SpotifyTheme';
+import DiscoverTheme from '../DiscoverTheme/DiscoverTheme';
+import VisualizerTheme from '../VisualizerTheme/VisualizerTheme';
 import {
   MusicPlayerContainer,
   ThemeWrapper,
@@ -19,6 +22,7 @@ import {
 
 function MusicPlayer() {
   const dispatch = useAppDispatch();
+  const { themeState } = useThemeState();
   const {
     tokenObj: { token, timeStamp, refreshToken, tokenExpires },
   } = useSessToken();
@@ -68,25 +72,15 @@ function MusicPlayer() {
     }
   }, [dispatch, refreshToken, timeStamp, token, tokenExpires]);
 
-  // function logoutTest() {
-  //   persistor.pause();
-  //   persistor.flush().then(() => {
-  //     return persistor.purge();
-  //   });
-  //   console.log(localStorage.getItem('persist:token'));
-  //   dispatch(fetchLogout());
-  // }
-
   return (
     <MusicPlayerContainer>
       <ThemeWrapper>
         {/* toggle -- spotify/discover/visualizer theme */}
-        <SpotifyTheme />
+        {themeState === 'Spotify' && <SpotifyTheme />}
+        {themeState === 'Discover' && <DiscoverTheme />}
+        {themeState === 'Visual' && <VisualizerTheme />}
       </ThemeWrapper>
       <FooterWrapper>
-        {/* <button type="button" onClick={() => logoutTest()}>
-          logout test
-        </button> */}
         <Footer />
       </FooterWrapper>
     </MusicPlayerContainer>
