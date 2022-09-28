@@ -97,6 +97,7 @@ export type MusicPlayerTypes = {
   trackTrigger: boolean;
   shuffleState: boolean;
   repeatState: string;
+  musicVolume: number;
 };
 
 // types tokenSlice
