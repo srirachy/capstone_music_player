@@ -23,7 +23,7 @@ function ToggleSwitch({ vals, curSelect }: ToggleProps) {
     };
   };
   return (
-    <Switch>
+    <Switch aria-label="toggle_switch_container">
       {vals &&
         vals.map((value) => {
           return (

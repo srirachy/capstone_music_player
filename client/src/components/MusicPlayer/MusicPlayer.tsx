@@ -19,6 +19,7 @@ import {
 import ToggleSwitch from '../ToggleSwitch/ToggleSwitch';
 import useThemeState from '../../utils/useThemeState';
 import DiscoverTheme from '../DiscoverTheme/DiscoverTheme';
+import VisualizerTheme from '../VisualizerTheme/VisualizerTheme';
 
 function MusicPlayer() {
   const dispatch = useAppDispatch();
@@ -81,27 +82,28 @@ function MusicPlayer() {
     }
   }, [dispatch, refreshToken, timeStamp, token, tokenExpires]);
 
-  // function logoutTest() {
-  //   persistor.pause();
-  //   persistor.flush().then(() => {
-  //     return persistor.purge();
-  //   });
-  //   console.log(localStorage.getItem('persist:token'));
-  //   dispatch(fetchLogout());
-  // }
+  function logoutTest() {
+    persistor.pause();
+    persistor.flush().then(() => {
+      return persistor.purge();
+    });
+    console.log(localStorage.getItem('persist:token'));
+    dispatch(fetchLogout());
+  }
 
   return (
     <MusicPlayerContainer>
       <ThemeWrapper>
         {/* toggle -- spotify/discover/visualizer theme */}
         {themeState === 'Spotify' && <SpotifyTheme />}
-        {/* <SpotifyTheme /> */}
         {themeState === 'Discover' && <DiscoverTheme />}
+        {themeState === 'Visualizer' && <VisualizerTheme />}
       </ThemeWrapper>
       <FooterWrapper>
-        {/* <button type="button" onClick={() => logoutTest()}>
+        {/* temp logout button for testing purposes */}
+        <button type="button" onClick={() => logoutTest()}>
           logout test
-        </button> */}
+        </button>
         <ToggleSwitch vals={val} curSelect={themeState} />
         <Footer />
       </FooterWrapper>

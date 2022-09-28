@@ -12,6 +12,7 @@ function ConcealedRadio({ value, selected }: RadioProps) {
       name="switch"
       checked={selected === value}
       readOnly
+      aria-label="switch_radio"
     />
   );
 }

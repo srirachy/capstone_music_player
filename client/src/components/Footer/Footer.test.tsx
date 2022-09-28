@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import { store } from '../../store';
 import Footer from './Footer';
 
-test('allow user to authenticate', async () => {
+test('load footer container element', async () => {
   render(
     <Provider store={store}>
       <Footer />

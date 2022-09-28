@@ -1,16 +1,14 @@
 import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { store } from '../../store';
-import SpotifyTheme from './SpotifyTheme';
+import ConcealedRadio from './ConcealedRadio';
 
-test('load spotify theme container', async () => {
+test('load switch radio element', async () => {
   render(
     <Provider store={store}>
-      <SpotifyTheme />
+      <ConcealedRadio value="" selected="" />
     </Provider>,
   );
-  const linkElement = screen.getByLabelText(
-    /spotify_theme_container/i,
-  );
+  const linkElement = screen.getByLabelText(/switch_radio/i);
   expect(linkElement).toBeInTheDocument();
 });

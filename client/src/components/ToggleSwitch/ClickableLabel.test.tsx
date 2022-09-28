@@ -1,16 +1,14 @@
 import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { store } from '../../store';
-import SpotifyTheme from './SpotifyTheme';
+import ClickableLabel from './ClickableLabel';
 
-test('load spotify theme container', async () => {
+test('load label element', async () => {
   render(
     <Provider store={store}>
-      <SpotifyTheme />
+      <ClickableLabel title="" onChange={() => ''} id="" />
     </Provider>,
   );
-  const linkElement = screen.getByLabelText(
-    /spotify_theme_container/i,
-  );
+  const linkElement = screen.getByLabelText(/switch_label/i);
   expect(linkElement).toBeInTheDocument();
 });

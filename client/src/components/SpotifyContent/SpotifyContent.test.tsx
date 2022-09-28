@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import { store } from '../../store';
 import SpotifyContent from './SpotifyContent';
 
-test('allow user to authenticate', async () => {
+test('load playlist element', async () => {
   render(
     <Provider store={store}>
       <SpotifyContent headerBackground={false} />

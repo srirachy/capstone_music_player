@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import { store } from '../../store';
 import MusicController from './MusicController';
 
-test('check if component is loaded', async () => {
+test('load controller container element', async () => {
   render(
     <Provider store={store}>
       <MusicController />

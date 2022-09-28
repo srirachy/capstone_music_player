@@ -1,16 +1,14 @@
 import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { store } from '../../store';
-import SpotifyTheme from './SpotifyTheme';
+import VisualizerTheme from './VisualizerTheme';
 
-test('load spotify theme container', async () => {
+test('load visualizer container element', async () => {
   render(
     <Provider store={store}>
-      <SpotifyTheme />
+      <VisualizerTheme />
     </Provider>,
   );
-  const linkElement = screen.getByLabelText(
-    /spotify_theme_container/i,
-  );
+  const linkElement = screen.getByLabelText(/visualizer_theme/i);
   expect(linkElement).toBeInTheDocument();
 });

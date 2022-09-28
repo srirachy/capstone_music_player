@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import { store } from '../../store';
 import CurrentTrack from './CurrentTrack';
 
-test('allow user to authenticate', async () => {
+test('load current track container element', async () => {
   render(
     <Provider store={store}>
       <CurrentTrack />

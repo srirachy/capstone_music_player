@@ -1,5 +1,5 @@
 function DiscoverTheme() {
-  return <p>meow</p>;
+  return <p aria-label="discover">meow</p>;
 }
 
 export default DiscoverTheme;

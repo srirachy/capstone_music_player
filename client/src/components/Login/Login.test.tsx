@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import { store } from '../../store';
 import Login from './Login';
 
-test('allow user to authenticate', async () => {
+test('load login button', async () => {
   render(
     <Provider store={store}>
       <Login />
