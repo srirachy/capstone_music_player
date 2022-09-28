@@ -11,3 +11,8 @@ export const FooterContainer = styled.div`
   width: 100%;
   border-top: 1px solid #282828;
 `;
+
+export const SwitchWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;

@@ -2,6 +2,8 @@ import styled from 'styled-components';
 
 export const Switch = styled.div`
   font-family: 'Lucida Grande', Tahoma, Verdana, sans-serif;
+  display: flex;
+  justify-content: flex-end;
   position: relative;
   height: 26px;
   width: 135px;
