@@ -36,7 +36,6 @@ function MusicPlayer() {
 
   // token persist
   useEffect(() => {
-    // use refreshToken to getRefreshToken()
     if (token) {
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
@@ -52,7 +51,7 @@ function MusicPlayer() {
         ) {
           const canRefresh = getRefreshToken();
           if (canRefresh) {
-            dispatch(fetchRefreshToken(refreshToken));
+            dispatch(fetchRefreshToken(refreshToken)); // use refreshToken to getRefreshToken()
           } else {
             logout();
           }

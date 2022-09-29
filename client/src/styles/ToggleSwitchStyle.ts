@@ -38,6 +38,7 @@ export const SwitchLabel = styled.label`
   color: rgba(0, 0, 0, 0.6);
   text-align: center;
   cursor: pointer;
+  color: #216ba5;
 
   ${SwitchRadio}:checked + & {
     transition: 0.15s ease-out;

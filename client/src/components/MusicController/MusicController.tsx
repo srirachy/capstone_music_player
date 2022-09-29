@@ -39,8 +39,7 @@ function MusicController() {
   // onClick shuffle
   const toggleShuffle = async () => {
     const curShuffle = shuffleState ? 'false' : 'true';
-    // pass state as string for fetch
-    await dispatch(fetchShuffle(curShuffle));
+    await dispatch(fetchShuffle(curShuffle)); // pass state as string for fetch
   };
 
   // onClick repeat

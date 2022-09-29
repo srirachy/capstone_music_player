@@ -5,7 +5,11 @@ import {
 
 function Login() {
   const connectSpotify = () => {
-    window.location.href = 'http://localhost:9000/auth/login';
+    const spotifyAuthLogin = process.env.REACT_APP_AUTH_LOGIN;
+    console.log(spotifyAuthLogin);
+    if (spotifyAuthLogin) {
+      window.location.href = spotifyAuthLogin;
+    }
   };
   return (
     <LoginContainer>
