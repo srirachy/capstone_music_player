@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TokenTypes } from '../types';
 import { createTokenObj } from '../utils/Functions';
-// import { persistor, RootState } from './index.js';
 
 const initialState = {
   loading: false,
   error: false,
+  musicOrLogin: false,
   tokenObj: {},
 } as TokenTypes;
 
@@ -13,9 +13,10 @@ export const fetchToken = createAsyncThunk(
   'token/fetchToken',
   async () => {
     const res = await fetch('/auth/token');
-    const data = await res.json();
-    const newTokenObj = createTokenObj(data);
-    return newTokenObj;
+    const resData = await res.json();
+    const newTokenObj = createTokenObj(resData);
+    const tokenExist = newTokenObj.token !== '';
+    return { newTokenObj, tokenExist };
   },
 );
 
@@ -25,7 +26,8 @@ export const fetchRefreshToken = createAsyncThunk(
     const res = await fetch(`/auth/refresh_token/${refreshToken}`);
     const resData = await res.json();
     const newTokenObj = createTokenObj(resData);
-    return newTokenObj;
+    const tokenExist = newTokenObj.token !== '';
+    return { newTokenObj, tokenExist };
   },
 );
 
@@ -51,7 +53,8 @@ export const tokenSlice = createSlice({
       .addCase(fetchToken.fulfilled, (state, { payload }) => {
         state.error = false;
         state.loading = false;
-        state.tokenObj = payload;
+        state.musicOrLogin = payload.tokenExist;
+        state.tokenObj = payload.newTokenObj;
       })
       .addCase(fetchToken.rejected, (state) => {
         state.error = true;
@@ -64,7 +67,8 @@ export const tokenSlice = createSlice({
       .addCase(fetchRefreshToken.fulfilled, (state, { payload }) => {
         state.error = false;
         state.loading = false;
-        state.tokenObj = payload;
+        state.musicOrLogin = payload.tokenExist;
+        state.tokenObj = payload.newTokenObj;
       })
       .addCase(fetchRefreshToken.rejected, (state) => {
         state.error = true;
@@ -77,6 +81,7 @@ export const tokenSlice = createSlice({
       .addCase(fetchLogout.fulfilled, (state, { payload }) => {
         state.error = false;
         state.loading = false;
+        state.musicOrLogin = false;
         state.tokenObj = payload;
       })
       .addCase(fetchLogout.rejected, (state) => {
@@ -85,8 +90,5 @@ export const tokenSlice = createSlice({
       });
   },
 });
-
-// export const exampleToken = (state: RootState) => state;
-// export const { clearToken } = tokenSlice.actions;
 
 export default tokenSlice.reducer;

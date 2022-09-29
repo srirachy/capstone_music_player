@@ -111,9 +111,8 @@ export const fetchRepeat = createAsyncThunk(
 export const fetchVolume = createAsyncThunk(
   'musicPlayer/fetchVolume',
   async (curVol: string) => {
-    const volAsNum = parseInt(curVol, 10);
-    await fetch(`/auth/volume/${volAsNum}`);
-    return volAsNum;
+    await fetch(`/auth/volume/${+curVol}`);
+    return +curVol;
   },
 );
 

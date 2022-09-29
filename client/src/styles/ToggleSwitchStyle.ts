@@ -34,7 +34,7 @@ export const SwitchLabel = styled.label`
   float: left;
   width: 2.8rem;
   line-height: 1.625rem;
-  font-size: 11px;
+  font-size: 0.69rem;
   color: rgba(0, 0, 0, 0.6);
   text-align: center;
   cursor: pointer;
