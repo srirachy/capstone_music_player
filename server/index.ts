@@ -307,6 +307,30 @@ app.get(
   },
 );
 
+// volume endpoint
+app.get(
+  '/auth/volume/:volAsNum',
+  async ({ params: { volAsNum } }, res) => {
+    try {
+      await axios({
+        method: 'put',
+        url: 'https://api.spotify.com/v1/me/player/volume',
+        params: {
+          volume_percent: volAsNum,
+        },
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      res.end();
+    } catch (err) {
+      console.log(err);
+      res.send(err);
+    }
+  },
+);
+
 // logout endpoint
 app.get('/auth/logout', (_, res) => {
   accessToken = '';

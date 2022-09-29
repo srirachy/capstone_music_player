@@ -18,6 +18,7 @@ const initialState = {
   trackTrigger: true,
   repeatState: '',
   shuffleState: false,
+  musicVolume: 0,
 } as unknown as MusicPlayerTypes;
 
 export const fetchCurrentTrack = createAsyncThunk(
@@ -104,6 +105,15 @@ export const fetchRepeat = createAsyncThunk(
   async (repState: string) => {
     await fetch(`/auth/repeat/${repState}`);
     return repState;
+  },
+);
+
+export const fetchVolume = createAsyncThunk(
+  'musicPlayer/fetchVolume',
+  async (curVol: string) => {
+    const volAsNum = parseInt(curVol, 10);
+    await fetch(`/auth/volume/${volAsNum}`);
+    return volAsNum;
   },
 );
 
@@ -209,18 +219,21 @@ export const musicPlayerSlice = createSlice({
       .addCase(fetchRepeat.rejected, (state) => {
         state.error = true;
         state.loading = false;
+      })
+      .addCase(fetchVolume.pending, (state) => {
+        state.error = false;
+        state.loading = true;
+      })
+      .addCase(fetchVolume.fulfilled, (state, { payload }) => {
+        state.error = false;
+        state.loading = false;
+        state.musicVolume = payload;
+      })
+      .addCase(fetchVolume.rejected, (state) => {
+        state.error = true;
+        state.loading = false;
       });
   },
 });
-
-// export const {
-//   setPlaylist,
-//   setSelectedPlaylist,
-//   setPlaylistSongs,
-//   setCurrentTrack,
-//   setMusicIsPlaying,
-//   setShuffleState,
-//   setRepeatState,
-// } = musicPlayerSlice.actions;
 
 export default musicPlayerSlice.reducer;
