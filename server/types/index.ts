@@ -19,13 +19,3 @@ export type ShuffUrlProps = {
 export type RepUrlProps = {
   state: string;
 };
-
-export type TrackProps = {
-  uri: string;
-  offset: any;
-  position_ms: number;
-};
-
-export type OffsetProp = {
-  position: number;
-};

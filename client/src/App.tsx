@@ -27,7 +27,7 @@ function App() {
     }
   }, [dispatch, token]);
 
-  // fetchRefreshToken if one exists and user data is empty
+  // fetchRefreshToken if one exists and user data is empty -- mostly to inject persisted token to server-side if its empty
   useEffect(() => {
     const getFreshy = async () => {
       await dispatch(fetchRefreshToken(refreshToken));
