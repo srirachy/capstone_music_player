@@ -6,7 +6,6 @@ import {
 function Login() {
   const connectSpotify = () => {
     const spotifyAuthLogin = process.env.REACT_APP_AUTH_LOGIN;
-    console.log(spotifyAuthLogin);
     if (spotifyAuthLogin) {
       window.location.href = spotifyAuthLogin;
     }
