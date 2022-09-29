@@ -7,6 +7,11 @@ import {
   TrackType,
 } from '../types/index';
 
+type SongType = {
+  uri: string;
+  trackNum: number;
+};
+
 const initialState = {
   loading: true,
   error: false,
@@ -116,10 +121,23 @@ export const fetchVolume = createAsyncThunk(
   },
 );
 
+export const fetchSong = createAsyncThunk(
+  'musicPlayer/fetchSong',
+  async (songObj: SongType) => {
+    const { uri, trackNum } = songObj;
+    const { status } = await fetch(`/auth/play/${uri}/${trackNum}`);
+    return status === 204;
+  },
+);
+
 export const musicPlayerSlice = createSlice({
   name: 'musicPlayer',
   initialState,
-  reducers: {},
+  reducers: {
+    setSelectedPlaylist(state, { payload }) {
+      state.selectedPlaylist = payload;
+    },
+  },
   extraReducers(builder) {
     builder
       .addCase(fetchCurrentTrack.pending, (state) => {
@@ -231,8 +249,22 @@ export const musicPlayerSlice = createSlice({
       .addCase(fetchVolume.rejected, (state) => {
         state.error = true;
         state.loading = false;
+      })
+      .addCase(fetchSong.pending, (state) => {
+        state.error = false;
+        state.loading = true;
+      })
+      .addCase(fetchSong.fulfilled, (state, { payload }) => {
+        state.error = false;
+        state.loading = false;
+        state.musicIsPlaying = payload;
+      })
+      .addCase(fetchSong.rejected, (state) => {
+        state.error = true;
+        state.loading = false;
       });
   },
 });
 
+export const { setSelectedPlaylist } = musicPlayerSlice.actions;
 export default musicPlayerSlice.reducer;
