@@ -1,5 +1,7 @@
+import { VisualizerContainer } from '../../styles/VisualizerStyle';
+
 function VisualizerTheme() {
-  return <p aria-label="visualizer_theme">poopie</p>;
+  return <VisualizerContainer aria-label="visualizer_theme" />;
 }
 
 export default VisualizerTheme;

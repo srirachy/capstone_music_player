@@ -111,6 +111,7 @@ type TokenObjProps = {
 export type TokenTypes = {
   loading: boolean;
   error: boolean;
+  musicOrLogin: boolean;
   tokenObj: TokenObjProps;
 };
 

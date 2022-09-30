@@ -1,4 +1,3 @@
-// this component will house the three themes: clone, my own style - emphasis on music discovery, and visualizer... maybe not visualizer anymore :(
 import { useEffect } from 'react';
 import { useAppDispatch } from 'src/store/hooks';
 import { fetchUser } from 'src/store/userSlice';
@@ -37,7 +36,6 @@ function MusicPlayer() {
 
   // token persist
   useEffect(() => {
-    // use refreshToken to getRefreshToken()
     if (token) {
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
@@ -53,9 +51,8 @@ function MusicPlayer() {
         ) {
           const canRefresh = getRefreshToken();
           if (canRefresh) {
-            dispatch(fetchRefreshToken(refreshToken));
+            dispatch(fetchRefreshToken(refreshToken)); // use refreshToken to getRefreshToken()
           } else {
-            console.log('no refresh token avail');
             logout();
           }
         }
@@ -75,7 +72,6 @@ function MusicPlayer() {
   return (
     <MusicPlayerContainer>
       <ThemeWrapper>
-        {/* toggle -- spotify/discover/visualizer theme */}
         {themeState === 'Spotify' && <SpotifyTheme />}
         {themeState === 'Discover' && <DiscoverTheme />}
         {themeState === 'Visual' && <VisualizerTheme />}

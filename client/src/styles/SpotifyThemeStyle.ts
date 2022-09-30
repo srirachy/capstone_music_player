@@ -7,6 +7,7 @@ export const SpotifyThemeContainer = styled.section`
   display: grid;
   grid-template-rows: 85vh;
 `;
+
 export const SidebarWrapper = styled.div`
   display: grid;
   grid-template-columns: 15vw 85vw;
@@ -15,6 +16,7 @@ export const SidebarWrapper = styled.div`
   background: linear-gradient(transparent, rgba(0, 0, 0, 1));
   background-color: rgb(32, 87, 100);
 `;
+
 export const NavBarWrapper = styled.div`
   height: 100%;
   width: 100%;
@@ -27,4 +29,5 @@ export const NavBarWrapper = styled.div`
   }
   scrollbar-width: thin;
 `;
+
 export const ContentWrapper = styled.div``;

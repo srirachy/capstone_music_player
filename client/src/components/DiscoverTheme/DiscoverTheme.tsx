@@ -1,5 +1,7 @@
+import { DiscoverContainer } from '../../styles/DiscoverStyle';
+
 function DiscoverTheme() {
-  return <p aria-label="discover">meow</p>;
+  return <DiscoverContainer aria-label="discover" />;
 }
 
 export default DiscoverTheme;

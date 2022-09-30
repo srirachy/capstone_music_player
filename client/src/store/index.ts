@@ -18,7 +18,7 @@ import themeReducer from './themeSlice';
 const persistConfig = {
   key: 'token',
   storage,
-  blacklist: ['loading', 'error', 'refreshData'],
+  blacklist: ['loading', 'error', 'refreshData', 'musicOrLogin'],
 };
 
 const persistedReducer = persistReducer(persistConfig, tokenReducer);

@@ -1,7 +1,10 @@
 import { useEffect } from 'react';
 import { useAppDispatch } from 'src/store/hooks';
 import usePlaylist from 'src/utils/usePlaylist';
-import { fetchUserPlaylist } from '../../store/musicPlayerSlice';
+import {
+  fetchUserPlaylist,
+  setSelectedPlaylist,
+} from '../../store/musicPlayerSlice';
 import { PlaylistContainer } from '../../styles/PlaylistStyle';
 
 function Playlist() {
@@ -16,12 +19,26 @@ function Playlist() {
     getPlaylistData();
   }, [dispatch]);
 
+  const changeSelectedPlaylist = async (
+    selectedPlaylistId: string,
+  ) => {
+    dispatch(setSelectedPlaylist(selectedPlaylistId));
+  };
+
   return (
     <PlaylistContainer>
       <ul>
         {playlist.length > 0 &&
           playlist.map(({ name, id }) => {
-            return <li key={id}>{name}</li>;
+            return (
+              <li
+                key={id}
+                onClick={() => changeSelectedPlaylist(id)}
+                role="none" // i win this round jsx-a11y
+              >
+                {name}
+              </li>
+            );
           })}
       </ul>
     </PlaylistContainer>

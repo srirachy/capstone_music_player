@@ -13,21 +13,26 @@ export const ControllerContainer = styled.section`
     }
   }
 `;
+
 export const ShuffleWrapper = styled.div`
   font-size: 1rem;
 `;
+
 export const PrevWrapper = styled.div`
   font-size: 2rem;
 `;
+
 export const PlayPauseWrapper = styled.div`
   font-size: 2rem;
   svg {
     color: #ffffff;
   }
 `;
+
 export const NextWrapper = styled.div`
   font-size: 2rem;
 `;
+
 export const RepeatWrapper = styled.div`
   font-size: 1rem;
 `;

@@ -4,17 +4,22 @@ import Login from './components/Login/Login';
 import { AppContainer } from './styles/AppStyle';
 import { useAppDispatch } from './store/hooks';
 import useSessToken from './utils/useSessToken';
-import { fetchToken } from './store/tokenSlice';
+import { fetchRefreshToken, fetchToken } from './store/tokenSlice';
+import useUserInfo from './utils/useUserInfo';
 
 function App() {
   const dispatch = useAppDispatch();
   const {
-    tokenObj: { token },
+    musicOrLogin,
+    tokenObj: { token, refreshToken },
   } = useSessToken();
+  const {
+    userInfo: { userId },
+  } = useUserInfo();
 
+  // fetchToken upon login
   useEffect(() => {
     const getToken = async () => {
-      console.log('getting initial token');
       await dispatch(fetchToken());
     };
     if (!token) {
@@ -22,9 +27,19 @@ function App() {
     }
   }, [dispatch, token]);
 
+  // fetchRefreshToken if one exists and user data is empty -- mostly to inject persisted token to server-side if its empty
+  useEffect(() => {
+    const getFreshy = async () => {
+      await dispatch(fetchRefreshToken(refreshToken));
+    };
+    if (!userId && refreshToken) {
+      getFreshy();
+    }
+  }, [dispatch, refreshToken, userId]);
+
   return (
     <AppContainer>
-      <div>{!token ? <Login /> : <MusicPlayer />}</div>
+      <div>{musicOrLogin ? <MusicPlayer /> : <Login />}</div>
     </AppContainer>
   );
 }

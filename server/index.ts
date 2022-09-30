@@ -219,6 +219,34 @@ app.get('/auth/me/player/currently-playing', async (_, res) => {
   }
 });
 
+app.get(
+  '/auth/play/:uri/:trackNum',
+  async ({ params: { uri, trackNum } }, res) => {
+    const numMinusOne = +trackNum - 1;
+    try {
+      const { status } = await axios({
+        method: 'put',
+        url: 'https://api.spotify.com/v1/me/player/play',
+        data: {
+          context_uri: uri,
+          offset: {
+            position: numMinusOne,
+          },
+          position_ms: '0',
+        },
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      res.send(status);
+    } catch (err) {
+      console.log(err);
+      res.send(err);
+    }
+  },
+);
+
 // next/prev endpoint -- skip to next/previous track
 app.get(
   '/auth/me/player/:prevOrNext',

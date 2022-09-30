@@ -1,7 +1,11 @@
 import { useEffect } from 'react';
 import { AiFillClockCircle } from 'react-icons/ai';
 import { useAppDispatch } from 'src/store/hooks';
-import { fetchSelectedPlaylist } from 'src/store/musicPlayerSlice';
+import {
+  fetchCurrentTrack,
+  fetchSelectedPlaylist,
+  fetchSong,
+} from 'src/store/musicPlayerSlice';
 import usePlaylist from 'src/utils/usePlaylist';
 import {
   ContentContainer,
@@ -37,6 +41,15 @@ function SpotifyContent({ headerBackground }: HeaderBkgdType) {
       getPlaylistSongs();
     }
   }, [dispatch, selectedPlaylist]);
+
+  const changeTrack = async (uri: string, trackNum: number) => {
+    const songObj = {
+      uri,
+      trackNum,
+    };
+    await dispatch(fetchSong(songObj));
+    await dispatch(fetchCurrentTrack());
+  };
 
   return (
     <ContentContainer>
@@ -80,13 +93,18 @@ function SpotifyContent({ headerBackground }: HeaderBkgdType) {
                       artists,
                       album,
                       duration,
-                      // context_uri,
-                      // track_number,
+                      context_uri: contextUri,
+                      track_number: trackNum,
                     },
                     i,
                   ) => {
                     return (
-                      <SongRow key={id}>
+                      <SongRow
+                        key={id}
+                        onClick={() => {
+                          changeTrack(contextUri, trackNum);
+                        }}
+                      >
                         <SongCol>
                           <span>{i + 1}</span>
                         </SongCol>

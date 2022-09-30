@@ -8,11 +8,11 @@ export const MusicPlayerContainer = styled.article`
   grid-template-rows: 85vh 15vh;
 `;
 
-// check grid template later for this section just in case
 export const ThemeWrapper = styled.section`
   height: 100%;
   width: 100%;
 `;
+
 export const FooterWrapper = styled.footer`
   font-size: 1rem;
 `;

@@ -5,7 +5,10 @@ import {
 
 function Login() {
   const connectSpotify = () => {
-    window.location.href = 'http://localhost:9000/auth/login'; // is there a way to thunk this?
+    const spotifyAuthLogin = process.env.REACT_APP_AUTH_LOGIN;
+    if (spotifyAuthLogin) {
+      window.location.href = spotifyAuthLogin;
+    }
   };
   return (
     <LoginContainer>
