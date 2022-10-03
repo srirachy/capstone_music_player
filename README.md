@@ -2,7 +2,21 @@
 ---------
 
 # Description:
-This repository contains the source code for a Music Player that utilizes the Spotify API.
+This repository contains the source code for a Music Player that utilizes the Spotify API. This app is built with React/TypeScript for front-end development and NodeJS/Express for server-side development. Simple component tests were made to practice test-driven-development.
+
+## Built With
+* React
+* TypeScript
+* NodeJS
+* Express
+* React Redux
+* Redux Persist
+* Styled Components
+* React Icons
+* ESLint
+* Prettier
+* Axios
+* Morgan
 
 ## Project Requirements
 - Visual Studio Code
