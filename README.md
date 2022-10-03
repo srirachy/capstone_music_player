@@ -1,7 +1,6 @@
 # Music Player - Spotify Clone
----------
 
-# Description:
+## Description:
 This repository contains the source code for a Music Player that utilizes the Spotify API. This app is built with React/TypeScript for front-end development and NodeJS/Express for server-side development. Simple component tests were made to practice test-driven-development.
 
 ## Built With
@@ -52,11 +51,11 @@ npm run dev
 - Gitflow Workflow
   - When starting work on a new feature, create a new `feature branch`
 
-  ```bash
-  git flow feature start feature_branch
-  ```
+    ```bash
+    git flow feature start feature_branch
+    ```
 
-    -Once finished, the branch will merge into `develop`
+  - Once finished, the branch will merge into `develop`
 
     ```bash
     git flow feature finish feature_branch
