@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.ts",
+  "proxy": "http://localhost:9000",
   "scripts": {
     "start": "react-scripts start",
     "test": "react-scripts test",
@@ -12,14 +13,27 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@reduxjs/toolkit": "^1.8.5",
     "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.3.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^14.4.3",
+    "http-proxy-middleware": "^2.0.6",
+    "msw": "^0.47.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-icons": "^4.4.0",
+    "react-redux": "^8.0.2",
     "react-scripts": "^5.0.1",
+    "redux-persist": "^6.0.0",
+    "redux-thunk": "^2.4.1",
+    "styled-components": "^5.3.5",
     "web-vitals": "^3.0.0"
   },
   "devDependencies": {
-    "eslint-config-react-app": "^7.0.1"
+    "@types/jest": "^29.0.2",
+    "@types/react": "^18.0.20",
+    "@types/react-dom": "^18.0.6",
+    "@types/react-icons": "^3.0.0",
+    "@types/styled-components": "^5.1.26"
   }
 }
