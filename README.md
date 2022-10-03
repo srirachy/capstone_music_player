@@ -1,70 +1,74 @@
-# Getting Started with Create React App
+# Music Player - Spotify Clone
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Description:
+This repository contains the source code for a Music Player that utilizes the Spotify API. This app is built with React/TypeScript for front-end development and NodeJS/Express for server-side development. Simple component tests were made to practice test-driven-development.
 
-## Available Scripts
+## Built With
+* React
+* TypeScript
+* NodeJS
+* Express
+* React Redux
+* Redux Persist
+* Styled Components
+* React Icons
+* ESLint
+* Prettier
+* Axios
+* Morgan
 
-In the project directory, you can run:
+## Project Requirements
+- Visual Studio Code
+- Visual Studio Code Installer Projects (https://code.visualstudio.com/download)
 
-### `npm start`
+## Project Setup
+- [Git](https://git-scm.com/) must be installed
+- Clone repository `git clone git@github.com:srirachy/capstone_music_player.git`
+- Install dependencies in root, client, and server running:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```bash
+npm install
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```bash
+cd client
+npm install
+```
 
-### `npm test`
+```bash
+cd server
+npm install
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Running the Project
+- Start both client and server with the following command:
 
-### `npm run build`
+```bash
+npm run dev
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Development Process
+- Gitflow Workflow
+  - When starting work on a new feature, create a new `feature branch`
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+    ```bash
+    git flow feature start feature_branch
+    ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+  - Once finished, the branch will merge into `develop`
 
-### `npm run eject`
+    ```bash
+    git flow feature finish feature_branch
+    ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+  - When starting work on a new release version, create a `release branch` and increment the `minor` version 
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+    ```bash
+    git flow release start 0.1.0
+    ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Deployment Process
+- Coming Soon™
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Wiki
+For information on Installation and API, see the [wiki](https://github.com/srirachy/capstone_music_player/wiki/Installation-and-API)
