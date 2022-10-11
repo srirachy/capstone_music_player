@@ -8,7 +8,7 @@ import useThemeState from 'src/utils/useThemeState';
 import Footer from '../Footer/Footer';
 import SpotifyTheme from '../SpotifyTheme/SpotifyTheme';
 import DiscoverTheme from '../DiscoverTheme/DiscoverTheme';
-import VisualizerTheme from '../VisualizerTheme/VisualizerTheme';
+// import VisualizerTheme from '../VisualizerTheme/VisualizerTheme';
 import {
   MusicPlayerContainer,
   ThemeWrapper,
@@ -18,6 +18,7 @@ import {
   getRefreshToken,
   hasTokenExpired,
 } from '../../utils/Functions';
+import BoxTest from '../BoxTest/BoxTest';
 
 function MusicPlayer() {
   const dispatch = useAppDispatch();
@@ -74,7 +75,7 @@ function MusicPlayer() {
       <ThemeWrapper>
         {themeState === 'Spotify' && <SpotifyTheme />}
         {themeState === 'Discover' && <DiscoverTheme />}
-        {themeState === 'Visual' && <VisualizerTheme />}
+        {themeState === 'Visual' && <BoxTest />}
       </ThemeWrapper>
       <FooterWrapper>
         <Footer />
@@ -82,5 +83,29 @@ function MusicPlayer() {
     </MusicPlayerContainer>
   );
 }
+
+// <>
+//   {themeState === 'Spotify' && (
+//     <MusicPlayerContainer>
+//       <ThemeWrapper>
+//         <SpotifyTheme />
+//       </ThemeWrapper>
+//       <FooterWrapper>
+//         <Footer />
+//       </FooterWrapper>
+//     </MusicPlayerContainer>
+//   )}
+//   {themeState === 'Visual' && <VisualizerTheme />}
+// </>
+// <MusicPlayerContainer>
+//   <ThemeWrapper>
+//     {themeState === 'Spotify' && <SpotifyTheme />}
+//     {themeState === 'Discover' && <DiscoverTheme />}
+//     {themeState === 'Visual' && <VisualizerTheme />}
+//   </ThemeWrapper>
+//   <FooterWrapper>
+//     <Footer />
+//   </FooterWrapper>
+// </MusicPlayerContainer>
 
 export default MusicPlayer;
