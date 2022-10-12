@@ -1,5 +1,4 @@
-/* eslint-disable react/jsx-curly-brace-presence */
-import { useRef, useState, Suspense } from 'react';
+import { useRef, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { PositionalAudio } from '@react-three/drei';
 import {
@@ -7,12 +6,11 @@ import {
   Bloom,
   SMAA,
 } from '@react-three/postprocessing';
-// import { VisualizerContainer } from '../../styles/VisualizerStyle';
+import { SoundRefType } from 'src/types';
 import VisualizerSphere from '../VisualizerSphere/VisualizerSphere';
 
 function VisualizerTheme() {
-  const sound = useRef() as any;
-  const [play, setPlay] = useState(false);
+  const sound = useRef<SoundRefType>(null!);
 
   function createSpheres() {
     const number = 20;
@@ -41,41 +39,29 @@ function VisualizerTheme() {
     return spheres;
   }
 
-  function playMusic() {
-    if (play) {
-      sound.current.pause();
-    } else {
-      sound.current.play();
-    }
-    setPlay(!play);
-  }
   return (
-    <>
-      <button type="button" onClick={playMusic}>
-        play
-      </button>
-      <Canvas>
-        <ambientLight intensity={0.2} />
-        <directionalLight position={[0, 0, 5]} />
-        <Suspense fallback={null}>
-          <PositionalAudio
-            url={'../../sounds/Paradise.mp3'}
-            distance={10}
-            loop
-            ref={sound}
+    <Canvas>
+      <ambientLight intensity={0.2} />
+      <directionalLight position={[0, 0, 5]} />
+      <Suspense fallback={null}>
+        <PositionalAudio
+          autoplay
+          url="Dreamin.mp3"
+          distance={5}
+          loop
+          ref={sound}
+        />
+        {createSpheres()}
+        <EffectComposer multisampling={0}>
+          <Bloom
+            intensity={0.5}
+            luminanceThreshold={0}
+            luminanceSmoothing={0.8}
           />
-          {createSpheres()}
-          <EffectComposer multisampling={0}>
-            <Bloom
-              intensity={0.5}
-              luminanceThreshold={0}
-              luminanceSmoothing={0.8}
-            />
-            <SMAA />
-          </EffectComposer>
-        </Suspense>
-      </Canvas>
-    </>
+          <SMAA />
+        </EffectComposer>
+      </Suspense>
+    </Canvas>
   );
 }
 
