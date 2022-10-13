@@ -7,7 +7,10 @@ import {
   SMAA,
 } from '@react-three/postprocessing';
 import { SoundRefType } from 'src/types';
+import { VisualizerContainer } from 'src/styles/VisualizerStyle';
 import VisualizerSphere from '../VisualizerSphere/VisualizerSphere';
+import VizOrbitControl from '../VizOrbitControl/VizOrbitControl';
+import VisualizerMenu from '../VisualizerMenu/VisualizerMenu';
 
 function VisualizerTheme() {
   const sound = useRef<SoundRefType>(null!);
@@ -40,28 +43,32 @@ function VisualizerTheme() {
   }
 
   return (
-    <Canvas>
-      <ambientLight intensity={0.2} />
-      <directionalLight position={[0, 0, 5]} />
-      <Suspense fallback={null}>
-        <PositionalAudio
-          autoplay
-          url="Dreamin.mp3"
-          distance={5}
-          loop
-          ref={sound}
-        />
-        {createSpheres()}
-        <EffectComposer multisampling={0}>
-          <Bloom
-            intensity={0.5}
-            luminanceThreshold={0}
-            luminanceSmoothing={0.8}
+    <VisualizerContainer>
+      <VisualizerMenu />
+      <Canvas>
+        <VizOrbitControl />
+        <ambientLight intensity={0.2} />
+        <directionalLight position={[0, 0, 5]} />
+        <Suspense fallback={null}>
+          <PositionalAudio
+            autoplay
+            url="Paradise.mp3"
+            distance={5}
+            loop
+            ref={sound}
           />
-          <SMAA />
-        </EffectComposer>
-      </Suspense>
-    </Canvas>
+          {createSpheres()}
+          <EffectComposer multisampling={0}>
+            <Bloom
+              intensity={0.5}
+              luminanceThreshold={0}
+              luminanceSmoothing={0.8}
+            />
+            <SMAA />
+          </EffectComposer>
+        </Suspense>
+      </Canvas>
+    </VisualizerContainer>
   );
 }
 
