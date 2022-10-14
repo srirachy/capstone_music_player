@@ -18,8 +18,6 @@ import {
   getRefreshToken,
   hasTokenExpired,
 } from '../../utils/Functions';
-// import BoxTest from '../BoxTest/BoxTest';
-// import VizTest from '../VizTest/VizTest';
 
 function MusicPlayer() {
   const dispatch = useAppDispatch();
@@ -84,29 +82,5 @@ function MusicPlayer() {
     </MusicPlayerContainer>
   );
 }
-
-// <>
-//   {themeState === 'Spotify' && (
-//     <MusicPlayerContainer>
-//       <ThemeWrapper>
-//         <SpotifyTheme />
-//       </ThemeWrapper>
-//       <FooterWrapper>
-//         <Footer />
-//       </FooterWrapper>
-//     </MusicPlayerContainer>
-//   )}
-//   {themeState === 'Visual' && <VisualizerTheme />}
-// </>
-// <MusicPlayerContainer>
-//   <ThemeWrapper>
-//     {themeState === 'Spotify' && <SpotifyTheme />}
-//     {themeState === 'Discover' && <DiscoverTheme />}
-//     {themeState === 'Visual' && <VisualizerTheme />}
-//   </ThemeWrapper>
-//   <FooterWrapper>
-//     <Footer />
-//   </FooterWrapper>
-// </MusicPlayerContainer>
 
 export default MusicPlayer;

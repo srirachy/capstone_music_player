@@ -5,13 +5,17 @@ type MenuProp = {
 };
 
 export const MenuItem = styled.div<MenuProp>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.8rem;
+  letter-spacing: 4px;
+  text-align: center;
   height: 10vh;
   width: 10vw;
   background-color: ${(props) => `${props.bkgdColor}`};
   color: #ffffff;
-  font-size: 10px;
+  cursor: pointer;
 `;
 
-// #1ab26b
-// background-color: ${({ headerBackground }) =>
-// headerBackground ? '#000000dc' : 'none'};
+// font-weight: bold;

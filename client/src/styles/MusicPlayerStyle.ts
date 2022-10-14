@@ -15,4 +15,5 @@ export const ThemeWrapper = styled.section`
 
 export const FooterWrapper = styled.footer`
   font-size: 1rem;
+  z-index: 1;
 `;

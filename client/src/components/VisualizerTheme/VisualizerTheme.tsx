@@ -1,4 +1,4 @@
-import { useRef, Suspense } from 'react';
+import { useRef, Suspense, useState, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { PositionalAudio } from '@react-three/drei';
 import {
@@ -7,13 +7,28 @@ import {
   SMAA,
 } from '@react-three/postprocessing';
 import { SoundRefType } from 'src/types';
-import { VisualizerContainer } from 'src/styles/VisualizerStyle';
+import {
+  MenuWrapper,
+  VisualizerContainer,
+  VizWrapper,
+} from 'src/styles/VisualizerStyle';
+import useVizSong from 'src/utils/useVizSong';
+import { FaMusic } from 'react-icons/fa';
+
 import VisualizerSphere from '../VisualizerSphere/VisualizerSphere';
 import VizOrbitControl from '../VizOrbitControl/VizOrbitControl';
 import VisualizerMenu from '../VisualizerMenu/VisualizerMenu';
 
 function VisualizerTheme() {
+  const { vizSong } = useVizSong();
   const sound = useRef<SoundRefType>(null!);
+  const [showSong, setShowSong] = useState<boolean>(false);
+
+  useEffect(() => {
+    console.log(vizSong);
+    console.log(sound.current);
+    console.log('i re-rendered i think');
+  }, [vizSong]);
 
   function createSpheres() {
     const number = 20;
@@ -42,32 +57,44 @@ function VisualizerTheme() {
     return spheres;
   }
 
+  function meowTest() {
+    setShowSong(!showSong);
+  }
+
   return (
     <VisualizerContainer>
-      <VisualizerMenu />
-      <Canvas>
-        <VizOrbitControl />
-        <ambientLight intensity={0.2} />
-        <directionalLight position={[0, 0, 5]} />
-        <Suspense fallback={null}>
-          <PositionalAudio
-            autoplay
-            url="Paradise.mp3"
-            distance={5}
-            loop
-            ref={sound}
-          />
-          {createSpheres()}
-          <EffectComposer multisampling={0}>
-            <Bloom
-              intensity={0.5}
-              luminanceThreshold={0}
-              luminanceSmoothing={0.8}
-            />
-            <SMAA />
-          </EffectComposer>
-        </Suspense>
-      </Canvas>
+      <MenuWrapper>
+        <button onClick={meowTest} type="button">
+          <FaMusic />
+        </button>
+        {showSong && <VisualizerMenu />}
+      </MenuWrapper>
+      {vizSong && (
+        <VizWrapper>
+          <Canvas>
+            <VizOrbitControl />
+            <ambientLight intensity={0.2} />
+            <directionalLight position={[0, 0, 5]} />
+            <Suspense fallback={null}>
+              <PositionalAudio
+                autoplay
+                url={`${vizSong}.mp3`}
+                distance={5}
+                ref={sound}
+              />
+              {createSpheres()}
+              <EffectComposer multisampling={0}>
+                <Bloom
+                  intensity={0.5}
+                  luminanceThreshold={0}
+                  luminanceSmoothing={0.8}
+                />
+                <SMAA />
+              </EffectComposer>
+            </Suspense>
+          </Canvas>
+        </VizWrapper>
+      )}
     </VisualizerContainer>
   );
 }

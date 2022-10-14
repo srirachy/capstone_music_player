@@ -98,3 +98,7 @@ export const adjustScale = (
     ((number - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin
   );
 };
+
+export const whiteSpaceToUnderscore = (songName: string) => {
+  return songName.replace(/\s+/g, '_');
+};

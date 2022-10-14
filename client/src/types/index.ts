@@ -153,6 +153,11 @@ export type LabelTypes = {
   onChange: (val: string) => void;
 };
 
+// types visualizerSlice
+export type VizSongType = {
+  vizSong: string;
+};
+
 // types toggle switch
 export type ToggleProps = {
   vals: string[];
@@ -191,4 +196,12 @@ export type AnalyzerProps = {
       THREE.Material | THREE.Material[]
     >
   >;
+};
+
+// VizMenu types
+export type VizMenuProps = {
+  id: string;
+  songName: string;
+  createClickHandler: () => void;
+  index: number;
 };
