@@ -3,6 +3,7 @@ import { VizSongType } from '../types';
 
 const initialState = {
   vizSong: "dreamin'",
+  trackChange: false,
 } as VizSongType;
 
 export const visualizerSlice = createSlice({
@@ -12,8 +13,11 @@ export const visualizerSlice = createSlice({
     setVizSong(state, { payload }) {
       state.vizSong = payload;
     },
+    setTrackChange(state, { payload }) {
+      state.trackChange = payload;
+    },
   },
 });
 
-export const { setVizSong } = visualizerSlice.actions;
+export const { setVizSong, setTrackChange } = visualizerSlice.actions;
 export default visualizerSlice.reducer;

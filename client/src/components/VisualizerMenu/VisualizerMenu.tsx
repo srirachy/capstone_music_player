@@ -8,7 +8,10 @@ import {
 import usePlaylist from 'src/utils/usePlaylist';
 import { VizMenuContainer } from 'src/styles/VisualizerMenuStyle';
 import { whiteSpaceToUnderscore } from 'src/utils/Functions';
-import { setVizSong } from 'src/store/visualizerSlice';
+import {
+  setTrackChange,
+  setVizSong,
+} from 'src/store/visualizerSlice';
 import VizMenuItem from './VizMenuItem';
 
 function VisualizerMenu() {
@@ -37,10 +40,12 @@ function VisualizerMenu() {
     const newName = whiteSpaceToUnderscore(name);
 
     if (vizList.includes(newName)) {
+      dispatch(setTrackChange(true));
       dispatch(setVizSong(newName));
       await dispatch(fetchSong(songObj));
       await dispatch(fetchCurrentTrack());
       await dispatch(fetchVolume('0'));
+      dispatch(setTrackChange(false));
     }
   };
 

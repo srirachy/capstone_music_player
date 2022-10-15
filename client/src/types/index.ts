@@ -156,6 +156,7 @@ export type LabelTypes = {
 // types visualizerSlice
 export type VizSongType = {
   vizSong: string;
+  trackChange: boolean;
 };
 
 // types toggle switch

@@ -14,21 +14,46 @@ import {
 } from 'src/styles/VisualizerStyle';
 import useVizSong from 'src/utils/useVizSong';
 import { FaMusic } from 'react-icons/fa';
-
+import usePlaylist from 'src/utils/usePlaylist';
+import {
+  fetchCurrentTrack,
+  fetchSong,
+  fetchVolume,
+} from 'src/store/musicPlayerSlice';
+import { useAppDispatch } from 'src/store/hooks';
 import VisualizerSphere from '../VisualizerSphere/VisualizerSphere';
 import VizOrbitControl from '../VizOrbitControl/VizOrbitControl';
 import VisualizerMenu from '../VisualizerMenu/VisualizerMenu';
 
 function VisualizerTheme() {
-  const { vizSong } = useVizSong();
-  const sound = useRef<SoundRefType>(null!);
+  const dispatch = useAppDispatch();
+  const {
+    playlistSongs: { tracks },
+  } = usePlaylist();
+  const { vizSong, trackChange } = useVizSong();
   const [showSong, setShowSong] = useState<boolean>(false);
+  const sound = useRef<SoundRefType>(null!);
 
   useEffect(() => {
-    console.log(vizSong);
-    console.log(sound.current);
-    console.log('i re-rendered i think');
-  }, [vizSong]);
+    const runInitSong = async () => {
+      console.log(vizSong);
+      const curTrack = tracks.find((elmt) => {
+        return elmt.name === vizSong;
+      });
+      if (curTrack) {
+        const uri = curTrack?.context_uri;
+        const trackNum = curTrack?.track_number;
+        const songObj = {
+          uri,
+          trackNum,
+        };
+        await dispatch(fetchSong(songObj));
+        await dispatch(fetchCurrentTrack());
+        await dispatch(fetchVolume('0'));
+      }
+    };
+    runInitSong();
+  }, [dispatch, tracks, vizSong]);
 
   function createSpheres() {
     const number = 20;
@@ -57,14 +82,14 @@ function VisualizerTheme() {
     return spheres;
   }
 
-  function meowTest() {
+  function songList() {
     setShowSong(!showSong);
   }
 
   return (
     <VisualizerContainer>
       <MenuWrapper>
-        <button onClick={meowTest} type="button">
+        <button onClick={songList} type="button">
           <FaMusic />
         </button>
         {showSong && <VisualizerMenu />}
@@ -76,13 +101,15 @@ function VisualizerTheme() {
             <ambientLight intensity={0.2} />
             <directionalLight position={[0, 0, 5]} />
             <Suspense fallback={null}>
-              <PositionalAudio
-                autoplay
-                url={`${vizSong}.mp3`}
-                distance={5}
-                ref={sound}
-              />
-              {createSpheres()}
+              {vizSong && !trackChange && (
+                <PositionalAudio
+                  autoplay
+                  url={`${vizSong}.mp3`}
+                  distance={5}
+                  ref={sound}
+                />
+              )}
+              {vizSong && !trackChange && createSpheres()}
               <EffectComposer multisampling={0}>
                 <Bloom
                   intensity={0.5}
