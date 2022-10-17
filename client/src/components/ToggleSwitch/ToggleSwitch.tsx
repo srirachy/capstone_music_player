@@ -8,6 +8,7 @@ import ClickableLabel from './ClickableLabel';
 import ConcealedRadio from './ConcealedRadio';
 import { ToggleProps } from '../../types';
 
+// parent component of ConcealedRadio and ClickableLabel
 function ToggleSwitch({ vals, curSelect }: ToggleProps) {
   const dispatch = useAppDispatch();
   const handleChange = (val: string) => {

@@ -16,6 +16,10 @@ This repository contains the source code for a Music Player that utilizes the Sp
 * Prettier
 * Axios
 * Morgan
+* THREE
+* React-Three Fiber
+* React-Three Drei
+* React-Three PostProcessing
 
 ## Project Requirements
 - Visual Studio Code

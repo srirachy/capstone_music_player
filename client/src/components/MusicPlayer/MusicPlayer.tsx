@@ -5,6 +5,7 @@ import { fetchLogout, fetchRefreshToken } from 'src/store/tokenSlice';
 import { persistor } from 'src/store';
 import useSessToken from 'src/utils/useSessToken';
 import useThemeState from 'src/utils/useThemeState';
+import { setVizSong } from 'src/store/visualizerSlice';
 import Footer from '../Footer/Footer';
 import SpotifyTheme from '../SpotifyTheme/SpotifyTheme';
 import DiscoverTheme from '../DiscoverTheme/DiscoverTheme';
@@ -68,6 +69,13 @@ function MusicPlayer() {
       dispatch(fetchLogout());
     }
   }, [dispatch, refreshToken, timeStamp, token, tokenExpires]);
+
+  // clean up vizSong when switching out of visual theme
+  useEffect(() => {
+    if (themeState !== 'Visual') {
+      dispatch(setVizSong(''));
+    }
+  });
 
   return (
     <MusicPlayerContainer>

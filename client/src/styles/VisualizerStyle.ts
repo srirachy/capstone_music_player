@@ -1,12 +1,20 @@
 import styled from 'styled-components';
-import wipBkgd from '../img/wipTwo.webp';
 
 export const VisualizerContainer = styled.article`
   max-width: 100vw;
   height: 100vh;
-  background-image: url(${wipBkgd});
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-attachment: fixed;
-  background-size: cover;
+  background-color: #1a1a24;
+`;
+
+export const MenuWrapper = styled.div`
+  z-index: 2;
+  position: absolute;
+  max-width: 20vw;
+  max-height: 40vh;
+`;
+
+export const VizWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  position: absolute;
 `;

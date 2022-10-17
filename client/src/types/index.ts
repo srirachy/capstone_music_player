@@ -1,3 +1,7 @@
+import { MutableRefObject } from 'react';
+import * as THREE from 'three';
+import { Vector3 } from '@react-three/fiber';
+
 // type for app
 export type PlaybackType = {
   token: string;
@@ -149,6 +153,12 @@ export type LabelTypes = {
   onChange: (val: string) => void;
 };
 
+// types visualizerSlice
+export type VizSongType = {
+  vizSong: string;
+  trackChange: boolean;
+};
+
 // types toggle switch
 export type ToggleProps = {
   vals: string[];
@@ -161,4 +171,38 @@ export type TrackObjTypes = {
   name: string;
   artists: [];
   album: AlbumProps;
+};
+
+// VisualizerTheme Type
+export type SoundRefType = {
+  sound: MutableRefObject<null>;
+};
+
+// VisualizerSphere types
+export type SphereProps = {
+  sound: MutableRefObject<SoundRefType>;
+  angle: number;
+  position: Vector3 | undefined;
+  radius: number;
+  index: number;
+};
+
+// VisualizerAnalyzer types
+export type AnalyzerProps = {
+  sound: MutableRefObject<any>; // can't do better than any here for now
+  index: number;
+  mesh: MutableRefObject<
+    THREE.Mesh<
+      THREE.BufferGeometry,
+      THREE.Material | THREE.Material[]
+    >
+  >;
+};
+
+// VizMenu types
+export type VizMenuProps = {
+  id: string;
+  songName: string;
+  createClickHandler: () => void;
+  index: number;
 };
