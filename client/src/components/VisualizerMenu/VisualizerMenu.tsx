@@ -19,7 +19,7 @@ function VisualizerMenu() {
   const {
     playlistSongs: { tracks },
   } = usePlaylist();
-  const meowRef = useRef<HTMLDivElement[]>([]);
+  const divElmtRef = useRef<HTMLDivElement[]>([]);
   const vizList = [
     "dreamin'",
     'i_could_be',
@@ -63,7 +63,7 @@ function VisualizerMenu() {
       index={index}
       songName={item.name}
       ref={(elmnt: HTMLDivElement) => {
-        meowRef.current[index] = elmnt;
+        divElmtRef.current[index] = elmnt;
       }}
     />
   ));
