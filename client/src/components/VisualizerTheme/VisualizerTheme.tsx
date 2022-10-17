@@ -88,6 +88,7 @@ function VisualizerTheme() {
               <Suspense fallback={null}>
                 <PositionalAudio
                   autoplay
+                  loop={false}
                   url={`${vizSong}.mp3`}
                   distance={5}
                   ref={sound}
