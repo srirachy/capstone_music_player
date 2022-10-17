@@ -14,10 +14,8 @@ import {
 } from 'src/styles/VisualizerStyle';
 import useVizSong from 'src/utils/useVizSong';
 import { FaMusic } from 'react-icons/fa';
-import usePlaylist from 'src/utils/usePlaylist';
 import {
-  fetchCurrentTrack,
-  fetchSong,
+  fetchPauseOrPlay,
   fetchVolume,
 } from 'src/store/musicPlayerSlice';
 import { useAppDispatch } from 'src/store/hooks';
@@ -27,34 +25,20 @@ import VisualizerMenu from '../VisualizerMenu/VisualizerMenu';
 
 function VisualizerTheme() {
   const dispatch = useAppDispatch();
-  const {
-    playlistSongs: { tracks },
-  } = usePlaylist();
   const { vizSong, trackChange } = useVizSong();
   const [showSong, setShowSong] = useState<boolean>(false);
   const sound = useRef<SoundRefType>(null!);
 
+  // set music player to pause and lower volume for initial setup
   useEffect(() => {
-    const runInitSong = async () => {
-      console.log(vizSong);
-      const curTrack = tracks.find((elmt) => {
-        return elmt.name === vizSong;
-      });
-      if (curTrack) {
-        const uri = curTrack?.context_uri;
-        const trackNum = curTrack?.track_number;
-        const songObj = {
-          uri,
-          trackNum,
-        };
-        await dispatch(fetchSong(songObj));
-        await dispatch(fetchCurrentTrack());
-        await dispatch(fetchVolume('0'));
-      }
+    const runInitSetup = async () => {
+      await dispatch(fetchPauseOrPlay('pause'));
+      await dispatch(fetchVolume('0'));
     };
-    runInitSong();
-  }, [dispatch, tracks, vizSong]);
+    runInitSetup();
+  }, [dispatch]);
 
+  // create spheres from VisualizerSphere component
   function createSpheres() {
     const number = 20;
     const increase = (Math.PI * 2) / number;
@@ -82,14 +66,14 @@ function VisualizerTheme() {
     return spheres;
   }
 
-  function songList() {
-    setShowSong(!showSong);
+  function toggleSongList() {
+    setShowSong(!showSong); // show/hide song
   }
 
   return (
     <VisualizerContainer>
       <MenuWrapper>
-        <button onClick={songList} type="button">
+        <button onClick={toggleSongList} type="button">
           <FaMusic />
         </button>
         {showSong && <VisualizerMenu />}
@@ -100,25 +84,25 @@ function VisualizerTheme() {
             <VizOrbitControl />
             <ambientLight intensity={0.2} />
             <directionalLight position={[0, 0, 5]} />
-            <Suspense fallback={null}>
-              {vizSong && !trackChange && (
+            {vizSong && !trackChange && (
+              <Suspense fallback={null}>
                 <PositionalAudio
                   autoplay
                   url={`${vizSong}.mp3`}
                   distance={5}
                   ref={sound}
                 />
-              )}
-              {vizSong && !trackChange && createSpheres()}
-              <EffectComposer multisampling={0}>
-                <Bloom
-                  intensity={0.5}
-                  luminanceThreshold={0}
-                  luminanceSmoothing={0.8}
-                />
-                <SMAA />
-              </EffectComposer>
-            </Suspense>
+                {createSpheres()}
+                <EffectComposer multisampling={0}>
+                  <Bloom
+                    intensity={0.5}
+                    luminanceThreshold={0}
+                    luminanceSmoothing={0.8}
+                  />
+                  <SMAA />
+                </EffectComposer>
+              </Suspense>
+            )}
           </Canvas>
         </VizWrapper>
       )}

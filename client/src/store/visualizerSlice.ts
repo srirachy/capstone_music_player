@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { VizSongType } from '../types';
 
 const initialState = {
-  vizSong: "dreamin'",
+  vizSong: '',
   trackChange: false,
 } as VizSongType;
 
@@ -11,6 +11,7 @@ export const visualizerSlice = createSlice({
   initialState,
   reducers: {
     setVizSong(state, { payload }) {
+      state.trackChange = true;
       state.vizSong = payload;
     },
     setTrackChange(state, { payload }) {

@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 
 function VizOrbitControl() {
   const { camera, gl } = useThree();
+  // orbit controls allows user to interact w/ interface
   useEffect(() => {
     const controls = new OrbitControls(camera, gl.domElement);
     controls.minDistance = 3;

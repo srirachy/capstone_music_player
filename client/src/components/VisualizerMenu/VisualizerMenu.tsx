@@ -27,6 +27,7 @@ function VisualizerMenu() {
     'Computers_Take_Over_The_World',
   ]; // songs from public folder
 
+  // change to user selected song if it exists in vizList array
   const createClickHandler = async (
     name: string,
     uri: string,
@@ -40,7 +41,6 @@ function VisualizerMenu() {
     const newName = whiteSpaceToUnderscore(name);
 
     if (vizList.includes(newName)) {
-      dispatch(setTrackChange(true));
       dispatch(setVizSong(newName));
       await dispatch(fetchSong(songObj));
       await dispatch(fetchCurrentTrack());
@@ -49,24 +49,22 @@ function VisualizerMenu() {
     }
   };
 
-  const menuItemNames = tracks.map((item, index) => (
-    <VizMenuItem
-      createClickHandler={() =>
-        createClickHandler(
-          item.name,
-          item.context_uri,
-          item.track_number,
-        )
-      }
-      id={item.id}
-      key={item.id}
-      index={index}
-      songName={item.name}
-      ref={(elmnt: HTMLDivElement) => {
-        divElmtRef.current[index] = elmnt;
-      }}
-    />
-  ));
+  const menuItemNames = tracks.map(
+    ({ name, context_uri, track_number, id }, index) => (
+      <VizMenuItem
+        createClickHandler={() =>
+          createClickHandler(name, context_uri, track_number)
+        }
+        id={id}
+        key={id}
+        index={index}
+        songName={name}
+        ref={(elmnt: HTMLDivElement) => {
+          divElmtRef.current[index] = elmnt;
+        }}
+      />
+    ),
+  );
   return <VizMenuContainer>{menuItemNames}</VizMenuContainer>;
 }
 
