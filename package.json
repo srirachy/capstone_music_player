@@ -13,7 +13,8 @@
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
     "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
     "start:dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
-    "start:prod": "ts-node --files server/index.ts"
+    "start:prod": "ts-node --files server/index.ts",
+    "build": "npm run build --prefix client"
   },
   "browserslist": {
     "production": [
