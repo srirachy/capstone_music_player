@@ -3,6 +3,7 @@ import axios from 'axios';
 import { generateRandomString } from './utils/Functions';
 import { LoginUrlProps, CbUrlProps } from './types';
 
+const path = require('path');
 const logger = require('morgan');
 const dotenv = require('../node_modules/dotenv');
 
@@ -24,6 +25,10 @@ app.use(logger('dev')); // setups logging in dev only
 const spotifyClientId = process.env.SPOTIFY_CLIENT_ID;
 const spotifyClientSecret = process.env.SPOTIFY_CLIENT_SECRET;
 const spotifyRedirectUri = process.env.SPOTIFY_REDIRECT_URI;
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../client/build')));
+}
 
 // redirect endpoint -- mostly a helper route
 app.get('/', (_, res) => {
@@ -369,6 +374,10 @@ app.get('/auth/logout', (_, res) => {
     expires_in: expiresIn,
     refresh_token: refreshToken,
   });
+});
+
+app.get('*', (_, res) => {
+  res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
 
 app.listen(PORT, () => {
