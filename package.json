@@ -1,6 +1,9 @@
 {
   "name": "capstone_music_player",
   "version": "0.1.0",
+  "engines": {
+    "node": "16.x"
+  },
   "private": true,
   "dependencies": {
     "concurrently": "^7.3.0",
