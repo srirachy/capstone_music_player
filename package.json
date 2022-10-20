@@ -17,7 +17,7 @@
     "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
     "start:dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
     "start:prod": "ts-node --files server/index.ts",
-    "build": "cd client/ && npm install --only=prod && npm run build"
+    "build": "cd client/ && npm install --omit=dev && npm run build"
   },
   "browserslist": {
     "production": [
