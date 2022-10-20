@@ -1,6 +1,7 @@
 import { SwitchLabel } from '../../styles/ToggleSwitchStyle';
 import { LabelTypes } from '../../types';
 
+// allows user to interact w/ label
 function ClickableLabel({ title, onChange, id }: LabelTypes) {
   return (
     <SwitchLabel

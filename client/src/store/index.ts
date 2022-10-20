@@ -14,6 +14,7 @@ import tokenReducer from './tokenSlice';
 import musicPlayerReducer from './musicPlayerSlice';
 import userReducer from './userSlice';
 import themeReducer from './themeSlice';
+import visualizerReducer from './visualizerSlice';
 
 const persistConfig = {
   key: 'token',
@@ -29,6 +30,7 @@ export const store = configureStore({
     musicPlayer: musicPlayerReducer,
     user: userReducer,
     theme: themeReducer,
+    visualizer: visualizerReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
