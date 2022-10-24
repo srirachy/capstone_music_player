@@ -37,6 +37,15 @@ function MusicPlayer() {
 
   // token persist
   useEffect(() => {
+    // logout helper function
+    function logout() {
+      persistor.pause();
+      persistor.flush().then(() => {
+        return persistor.purge();
+      });
+      dispatch(fetchLogout());
+    }
+
     if (token) {
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
@@ -58,15 +67,6 @@ function MusicPlayer() {
           }
         }
       }
-    }
-
-    // logout helper function
-    function logout() {
-      persistor.pause();
-      persistor.flush().then(() => {
-        return persistor.purge();
-      });
-      dispatch(fetchLogout());
     }
   }, [dispatch, refreshToken, timeStamp, token, tokenExpires]);
 
