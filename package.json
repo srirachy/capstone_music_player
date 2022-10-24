@@ -17,7 +17,7 @@
     "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
     "start:dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
     "start:prod": "ts-node --files server/index.ts",
-    "build": "cd client/ && npm install --omit=dev && npm run build"
+    "build": "cd client/ && npm install && npm run build"
   },
   "browserslist": {
     "production": [
@@ -35,15 +35,15 @@
     "@types/node": "^18.7.13",
     "@typescript-eslint/eslint-plugin": "^5.37.0",
     "@typescript-eslint/parser": "^5.37.0",
-    "eslint": "^8.22.0",
+    "eslint": "^8.2.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^17.0.0",
-    "eslint-config-node": "^4.1.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.6.1",
-    "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.31.10",
+    "eslint-plugin-react-hooks": "^4.6.0",
     "prettier": "^2.7.1",
     "ts-node": "^10.9.1",
     "tslib": "^2.4.0",
