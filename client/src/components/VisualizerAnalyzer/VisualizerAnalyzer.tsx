@@ -1,16 +1,16 @@
 import { useFrame } from '@react-three/fiber';
 import { useEffect, useRef } from 'react';
-import { AudioAnalyser } from 'three';
 import { AnalyzerProps } from 'src/types';
 import { adjustScale } from 'src/utils/Functions';
+import * as THREE from "three";
 
 function VisualizerAnalyzer({ sound, index, mesh }: AnalyzerProps) {
-  const analyzer = useRef<AudioAnalyser>(null!);
+  const analyzer = useRef<THREE.AudioAnalyser>(null!);
   const refMesh = mesh;
 
   // creates AudioAnalyser node to use for sound data
   useEffect(() => {
-    analyzer.current = new AudioAnalyser(sound.current, 128);
+    analyzer.current = new THREE.AudioAnalyser(sound.current, 128);
   }, [sound]);
 
   useFrame(() => {

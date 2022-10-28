@@ -9,9 +9,13 @@
       "*": ["../*"]
     },
     "typeRoots": ["./node_modules/@types", "./types"],
+    "outDir": "build-server",
+    "downlevelIteration": true,
+    "noEmit": false
   },
   "include": [
-    "./"
+    "./",
+    "server"
   ],
   "exclude": [
     "./node_modules"
