@@ -33,7 +33,6 @@ function VisualizerMenu() {
     uri: string,
     trackNum: number,
   ) => {
-    console.log(name);
     const songObj = {
       uri,
       trackNum,
