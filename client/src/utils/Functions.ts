@@ -1,5 +1,5 @@
 import { Color } from 'three';
-import { ArtistProp, TrackObjTypes, TokenProps } from '../common/models';
+import { ArtistProp, TrackObjTypes, TokenProps } from '../types';
 
 // helper function to convert ms to mm:ss (song standard)
 export const convertMsToStandardTime = (ms: number) => {
@@ -10,7 +10,12 @@ export const convertMsToStandardTime = (ms: number) => {
 };
 
 // helper function to create track obj
-export const createTrackObj = ({ id, name, artists, album }: TrackObjTypes) => {
+export const createTrackObj = ({
+  id,
+  name,
+  artists,
+  album,
+}: TrackObjTypes) => {
   const trackObj = {
     id: id,
     name: name,
@@ -22,7 +27,11 @@ export const createTrackObj = ({ id, name, artists, album }: TrackObjTypes) => {
 };
 
 export const createTokenObj = (data: TokenProps) => {
-  const { access_token: accessToken, expires_in: expiresIn, refresh_token: refreshToken } = data;
+  const {
+    access_token: accessToken,
+    expires_in: expiresIn,
+    refresh_token: refreshToken,
+  } = data;
   const tokenObj = {
     token: accessToken,
     tokenExpires: expiresIn,
@@ -49,7 +58,11 @@ export const getRefreshToken = () => {
   return true; // refreshToken found
 };
 
-export const hasTokenExpired = (token: string, timeStamp: number, tokenExpires: number) => {
+export const hasTokenExpired = (
+  token: string,
+  timeStamp: number,
+  tokenExpires: number,
+) => {
   if (!token || !timeStamp) {
     return false;
   }
@@ -60,15 +73,30 @@ export const hasTokenExpired = (token: string, timeStamp: number, tokenExpires: 
 
 export const sphereColor = (angle: number, radius: number) => {
   const fakeColor = radius * 0; // mostly to satisfy unused prop - radius (damned if i do, damned if i don't kinda thing)
-  const r = +Math.floor((Math.sin(angle - Math.PI) + 1) * 128) + fakeColor;
-  const g = +Math.floor((Math.sin(angle - Math.PI - (4 * Math.PI) / 3) + 1) * 128) + fakeColor;
-  const b = +Math.floor((Math.sin(angle - Math.PI - (2 * Math.PI) / 3) + 1) * 128) + fakeColor;
+  const r =
+    +Math.floor((Math.sin(angle - Math.PI) + 1) * 128) + fakeColor;
+  const g =
+    +Math.floor(
+      (Math.sin(angle - Math.PI - (4 * Math.PI) / 3) + 1) * 128,
+    ) + fakeColor;
+  const b =
+    +Math.floor(
+      (Math.sin(angle - Math.PI - (2 * Math.PI) / 3) + 1) * 128,
+    ) + fakeColor;
 
   return new Color(`rgb(${r}, ${g}, ${b})`);
 };
 
-export const adjustScale = (number: number, inMin: number, inMax: number, outMin: number, outMax: number) => {
-  return ((number - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
+export const adjustScale = (
+  number: number,
+  inMin: number,
+  inMax: number,
+  outMin: number,
+  outMax: number,
+) => {
+  return (
+    ((number - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin
+  );
 };
 
 export const whiteSpaceToUnderscore = (songName: string) => {

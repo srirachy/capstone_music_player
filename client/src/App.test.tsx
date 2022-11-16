@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { store } from './app/redux';
-import App from './app/App';
+import { store } from './store';
+import App from './App';
 
 test('show login if token is invalid', async () => {
   render(
