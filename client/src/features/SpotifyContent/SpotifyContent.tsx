@@ -47,7 +47,7 @@ function SpotifyContent({ headerBackground }: HeaderBkgdType) {
     };
     await dispatch(fetchSong(songObj));
     // await dispatch(fetchCurrentTrack());
-    await getCurrentTrack({});
+    await getCurrentTrack({ name });
   };
 
   return (

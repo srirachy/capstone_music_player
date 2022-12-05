@@ -5,10 +5,10 @@ import { createTrackObj } from 'src/utils/Functions';
 const PORT = process.env.PORT || 9000;
 
 export const api = createApi({
-  reducerPath: 'spotifyApi',
+  // reducerPath: 'spotifyApi',
   baseQuery: fetchBaseQuery({ baseUrl: `https://localhost:${PORT}` }),
   endpoints: build => ({
-    fetchCurrentTrack: build.mutation<object, unknown>({
+    fetchCurrentTrack: build.mutation<unknown, unknown>({
       query: ({ prevOrNext }) => ({
         url: '/auth/me/player/currently-playing',
         method: 'GET',
