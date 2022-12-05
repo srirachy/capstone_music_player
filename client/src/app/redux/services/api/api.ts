@@ -1,5 +1,13 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { ArtistProp, PlaylistItemsType, SongType, TrackType } from 'src/common/models';
+import {
+  createApi,
+  fetchBaseQuery,
+} from '@reduxjs/toolkit/query/react';
+import {
+  ArtistProp,
+  PlaylistItemsType,
+  SongType,
+  TrackType,
+} from 'src/common/models';
 import { createTrackObj } from 'src/utils/Functions';
 
 const PORT = process.env.PORT || 9000;
@@ -7,7 +15,7 @@ const PORT = process.env.PORT || 9000;
 export const api = createApi({
   reducerPath: 'spotifyApi',
   baseQuery: fetchBaseQuery({ baseUrl: `https://localhost:${PORT}` }),
-  endpoints: build => ({
+  endpoints: (build) => ({
     fetchCurrentTrack: build.query<unknown, unknown>({
       query: () => '/auth/me/player/currently-playing',
       transformResponse: ({ item, is_playing: isPlaying }) => {
@@ -16,30 +24,44 @@ export const api = createApi({
       },
     }),
     fetchNextOrPrevTrack: build.query<unknown, unknown>({
-      query: (buttonPressed: string) => `/auth/me/player/${buttonPressed}`,
+      query: (buttonPressed: string) =>
+        `/auth/me/player/${buttonPressed}`,
     }),
     fetchUserPlaylist: build.query<unknown, unknown>({
       query: () => '/auth/me/playlist',
       transformResponse: ({ items }) => {
-        const playlists = items.map(({ name, id }: PlaylistItemsType) => {
-          return { name, id };
-        });
+        const playlists = items.map(
+          ({ name, id }: PlaylistItemsType) => {
+            return { name, id };
+          },
+        );
         const initPlaylist = items[0].id;
         return { playlists, initPlaylist };
       },
     }),
     fetchSelectedPlaylist: build.query<unknown, unknown>({
-      query: (selectedPlaylist: string) => `/auth/playlists/${selectedPlaylist}`,
-      transformResponse: ({ id, name, description, images, tracks }) => {
+      query: (selectedPlaylist: string) =>
+        `/auth/playlists/${selectedPlaylist}`,
+      transformResponse: ({
+        id,
+        name,
+        description,
+        images,
+        tracks,
+      }) => {
         const songData = {
           id: id,
           name: name,
-          description: description.startsWith('<a') ? '' : description,
+          description: description.startsWith('<a')
+            ? ''
+            : description,
           image: images[0].url,
           tracks: tracks.items.map(({ track }: TrackType) => ({
             id: track.id,
             name: track.name,
-            artists: track.artists.map((artist: ArtistProp) => artist.name),
+            artists: track.artists.map(
+              (artist: ArtistProp) => artist.name,
+            ),
             image: track.album.images[2].url,
             duration: track.duration_ms,
             album: track.album.name,
@@ -75,7 +97,8 @@ export const api = createApi({
       },
     }),
     fetchSong: build.query<unknown, unknown>({
-      query: ({ uri, trackNum }: SongType) => `/auth/play/${uri}/${trackNum}`,
+      query: ({ uri, trackNum }: SongType) =>
+        `/auth/play/${uri}/${trackNum}`,
       transformResponse: ({ status }) => {
         return status === 204; // is this a good conversion from thunk?
       },
