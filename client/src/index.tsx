@@ -6,14 +6,18 @@ import { store, persistor } from './app/redux';
 import App from './app/App';
 import reportWebVitals from './reportWebVitals';
 import { GlobalStyle } from './GlobalStyle';
+import { ApiProvider } from '@reduxjs/toolkit/dist/query/react';
+import { api } from './app/redux/services/api/api';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       <React.StrictMode>
-        <GlobalStyle />
-        <App />
+        <ApiProvider api={api}>
+          <GlobalStyle />
+          <App />
+        </ApiProvider>
       </React.StrictMode>
     </PersistGate>
   </Provider>,

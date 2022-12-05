@@ -104,6 +104,11 @@ export type MusicPlayerTypes = {
   musicVolume: number;
 };
 
+export type SongType = {
+  uri: string;
+  trackNum: number;
+};
+
 // types tokenSlice
 type TokenObjProps = {
   token: string;
