@@ -3,8 +3,7 @@
   "env": {
     "browser": true,
     "es2021": true,
-    "jest": true,
-    "node": true
+    "jest": true
   },
   "plugins": ["react", "@typescript-eslint", "react-hooks", "eslint-plugin-prettier"],
   "extends": ["plugin:react/recommended", "airbnb", "plugin:@typescript-eslint/recommended", "prettier"],
