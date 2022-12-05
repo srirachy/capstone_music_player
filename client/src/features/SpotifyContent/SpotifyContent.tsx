@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { AiFillClockCircle } from 'react-icons/ai';
 import { useAppDispatch } from 'src/app/redux/hooks';
-import { fetchCurrentTrack, fetchSelectedPlaylist, fetchSong } from 'src/app/redux/musicPlayerSlice';
+import { fetchSelectedPlaylist, fetchSong } from 'src/app/redux/musicPlayerSlice';
 import usePlaylist from 'src/utils/usePlaylist';
 import {
   ContentContainer,
@@ -20,6 +20,7 @@ import {
 } from '../../common/styles/SpotifyContent';
 import { HeaderBkgdType } from '../../common/models';
 import { convertMsToStandardTime } from '../../utils/Functions';
+import { useFetchCurrentTrackMutation } from 'src/app/redux/services/api/api';
 
 function SpotifyContent({ headerBackground }: HeaderBkgdType) {
   const dispatch = useAppDispatch();
@@ -27,6 +28,7 @@ function SpotifyContent({ headerBackground }: HeaderBkgdType) {
     selectedPlaylist,
     playlistSongs: { image, name, description, tracks },
   } = usePlaylist();
+  const [getCurrentTrack] = useFetchCurrentTrackMutation();
 
   // fetch data of selected playlist for content output
   useEffect(() => {
@@ -44,7 +46,8 @@ function SpotifyContent({ headerBackground }: HeaderBkgdType) {
       trackNum,
     };
     await dispatch(fetchSong(songObj));
-    await dispatch(fetchCurrentTrack());
+    // await dispatch(fetchCurrentTrack());
+    await getCurrentTrack({});
   };
 
   return (
@@ -91,8 +94,8 @@ function SpotifyContent({ headerBackground }: HeaderBkgdType) {
                       duration,
                       context_uri: contextUri,
                       track_number: trackNum,
-                    },
-                    i,
+                    }: any,
+                    i: number,
                   ) => {
                     return (
                       <SongRow
