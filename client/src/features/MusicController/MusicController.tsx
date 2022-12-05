@@ -2,7 +2,7 @@ import { BsFillPlayCircleFill, BsFillPauseCircleFill, BsShuffle } from 'react-ic
 import { CgPlayTrackNext, CgPlayTrackPrev } from 'react-icons/cg';
 import { FiRepeat } from 'react-icons/fi';
 import { useAppDispatch } from 'src/app/redux/hooks';
-import { fetchNextOrPrevTrack, fetchPauseOrPlay, fetchRepeat, fetchShuffle } from 'src/app/redux/musicPlayerSlice';
+// import { fetchNextOrPrevTrack, fetchPauseOrPlay, fetchRepeat, fetchShuffle } from 'src/app/redux/musicPlayerSlice';
 import usePlaylist from 'src/utils/usePlaylist';
 import {
   ControllerContainer,
@@ -12,14 +12,22 @@ import {
   NextWrapper,
   RepeatWrapper,
 } from '../../common/styles/MusicControllerStyle';
+import {
+  useFetchNextOrPrevTrackQuery,
+  useFetchPauseOrPlayQuery,
+  useFetchRepeatQuery,
+  useFetchShuffleQuery,
+} from '../../app/redux/services/api/api';
 
 function MusicController() {
   const { musicIsPlaying, shuffleState, repeatState } = usePlaylist();
   const dispatch = useAppDispatch();
+  const { isLoading: isLoadingNextOrPrev } = useFetchNextOrPrevTrackQuery('next');
 
   // onClick to change track w/ prev/next buttons
   const changeTrack = async (prevOrNext: string) => {
-    await dispatch(fetchNextOrPrevTrack(prevOrNext)); // trigger next/prev song
+    const { isLoading } = useFetchNextOrPrevTrackQuery(prevOrNext);
+    await dispatch(isLoading(prevOrNext)); // trigger next/prev song
   };
 
   // onClick to pause or play track
