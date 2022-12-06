@@ -20,7 +20,7 @@ import {
 } from '../../common/styles/SpotifyContent';
 import { HeaderBkgdType } from '../../common/models';
 import { convertMsToStandardTime } from '../../utils/Functions';
-import { useFetchCurrentTrackMutation } from 'src/app/redux/services/api/api';
+// import { useFetchCurrentTrackMutation } from 'src/app/redux/services/api/api';
 
 function SpotifyContent({ headerBackground }: HeaderBkgdType) {
   const dispatch = useAppDispatch();
@@ -28,7 +28,7 @@ function SpotifyContent({ headerBackground }: HeaderBkgdType) {
     selectedPlaylist,
     playlistSongs: { image, name, description, tracks },
   } = usePlaylist();
-  const [getCurrentTrack] = useFetchCurrentTrackMutation();
+  // const [getCurrentTrack] = useFetchCurrentTrackMutation();
 
   // fetch data of selected playlist for content output
   useEffect(() => {
@@ -47,7 +47,7 @@ function SpotifyContent({ headerBackground }: HeaderBkgdType) {
     };
     await dispatch(fetchSong(songObj));
     // await dispatch(fetchCurrentTrack());
-    await getCurrentTrack({});
+    // await getCurrentTrack({});
   };
 
   return (

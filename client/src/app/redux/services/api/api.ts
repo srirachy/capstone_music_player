@@ -8,14 +8,21 @@ export const api = createApi({
   reducerPath: 'musicPlayerApi',
   baseQuery: fetchBaseQuery({
     baseUrl: `http://localhost:${PORT}`,
-    mode: 'cors',
+    // mode: 'cors',
   }),
   endpoints: build => ({
-    fetchCurrentTrack: build.mutation<unknown, unknown>({
-      query: () => ({
-        url: '/auth/me/player/currently-playing',
-        method: 'GET',
-      }),
+    // fetchCurrentTrack: build.mutation<unknown, unknown>({
+    //   query: () => ({
+    //     url: '/auth/me/player/currently-playing',
+    //     method: 'GET',
+    //   }),
+    //   transformResponse: ({ item, is_playing: isPlaying }) => {
+    //     const currentTrackObj = createTrackObj(item);
+    //     return { currentTrackObj, isPlaying };
+    //   },
+    // }),
+    fetchCurrentTrack: build.query<unknown, void>({
+      query: () => '/auth/me/player/currently-playing',
       transformResponse: ({ item, is_playing: isPlaying }) => {
         const currentTrackObj = createTrackObj(item);
         return { currentTrackObj, isPlaying };
@@ -90,7 +97,7 @@ export const api = createApi({
 });
 
 export const {
-  useFetchCurrentTrackMutation,
+  useFetchCurrentTrackQuery,
   // useFetchNextOrPrevTrackQuery,
   // useFetchUserPlaylistQuery,
   // useFetchSelectedPlaylistQuery,
