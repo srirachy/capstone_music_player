@@ -29,10 +29,9 @@ function VisualizerMenu() {
       dispatch(setVizSong(newName));
       await dispatch(fetchSong(songObj));
       // await dispatch(fetchCurrentTrack());
-      const meow = getCurrentTrack({ name });
+      await getCurrentTrack({});
       await dispatch(fetchVolume('0'));
       dispatch(setTrackChange(false));
-      console.log(meow);
     }
   };
 

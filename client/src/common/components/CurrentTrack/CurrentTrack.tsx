@@ -22,8 +22,12 @@ function CurrentTrack() {
       // } catch {
       //   console.log('no clue');
       // }
-      const meow = await fetchCurrentTrack({ name });
-      console.log(meow);
+      try {
+        const meow = await fetchCurrentTrack({}).unwrap();
+        console.log(meow);
+      } catch (error) {
+        console.log(error);
+      }
     };
     if (trackTrigger) {
       getCurrentTrack();
