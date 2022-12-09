@@ -71,7 +71,7 @@ type PlaylistSongProps = {
   tracks: OutputTrackProps[];
 };
 
-type OutputTrackProps = {
+export type OutputTrackProps = {
   album: string;
   artists: string[];
   context_uri: string;
@@ -98,7 +98,6 @@ export type MusicPlayerTypes = {
   currentTrack: CurrentTrackProps;
   prevOrNextStatus: number;
   musicIsPlaying: boolean;
-  trackTrigger: boolean;
   shuffleState: boolean;
   repeatState: string;
   musicVolume: number;

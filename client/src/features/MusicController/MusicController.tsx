@@ -2,7 +2,13 @@ import { BsFillPlayCircleFill, BsFillPauseCircleFill, BsShuffle } from 'react-ic
 import { CgPlayTrackNext, CgPlayTrackPrev } from 'react-icons/cg';
 import { FiRepeat } from 'react-icons/fi';
 import { useAppDispatch } from 'src/app/redux/hooks';
-import { fetchNextOrPrevTrack, fetchPauseOrPlay, fetchRepeat, fetchShuffle } from 'src/app/redux/musicPlayerSlice';
+import { setShuffleState, setRepeatState } from 'src/app/redux/musicPlayerSlice';
+import {
+  useFetchNextOrPrevTrackMutation,
+  useFetchPauseOrPlayMutation,
+  useFetchRepeatMutation,
+  useFetchShuffleMutation,
+} from 'src/app/redux/services/api/musicPlayerApi';
 import usePlaylist from 'src/utils/usePlaylist';
 import {
   ControllerContainer,
@@ -12,44 +18,43 @@ import {
   NextWrapper,
   RepeatWrapper,
 } from '../../common/styles/MusicControllerStyle';
-// import {
-//   useFetchNextOrPrevTrackQuery,
-//   useFetchPauseOrPlayQuery,
-//   useFetchRepeatQuery,
-//   useFetchShuffleQuery,
-// } from '../../app/redux/services/api/api';
 
 function MusicController() {
   const { musicIsPlaying, shuffleState, repeatState } = usePlaylist();
   const dispatch = useAppDispatch();
+  const [prevOrNextTrack] = useFetchNextOrPrevTrackMutation();
+  const [pauseOrPlayTrack] = useFetchPauseOrPlayMutation();
+  const [setShuffle] = useFetchShuffleMutation();
+  const [setRepeat] = useFetchRepeatMutation();
 
   // onClick to change track w/ prev/next buttons
   const changeTrack = async (prevOrNext: string) => {
-    await dispatch(fetchNextOrPrevTrack(prevOrNext)); // trigger next/prev song
+    await prevOrNextTrack(prevOrNext);
   };
 
   // onClick to pause or play track
   const mpState = async (pauseOrPlay: string) => {
-    await dispatch(fetchPauseOrPlay(pauseOrPlay));
+    await pauseOrPlayTrack(pauseOrPlay);
   };
 
-  // onClick shuffle
   const toggleShuffle = async () => {
     const curShuffle = shuffleState ? 'false' : 'true';
-    await dispatch(fetchShuffle(curShuffle)); // pass state as string for fetch
+    await setShuffle(curShuffle);
+    dispatch(setShuffleState(curShuffle));
   };
 
   // onClick repeat
   const toggleRepeat = async () => {
     let curRepeat;
     if (repeatState === '' || repeatState === 'off') {
-      curRepeat = 'track';
-    } else if (repeatState === 'track') {
       curRepeat = 'context';
+    } else if (repeatState === 'context') {
+      curRepeat = 'track';
     } else {
       curRepeat = 'off';
     }
-    await dispatch(fetchRepeat(curRepeat));
+    await setRepeat(curRepeat);
+    dispatch(setRepeatState(curRepeat));
   };
 
   return (
