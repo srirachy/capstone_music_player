@@ -90,8 +90,6 @@ export type CurrentTrackProps = {
 };
 
 export type MusicPlayerTypes = {
-  loading: boolean;
-  error: boolean;
   playlist: PlaylistProps[];
   selectedPlaylist: string;
   playlistSongs: PlaylistSongProps;
@@ -117,8 +115,6 @@ type TokenObjProps = {
 };
 
 export type TokenTypes = {
-  loading: boolean;
-  error: boolean;
   musicOrLogin: boolean;
   tokenObj: TokenObjProps;
 };
@@ -136,8 +132,6 @@ type UserProps = {
 };
 
 export type UserTypes = {
-  loading: boolean;
-  error: boolean;
   userInfo: UserProps;
 };
 

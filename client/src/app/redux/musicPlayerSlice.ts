@@ -2,8 +2,6 @@ import { createSlice } from '@reduxjs/toolkit';
 import { MusicPlayerTypes } from '../../common/models/index';
 
 const initialState = {
-  loading: true,
-  error: false,
   playlist: [],
   selectedPlaylist: '',
   playlistSongs: {},

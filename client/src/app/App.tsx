@@ -4,8 +4,10 @@ import Login from '../features/Login/Login';
 import { AppContainer } from '../common/styles/AppStyle';
 import { useAppDispatch } from './redux/hooks';
 import useSessToken from '../utils/useSessToken';
-import { fetchRefreshToken, fetchToken } from './redux/tokenSlice';
+// import { fetchRefreshToken, fetchToken } from './redux/tokenSlice';
 import useUserInfo from '../utils/useUserInfo';
+import { useFetchRefreshTokenMutation, useFetchTokenQuery } from './redux/services/api/tokenApi';
+import { setRefreshTokenState, setTokenState } from './redux/tokenSlice';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -16,26 +18,31 @@ function App() {
   const {
     userInfo: { userId },
   } = useUserInfo();
+  const { data: tokenData, isSuccess: tokenIsSuccess } = useFetchTokenQuery();
+  const [freshy] = useFetchRefreshTokenMutation();
 
   // fetchToken upon login
   useEffect(() => {
-    const getToken = async () => {
-      await dispatch(fetchToken());
+    const getToken = () => {
+      if (tokenData && tokenIsSuccess) {
+        dispatch(setTokenState(tokenData));
+      }
     };
     if (!token) {
       getToken();
     }
-  }, [dispatch, token]);
+  }, [dispatch, token, tokenData, tokenIsSuccess]);
 
   // fetchRefreshToken if one exists and user data is empty -- mostly to inject persisted token to server-side if its empty
   useEffect(() => {
     const getFreshy = async () => {
-      await dispatch(fetchRefreshToken(refreshToken));
+      const newToken = await freshy(refreshToken).unwrap();
+      dispatch(setRefreshTokenState(newToken));
     };
     if (!userId && refreshToken) {
       getFreshy();
     }
-  }, [dispatch, refreshToken, userId]);
+  }, [dispatch, freshy, refreshToken, userId]);
 
   return (
     <AppContainer>
