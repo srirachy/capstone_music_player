@@ -1,8 +1,8 @@
 import { useRef, Suspense, useState, useEffect } from 'react';
+import * as THREE from 'three';
 import { Canvas } from '@react-three/fiber';
 import { PositionalAudio } from '@react-three/drei';
 import { EffectComposer, Bloom, SMAA } from '@react-three/postprocessing';
-import { SoundRefType } from 'src/common/models';
 import { MenuWrapper, VisualizerContainer, VizWrapper } from 'src/common/styles/VisualizerStyle';
 import useVizSong from 'src/utils/useVizSong';
 import { FaMusic } from 'react-icons/fa';
@@ -17,7 +17,7 @@ function VisualizerTheme() {
   const dispatch = useAppDispatch();
   const { vizSong, trackChange } = useVizSong();
   const [showSong, setShowSong] = useState<boolean>(false);
-  const sound = useRef<SoundRefType>(null!);
+  const sound = useRef<THREE.Audio<AudioNode>>(null!);
   const [pauseOrPlayTrack] = useFetchPauseOrPlayMutation();
   const [fetchVolume] = useFetchVolumeMutation();
 

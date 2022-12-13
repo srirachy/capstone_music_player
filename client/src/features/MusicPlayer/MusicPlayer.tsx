@@ -40,7 +40,7 @@ function MusicPlayer() {
       persistor.flush().then(() => {
         return persistor.purge();
       });
-      const logoutInfo = await fetchLogout().unwrap(); // upwrap() basically response into readable data
+      const logoutInfo = await fetchLogout().unwrap(); // upwrap() basically turns response into readable data
       dispatch(setLogoutState(logoutInfo));
     };
     // refresh helper function

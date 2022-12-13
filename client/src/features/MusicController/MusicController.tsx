@@ -37,6 +37,7 @@ function MusicController() {
     await pauseOrPlayTrack(pauseOrPlay);
   };
 
+  // oncClick to toggle on/off shuffle
   const toggleShuffle = async () => {
     const curShuffle = shuffleState ? 'false' : 'true';
     await setShuffle(curShuffle);

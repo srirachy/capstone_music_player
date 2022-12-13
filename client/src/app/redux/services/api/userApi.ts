@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { ResponseUserInfoTypes, ReturnUserInfoTypes } from 'src/common/models';
 
 const PORT = process.env.PORT || 9000;
 
@@ -9,10 +10,10 @@ export const userApi = createApi({
   }),
   tagTypes: ['User'],
   endpoints: build => ({
-    fetchUser: build.query<unknown, void>({
+    fetchUser: build.query<ReturnUserInfoTypes, void>({
       query: () => '/auth/me',
       providesTags: ['User'],
-      transformResponse: ({ id, display_name: displayName }) => {
+      transformResponse: ({ id, display_name: displayName }: ResponseUserInfoTypes) => {
         const userInfo = {
           userId: id,
           userName: displayName,

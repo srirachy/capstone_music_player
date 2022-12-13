@@ -34,8 +34,8 @@ function VisualizerMenu() {
     const newName = whiteSpaceToUnderscore(name);
 
     if (vizList.includes(newName)) {
-      dispatch(setVizSong(newName));
-      fetchSong(songObj);
+      dispatch(setVizSong(newName)); // set song from public folder
+      await fetchSong(songObj); // set song from spotify
       await fetchVolume('0'); // assure volume is off
       dispatch(setVolumeState(0));
       dispatch(setTrackChange(false)); // change state trigger

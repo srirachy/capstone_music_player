@@ -4,7 +4,6 @@ import Login from '../features/Login/Login';
 import { AppContainer } from '../common/styles/AppStyle';
 import { useAppDispatch } from './redux/hooks';
 import useSessToken from '../utils/useSessToken';
-// import { fetchRefreshToken, fetchToken } from './redux/tokenSlice';
 import useUserInfo from '../utils/useUserInfo';
 import { useFetchRefreshTokenMutation, useFetchTokenQuery } from './redux/services/api/tokenApi';
 import { setRefreshTokenState, setTokenState } from './redux/tokenSlice';

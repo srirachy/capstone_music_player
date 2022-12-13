@@ -20,7 +20,7 @@ let refreshToken = '';
 // middleware
 app.use(express.json()); // allows the data in post/put to be parsed and understood by server
 app.use(logger('dev')); // setups logging in dev only
-app.use(cors()); // cors
+app.use(cors()); // rtk queries required cors
 
 // env keys
 const spotifyClientId = process.env.SPOTIFY_CLIENT_ID;
