@@ -63,7 +63,7 @@ type PlaylistProps = {
   id: string;
 };
 
-type PlaylistSongProps = {
+export type PlaylistSongProps = {
   id: string;
   name: string;
   description: string;
@@ -71,7 +71,7 @@ type PlaylistSongProps = {
   tracks: OutputTrackProps[];
 };
 
-type OutputTrackProps = {
+export type OutputTrackProps = {
   album: string;
   artists: string[];
   context_uri: string;
@@ -90,18 +90,20 @@ export type CurrentTrackProps = {
 };
 
 export type MusicPlayerTypes = {
-  loading: boolean;
-  error: boolean;
   playlist: PlaylistProps[];
   selectedPlaylist: string;
   playlistSongs: PlaylistSongProps;
   currentTrack: CurrentTrackProps;
   prevOrNextStatus: number;
   musicIsPlaying: boolean;
-  trackTrigger: boolean;
   shuffleState: boolean;
   repeatState: string;
   musicVolume: number;
+};
+
+export type SongType = {
+  uri: string;
+  trackNum: number;
 };
 
 // types tokenSlice
@@ -113,8 +115,6 @@ type TokenObjProps = {
 };
 
 export type TokenTypes = {
-  loading: boolean;
-  error: boolean;
   musicOrLogin: boolean;
   tokenObj: TokenObjProps;
 };
@@ -132,8 +132,6 @@ type UserProps = {
 };
 
 export type UserTypes = {
-  loading: boolean;
-  error: boolean;
   userInfo: UserProps;
 };
 
@@ -150,7 +148,7 @@ export type RadioProps = {
 export type LabelTypes = {
   title: string;
   id: string;
-  onChange: (val: string) => void;
+  onChange: (val: string) => void; // added ignore pattern 'val' to eslint for no-unused-vars
 };
 
 // types visualizerSlice
@@ -173,14 +171,9 @@ export type TrackObjTypes = {
   album: AlbumProps;
 };
 
-// VisualizerTheme Type
-export type SoundRefType = {
-  sound: MutableRefObject<null>;
-};
-
 // VisualizerSphere types
 export type SphereProps = {
-  sound: MutableRefObject<SoundRefType>;
+  sound: MutableRefObject<THREE.Audio<AudioNode>>;
   angle: number;
   position: Vector3 | undefined;
   radius: number;
@@ -189,7 +182,7 @@ export type SphereProps = {
 
 // VisualizerAnalyzer types
 export type AnalyzerProps = {
-  sound: MutableRefObject<any>; // can't do better than any here for now
+  sound: MutableRefObject<THREE.Audio<AudioNode>>;
   index: number;
   mesh: MutableRefObject<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]>>;
 };
@@ -200,4 +193,66 @@ export type VizMenuProps = {
   songName: string;
   createClickHandler: () => void;
   index: number;
+};
+
+// musicPlayerApi types
+export type ReturnSongTypes = {
+  id: string;
+  name: string;
+  description: string;
+  image: string;
+  tracks: OutputTrackProps[];
+};
+
+export type ResponseSongTypes = {
+  id: string;
+  name: string;
+  description: string;
+  images: ImagesProp[];
+  tracks: {
+    items: TrackType[];
+  };
+};
+
+export type ReturnUserPlaylistTypes = {
+  playlists: PlaylistItemsType[];
+  initPlaylist: string;
+};
+
+type MutatedTrackObj = {
+  id: string;
+  name: string;
+  artists: string[];
+  image: string;
+};
+
+export type ReturnCurrentTrack = {
+  currentTrackObj: MutatedTrackObj;
+  isPlaying: boolean;
+};
+
+export type ResponseCurrentTrack = {
+  item: TrackObjTypes;
+  is_playing: boolean;
+};
+
+export type ResponseUserPlaylistTypes = {
+  items: PlaylistItemsType[];
+};
+
+// tokenApi types
+export type ReturnTokenTypes = {
+  newTokenObj: TokenObjProps;
+  tokenExist: boolean;
+};
+
+// userApi types
+export type ReturnUserInfoTypes = {
+  userId: string;
+  userName: string;
+};
+
+export type ResponseUserInfoTypes = {
+  id: string;
+  display_name: string;
 };

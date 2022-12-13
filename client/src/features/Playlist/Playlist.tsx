@@ -1,20 +1,21 @@
 import { useEffect } from 'react';
 import { useAppDispatch } from 'src/app/redux/hooks';
 import usePlaylist from 'src/utils/usePlaylist';
-import { fetchUserPlaylist, setSelectedPlaylist } from 'src/app/redux/musicPlayerSlice';
+import { setSelectedPlaylist, setUserPlaylists } from 'src/app/redux/musicPlayerSlice';
 import { PlaylistContainer } from 'src/common/styles/PlaylistStyle';
+import { useFetchUserPlaylistsQuery } from 'src/app/redux/services/api/musicPlayerApi';
 
 function Playlist() {
   const dispatch = useAppDispatch();
   const { playlist } = usePlaylist();
+  const { data, isSuccess } = useFetchUserPlaylistsQuery();
 
   // fetch all user playlists data
   useEffect(() => {
-    const getPlaylistData = async () => {
-      await dispatch(fetchUserPlaylist());
-    };
-    getPlaylistData();
-  }, [dispatch]);
+    if (data && isSuccess) {
+      dispatch(setUserPlaylists(data));
+    }
+  }, [dispatch, data, isSuccess]);
 
   const changeSelectedPlaylist = async (selectedPlaylistId: string) => {
     dispatch(setSelectedPlaylist(selectedPlaylistId));

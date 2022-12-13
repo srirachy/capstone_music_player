@@ -17,8 +17,16 @@ function SpotifyTheme() {
   // helper function to pass into NavBarWrapper for styledcomponent dynamic attribute
   const bodyScrolled = () => {
     if (bodyRef.current !== null) {
-      bodyRef.current.scrollTop >= 30 ? setNavBackground(true) : setNavBackground(false);
-      bodyRef.current.scrollTop >= 268 ? setHeaderBackground(true) : setHeaderBackground(false);
+      if (bodyRef.current.scrollTop >= 30) {
+        setNavBackground(true);
+      } else {
+        setNavBackground(false);
+      } // bodyRef.current.scrollTop >= 30 ? setNavBackground(true) : setNavBackground(false);
+      if (bodyRef.current.scrollTop >= 268) {
+        setHeaderBackground(true);
+      } else {
+        setHeaderBackground(false);
+      } // bodyRef.current.scrollTop >= 268 ? setHeaderBackground(true) : setHeaderBackground(false);
     }
   };
 

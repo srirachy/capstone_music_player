@@ -15,7 +15,7 @@
       }
     ],
     "no-underscore-dangle": "off",
-    "no-unused-vars": "warn",
+    "no-unused-vars": ["warn", { "argsIgnorePattern": "val"}],
     "no-console": "off",
     "func-names": "off",
     "no-process-exit": "off",

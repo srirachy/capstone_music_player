@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { AiFillClockCircle } from 'react-icons/ai';
 import { useAppDispatch } from 'src/app/redux/hooks';
-import { fetchCurrentTrack, fetchSelectedPlaylist, fetchSong } from 'src/app/redux/musicPlayerSlice';
+import { setPlaylistSongs } from 'src/app/redux/musicPlayerSlice';
 import usePlaylist from 'src/utils/usePlaylist';
 import {
   ContentContainer,
@@ -18,8 +18,9 @@ import {
   SongImageWrapper,
   SongInfoWrapper,
 } from '../../common/styles/SpotifyContent';
-import { HeaderBkgdType } from '../../common/models';
+import { HeaderBkgdType, OutputTrackProps } from '../../common/models';
 import { convertMsToStandardTime } from '../../utils/Functions';
+import { useFetchSelectedPlaylistSongsQuery, useFetchSongMutation } from 'src/app/redux/services/api/musicPlayerApi';
 
 function SpotifyContent({ headerBackground }: HeaderBkgdType) {
   const dispatch = useAppDispatch();
@@ -27,24 +28,22 @@ function SpotifyContent({ headerBackground }: HeaderBkgdType) {
     selectedPlaylist,
     playlistSongs: { image, name, description, tracks },
   } = usePlaylist();
+  const [fetchSong] = useFetchSongMutation();
+  const { data: playlistSongsData, isSuccess } = useFetchSelectedPlaylistSongsQuery(selectedPlaylist);
 
   // fetch data of selected playlist for content output
   useEffect(() => {
-    const getPlaylistSongs = async () => {
-      await dispatch(fetchSelectedPlaylist(selectedPlaylist));
-    };
-    if (selectedPlaylist) {
-      getPlaylistSongs();
+    if (playlistSongsData && isSuccess) {
+      dispatch(setPlaylistSongs(playlistSongsData));
     }
-  }, [dispatch, selectedPlaylist]);
+  }, [dispatch, isSuccess, playlistSongsData]);
 
   const changeTrack = async (uri: string, trackNum: number) => {
     const songObj = {
       uri,
       trackNum,
     };
-    await dispatch(fetchSong(songObj));
-    await dispatch(fetchCurrentTrack());
+    fetchSong(songObj);
   };
 
   return (
@@ -91,8 +90,8 @@ function SpotifyContent({ headerBackground }: HeaderBkgdType) {
                       duration,
                       context_uri: contextUri,
                       track_number: trackNum,
-                    },
-                    i,
+                    }: OutputTrackProps,
+                    i: number,
                   ) => {
                     return (
                       <SongRow

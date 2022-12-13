@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
-import { fetchCurrentTrack } from 'src/app/redux/musicPlayerSlice';
 import { useAppDispatch } from 'src/app/redux/hooks';
+import { useFetchCurrentTrackQuery } from 'src/app/redux/services/api/musicPlayerApi';
+import { setCurrentTrack } from 'src/app/redux/musicPlayerSlice';
 import { CurrentTrackContainer, TrackWrapper, ImageWrapper, InfoWrapper } from 'src/common/styles/CurrentTrackStyle';
 import usePlaylist from 'src/utils/usePlaylist';
 
@@ -8,18 +9,15 @@ function CurrentTrack() {
   const dispatch = useAppDispatch();
   const {
     currentTrack: { name, artists, image },
-    trackTrigger,
   } = usePlaylist();
+  const { data, isSuccess } = useFetchCurrentTrackQuery();
 
   // fetch current track data on initial render (cuz trackTrigger is initially true) and when trackTrigger is true
   useEffect(() => {
-    const getCurrentTrack = async () => {
-      await dispatch(fetchCurrentTrack());
-    };
-    if (trackTrigger) {
-      getCurrentTrack();
+    if (data && isSuccess) {
+      dispatch(setCurrentTrack(data));
     }
-  }, [dispatch, trackTrigger]);
+  }, [dispatch, data, isSuccess]);
 
   return (
     <CurrentTrackContainer aria-label='current_track_container'>
