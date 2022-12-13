@@ -1,31 +1,35 @@
 import { useRef, Suspense, useState, useEffect } from 'react';
+import * as THREE from 'three';
 import { Canvas } from '@react-three/fiber';
 import { PositionalAudio } from '@react-three/drei';
 import { EffectComposer, Bloom, SMAA } from '@react-three/postprocessing';
-import { SoundRefType } from 'src/common/models';
 import { MenuWrapper, VisualizerContainer, VizWrapper } from 'src/common/styles/VisualizerStyle';
 import useVizSong from 'src/utils/useVizSong';
 import { FaMusic } from 'react-icons/fa';
-import { fetchPauseOrPlay, fetchVolume } from '../../app/redux/musicPlayerSlice';
 import { useAppDispatch } from 'src/app/redux/hooks';
 import VisualizerSphere from '../VisualizerSphere/VisualizerSphere';
 import VizOrbitControl from '../VizOrbitControl/VizOrbitControl';
 import VisualizerMenu from '../VisualizerMenu/VisualizerMenu';
+import { useFetchPauseOrPlayMutation, useFetchVolumeMutation } from 'src/app/redux/services/api/musicPlayerApi';
+import { setVolumeState } from 'src/app/redux/musicPlayerSlice';
 
 function VisualizerTheme() {
   const dispatch = useAppDispatch();
   const { vizSong, trackChange } = useVizSong();
   const [showSong, setShowSong] = useState<boolean>(false);
-  const sound = useRef<SoundRefType>(null!);
+  const sound = useRef<THREE.Audio<AudioNode>>(null!);
+  const [pauseOrPlayTrack] = useFetchPauseOrPlayMutation();
+  const [fetchVolume] = useFetchVolumeMutation();
 
   // set music player to pause and lower volume for initial setup
   useEffect(() => {
     const runInitSetup = async () => {
-      await dispatch(fetchPauseOrPlay('pause'));
-      await dispatch(fetchVolume('0'));
+      await pauseOrPlayTrack('pause');
+      await fetchVolume('0');
+      dispatch(setVolumeState(0));
     };
     runInitSetup();
-  }, [dispatch]);
+  }, [dispatch, fetchVolume, pauseOrPlayTrack]);
 
   // create spheres from VisualizerSphere component
   function createSpheres() {

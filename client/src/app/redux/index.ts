@@ -6,6 +6,9 @@ import musicPlayerReducer from './musicPlayerSlice';
 import userReducer from './userSlice';
 import themeReducer from './themeSlice';
 import visualizerReducer from './visualizerSlice';
+import { musicPlayerApi } from './services/api/musicPlayerApi';
+import { userApi } from './services/api/userApi';
+import { tokenApi } from './services/api/tokenApi';
 
 const persistConfig = {
   key: 'token',
@@ -22,13 +25,16 @@ export const store = configureStore({
     user: userReducer,
     theme: themeReducer,
     visualizer: visualizerReducer,
+    [musicPlayerApi.reducerPath]: musicPlayerApi.reducer,
+    [userApi.reducerPath]: userApi.reducer,
+    [tokenApi.reducerPath]: tokenApi.reducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }),
+    }).concat(musicPlayerApi.middleware, userApi.middleware, tokenApi.middleware),
 });
 
 export const persistor = persistStore(store);
