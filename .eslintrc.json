@@ -3,11 +3,10 @@
   "env": {
     "browser": true,
     "es2021": true,
-    "node": true,
     "jest": true
   },
-  "plugins": ["react", "prettier"],
-  "extends": ["airbnb", "airbnb/hooks", "plugin:prettier/recommended", "airbnb-typescript", "eslint:recommended", "react-app"],
+  "plugins": ["react", "@typescript-eslint", "react-hooks", "eslint-plugin-prettier"],
+  "extends": ["plugin:react/recommended", "airbnb", "plugin:@typescript-eslint/recommended", "prettier"],
   "rules": {
     "prettier/prettier": [
       "error",
@@ -16,38 +15,71 @@
       }
     ],
     "no-underscore-dangle": "off",
-    "no-unused-vars": "warn",
+    "no-unused-vars": ["warn", { "argsIgnorePattern": "val"}],
     "no-console": "off",
     "func-names": "off",
     "no-process-exit": "off",
     "object-shorthand": "off",
     "class-methods-use-this": "off",
     "react/react-in-jsx-scope": "off",
-    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
     "import/prefer-default-export": "off",
-    "no-param-reassign": ["error", {
-      "props": true,
-      "ignorePropertyModificationsFor": [ "state"]
-    }],
     "indent": "off",
     "@typescript-eslint/indent": "off",
     "no-unused-expressions": "off",
     "@typescript-eslint/no-unused-expressions": "warn",
     "no-shadow": "off",
-    "@typescript-eslint/no-shadow": "warn",
-    "no-undef": "warn"
+    "@typescript-eslint/no-shadow": "off",
+    "no-undef": "warn",
+    "react/no-unknown-property": ["error", { "ignore": ["position", "args", "intensity"] }],
+    "no-use-before-define": "off",
+    "lines-between-class-members": "off",
+    "@typescript-eslint/no-use-before-define": ["error"],
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "react/jsx-filename-extension": ["warn", { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
+    "import/order": "off",
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
+    "camelcase": "off",
+    "no-unsafe-optional-chaining": "off",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "arrow-body-style": "off",
+    "react/no-unescaped-entities": "off",
+    "default-param-last": "off",
+    "react/function-component-definition": "off",
+    "react/jsx-no-useless-fragment": "off",
+    "no-param-reassign": "off",
+    "object-curly-newline": "off",
+    "react-hooks/exhaustive-deps": "warn",
+    "react-hooks/rules-of-hooks": "error",
+    "react/prop-types": "off",
+    "react/self-closing-comp": "warn",
+    "react/jsx-props-no-spreading": "off",
+    "react/require-default-props": "off",
+    "react/no-unused-prop-types": "off",
+    "jsx-a11y/anchor-is-valid": "off"
   },
   "settings": {
     "import/resolver": {
       "node": {
-        "moduleDirectory": ["./node_modules/", "client/node_modules/", "client/src/", "server/", "server/node_modules/"]
+        "moduleDirectory": ["./node_modules", "client", "client/node_modules", "client/src", "server", "server/node_modules"],
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
       }
     }
   },
-    "parserOptions": {
-      "ecmaVersion":"latest",
-      "project": "./tsconfig.json",
-      "tsconfigRootDir": "./",
-      "sourceType": "module"
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion":"latest",
+    "project": "./tsconfig.json",
+    "tsconfigRootDir": "./",
+    "sourceType": "module"
   } 
 }

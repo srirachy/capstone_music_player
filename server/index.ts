@@ -2,10 +2,10 @@ import express from 'express';
 import axios from 'axios';
 import { generateRandomString } from './utils/Functions';
 import { LoginUrlProps, CbUrlProps } from './types';
-
-const path = require('path');
-const logger = require('morgan');
-const dotenv = require('../node_modules/dotenv');
+import path = require('path');
+import logger = require('morgan');
+import dotenv = require('../node_modules/dotenv');
+import cors from 'cors';
 
 // initializers
 const app = express();
@@ -20,6 +20,7 @@ let refreshToken = '';
 // middleware
 app.use(express.json()); // allows the data in post/put to be parsed and understood by server
 app.use(logger('dev')); // setups logging in dev only
+app.use(cors()); // rtk queries required cors
 
 // env keys
 const spotifyClientId = process.env.SPOTIFY_CLIENT_ID;
@@ -58,9 +59,7 @@ app.get('/auth/login', (_, res) => {
     state: state,
   } as LoginUrlProps);
 
-  res.redirect(
-    `https://accounts.spotify.com/authorize/?${authQueryParameters.toString()}`,
-  );
+  res.redirect(`https://accounts.spotify.com/authorize/?${authQueryParameters.toString()}`);
 });
 
 // callback endpoint -- set token server globals and redirect to homepage
@@ -74,19 +73,13 @@ app.get('/auth/callback', async (req, res) => {
 
   try {
     const {
-      data: {
-        access_token: dataToken,
-        expires_in: dataExpires,
-        refresh_token: dataRefresh,
-      },
+      data: { access_token: dataToken, expires_in: dataExpires, refresh_token: dataRefresh },
     } = await axios({
       method: 'post',
       url: 'https://accounts.spotify.com/api/token',
       data: formData,
       headers: {
-        Authorization: `Basic ${Buffer.from(
-          `${spotifyClientId}:${spotifyClientSecret}`,
-        ).toString('base64')}`,
+        Authorization: `Basic ${Buffer.from(`${spotifyClientId}:${spotifyClientSecret}`).toString('base64')}`,
         'Content-Type': 'application/x-www-form-urlencoded',
       },
     });
@@ -127,9 +120,7 @@ app.get('/auth/refresh_token/:rTok', async ({ params }, res) => {
       url: 'https://accounts.spotify.com/api/token',
       data: formData,
       headers: {
-        Authorization: `Basic ${Buffer.from(
-          `${spotifyClientId}:${spotifyClientSecret}`,
-        ).toString('base64')}`,
+        Authorization: `Basic ${Buffer.from(`${spotifyClientId}:${spotifyClientSecret}`).toString('base64')}`,
       },
     });
     accessToken = accTok;
@@ -155,7 +146,7 @@ app.get('/auth/me', async (_, res) => {
           'Content-Type': 'application/json',
         },
       })
-      .then((response) => {
+      .then(response => {
         res.json(response.data);
       });
   } catch (err) {
@@ -167,15 +158,12 @@ app.get('/auth/me', async (_, res) => {
 // playlist endpoint -- get user playlists
 app.get('/auth/me/playlist', async (_, res) => {
   try {
-    const { data } = await axios.get(
-      'https://api.spotify.com/v1/me/playlists',
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
+    const { data } = await axios.get('https://api.spotify.com/v1/me/playlists', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
       },
-    );
+    });
     res.json(data);
   } catch (err) {
     console.log(err);
@@ -184,39 +172,14 @@ app.get('/auth/me/playlist', async (_, res) => {
 });
 
 // selected playlist endpoint -- get playlist song data
-app.get(
-  '/auth/playlists/:playlist_id',
-  async ({ params: { playlist_id: playlistId } }, res) => {
-    try {
-      const { data } = await axios.get(
-        `https://api.spotify.com/v1/playlists/${playlistId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
-          },
-        },
-      );
-      res.json(data);
-    } catch (err) {
-      console.log(err);
-      res.send(err);
-    }
-  },
-);
-
-// currently playing endpoint -- get data of current song
-app.get('/auth/me/player/currently-playing', async (_, res) => {
+app.get('/auth/playlists/:playlist_id', async ({ params: { playlist_id: playlistId } }, res) => {
   try {
-    const { data } = await axios.get(
-      'https://api.spotify.com/v1/me/player/currently-playing',
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
+    const { data } = await axios.get(`https://api.spotify.com/v1/playlists/${playlistId}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
       },
-    );
+    });
     res.json(data);
   } catch (err) {
     console.log(err);
@@ -224,145 +187,143 @@ app.get('/auth/me/player/currently-playing', async (_, res) => {
   }
 });
 
-app.get(
-  '/auth/play/:uri/:trackNum',
-  async ({ params: { uri, trackNum } }, res) => {
-    const numMinusOne = +trackNum - 1;
-    try {
-      const { status } = await axios({
-        method: 'put',
-        url: 'https://api.spotify.com/v1/me/player/play',
-        data: {
-          context_uri: uri,
-          offset: {
-            position: numMinusOne,
-          },
-          position_ms: '0',
+// currently playing endpoint -- get data of current song
+app.get('/auth/me/player/currently-playing', async (_, res) => {
+  try {
+    const { data } = await axios.get('https://api.spotify.com/v1/me/player/currently-playing', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    res.json(data);
+  } catch (err) {
+    console.log(err);
+    res.send(err);
+  }
+});
+
+app.get('/auth/play/:uri/:trackNum', async ({ params: { uri, trackNum } }, res) => {
+  const numMinusOne = +trackNum - 1;
+  try {
+    const { status } = await axios({
+      method: 'put',
+      url: 'https://api.spotify.com/v1/me/player/play',
+      data: {
+        context_uri: uri,
+        offset: {
+          position: numMinusOne,
         },
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-      });
-      res.send(status);
-    } catch (err) {
-      console.log(err);
-      res.send(err);
-    }
-  },
-);
+        position_ms: '0',
+      },
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    res.send(status);
+  } catch (err) {
+    console.log(err);
+    res.send(err);
+  }
+});
 
 // next/prev endpoint -- skip to next/previous track
-app.get(
-  '/auth/me/player/:prevOrNext',
-  async ({ params: { prevOrNext } }, res) => {
-    try {
-      const { data } = await axios.post(
-        `https://api.spotify.com/v1/me/player/${prevOrNext}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
-          },
+app.get('/auth/me/player/:prevOrNext', async ({ params: { prevOrNext } }, res) => {
+  try {
+    const { data } = await axios.post(
+      `https://api.spotify.com/v1/me/player/${prevOrNext}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
         },
-      );
-      res.end(data);
-    } catch (err) {
-      console.log(err);
-      res.send(err);
-    }
-  },
-);
+      },
+    );
+    res.end(data);
+  } catch (err) {
+    console.log(err);
+    res.send(err);
+  }
+});
 
 // pause/play endpoint -- pause or play current track
-app.get(
-  '/auth/v1/me/player/:pauseOrPlay',
-  async ({ params: { pauseOrPlay } }, res) => {
-    try {
-      const { data } = await axios({
-        method: 'put',
-        url: `https://api.spotify.com/v1/me/player/${pauseOrPlay}`,
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-      });
-      res.end(data);
-    } catch (err) {
-      console.log(err);
-      res.send(err);
-    }
-  },
-);
+app.get('/auth/v1/me/player/:pauseOrPlay', async ({ params: { pauseOrPlay } }, res) => {
+  try {
+    const { data } = await axios({
+      method: 'put',
+      url: `https://api.spotify.com/v1/me/player/${pauseOrPlay}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    res.end(data);
+  } catch (err) {
+    console.log(err);
+    res.send(err);
+  }
+});
 
 // shuffle endpoint -- toggle shuffle
-app.get(
-  '/auth/shuffle/:shuffState',
-  async ({ params: { shuffState } }, res) => {
-    const shuffQuery = `?state=${shuffState}`;
-    try {
-      const { data } = await axios({
-        method: 'put',
-        url: `https://api.spotify.com/v1/me/player/shuffle${shuffQuery}`,
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-      });
-      res.end(data);
-    } catch (err) {
-      console.log(err);
-      res.send(err);
-    }
-  },
-);
+app.get('/auth/shuffle/:shuffState', async ({ params: { shuffState } }, res) => {
+  const shuffQuery = `?state=${shuffState}`;
+  try {
+    const { data } = await axios({
+      method: 'put',
+      url: `https://api.spotify.com/v1/me/player/shuffle${shuffQuery}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    res.end(data);
+  } catch (err) {
+    console.log(err);
+    res.send(err);
+  }
+});
 
 // repeat endpoint -- toggle repeat
-app.get(
-  '/auth/repeat/:repState',
-  async ({ params: { repState } }, res) => {
-    const repQuery = `?state=${repState}`;
-    try {
-      const { data } = await axios({
-        method: 'put',
-        url: `https://api.spotify.com/v1/me/player/repeat${repQuery}`,
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-      });
-      res.end(data);
-    } catch (err) {
-      console.log(err);
-      res.send(err);
-    }
-  },
-);
+app.get('/auth/repeat/:repState', async ({ params: { repState } }, res) => {
+  const repQuery = `?state=${repState}`;
+  try {
+    const { data } = await axios({
+      method: 'put',
+      url: `https://api.spotify.com/v1/me/player/repeat${repQuery}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    res.end(data);
+  } catch (err) {
+    console.log(err);
+    res.send(err);
+  }
+});
 
 // volume endpoint
-app.get(
-  '/auth/volume/:volAsNum',
-  async ({ params: { volAsNum } }, res) => {
-    try {
-      await axios({
-        method: 'put',
-        url: 'https://api.spotify.com/v1/me/player/volume',
-        params: {
-          volume_percent: volAsNum,
-        },
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-      });
-      res.end();
-    } catch (err) {
-      console.log(err);
-      res.send(err);
-    }
-  },
-);
+app.get('/auth/volume/:volAsNum', async ({ params: { volAsNum } }, res) => {
+  try {
+    await axios({
+      method: 'put',
+      url: 'https://api.spotify.com/v1/me/player/volume',
+      params: {
+        volume_percent: volAsNum,
+      },
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    res.end();
+  } catch (err) {
+    console.log(err);
+    res.send(err);
+  }
+});
 
 // logout endpoint
 app.get('/auth/logout', (_, res) => {

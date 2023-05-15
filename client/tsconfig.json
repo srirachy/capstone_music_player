@@ -1,7 +1,7 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "target": "ESNext",
+    "target": "ES5",
     "module": "ESNext",
     "jsx": "react-jsx",
     "noEmit": true,
@@ -10,10 +10,11 @@
       "*": ["./"],
       "src/*": ["./src/*"]
     },
-    "isolatedModules": false,
+    "isolatedModules": true,
   },
   "include": [
     "./src",
+    "./src/**/*",
     "./src/setupTests.ts",
   ],
   "exclude": [

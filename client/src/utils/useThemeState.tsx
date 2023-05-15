@@ -1,8 +1,8 @@
 import { shallowEqual } from 'react-redux';
-import { useAppSelector } from 'src/store/hooks';
+import { useAppSelector } from 'src/app/redux/hooks';
 
 function useThemeState() {
-  return useAppSelector((state) => state.theme, shallowEqual);
+  return useAppSelector(state => state.theme, shallowEqual);
 }
 
 export default useThemeState;
