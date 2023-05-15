@@ -4,7 +4,7 @@ import { generateRandomString } from './utils/Functions';
 import { LoginUrlProps, CbUrlProps } from './types';
 import path = require('path');
 import logger = require('morgan');
-import dotenv = require('../node_modules/dotenv');
+import dotenv = require('dotenv');
 import cors from 'cors';
 
 // initializers
@@ -337,9 +337,9 @@ app.get('/auth/logout', (_, res) => {
   });
 });
 
-app.get('*', (_, res) => {
-  res.sendFile(path.join(__dirname, '../client/build/index.html'));
-});
+// app.get('*', (_, res) => {
+//   res.sendFile(path.join(__dirname, '../client/build/index.html'));
+// });
 
 app.listen(PORT, () => {
   console.log(`listening at localhost port: ${PORT}`);
