@@ -25,6 +25,9 @@ This repository contains the source code for a Music Player that utilizes the Sp
 - Visual Studio Code
 - Visual Studio Code Installer Projects (https://code.visualstudio.com/download)
 
+## Necessary API Keys
+**Putting API key directions here to help users**
+
 ## Project Setup
 - [Git](https://git-scm.com/) must be installed
 - Clone repository `git clone git@github.com:srirachy/capstone_music_player.git`
